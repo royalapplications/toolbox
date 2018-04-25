@@ -2,7 +2,7 @@
 
 **THIS IS CURRENTLY UNDER BETA!**
 
-This script allows you to check all your document passwords against the famous and great service called "Have I been pwned?". More information about this service can be found at the official site at: https://haveibeenpwned.com
+This script allows you to check all your document passwords against the famous and great service called "Have I been pwned?". More information about this service can be found at the official site at: [HaveIBeenPwned.com](https://haveibeenpwned.com)
 
 For your own security not your full passwords will be submitted to HIBP. The first 5 letters from each passwords are going to be hashed using SHA-1 and submitted to the HIBP-API. Afterwards the returned dataset will be checked if your full with SHA-1 hashed password is within the returned list. This way your full password will never leave your local machine.
 
@@ -37,9 +37,9 @@ C:\PS> wget -OutFile checkDocumentPasswordsHIBP.ps1 https://raw.githubuserconten
 
 | Parameter                 | Type          | Description | Required | Default |
 | ------------------------- | ------------- | ----------- | -------- | ------- |
-| **File**               | `String` | The path to your document file. | True | *None* |
-| **EncryptionPassword** | `String` | Provide the encryption password for the specified document, if required. | False | *None* |
-| **LockdownPassword**   | `String` | Provide the lockdown password for the specified document, if required. | False | *None* |
+| **File**               | `String`              | The path to your document file. | True | *None* |
+| **EncryptionPassword** | `String/SecureString` | Provide the encryption password for the specified document, if required. | False | *None* |
+| **LockdownPassword**   | `String/SecureString` | Provide the lockdown password for the specified document, if required. | False | *None* |
 
 ### EXAMPLES
 
@@ -58,4 +58,4 @@ C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword
 
 ## EXAMPLE OUTPUT
 
-![Script Output Screenshot](https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/checkDocumentPasswordsHIBP/screenshots/checkDocumentPasswordsHIBP-1.png)
+![Script Output Screenshot](https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/checkDocumentPasswordsHIBP/screenshots/checkDocumentPasswordsHIBP-1.jpg)
