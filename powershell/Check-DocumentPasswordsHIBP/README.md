@@ -1,10 +1,10 @@
 # Check-DocumentPasswordsHIBP
 
-**THIS IS CURRENTLY UNDER BETA!**
+**THIS IS CURRENTLY IN BETA AND WORK IN PROGRESS! Feedback strongly appreciated.**
 
 This script allows you to check all your document passwords against the famous and great service called "Have I been pwned?". More information about this service can be found at the official site at: [HaveIBeenPwned.com](https://haveibeenpwned.com)
 
-For your own security not your full passwords will be submitted to HIBP. The first 5 letters from each passwords are going to be hashed using SHA-1 and submitted to the HIBP-API. Afterwards the returned dataset will be checked if your full with SHA-1 hashed password is within the returned list. This way your full password will never leave your local machine.
+For your own security not your full passwords will be submitted to HIBP. The first 5 letters from each passwords are going to be hashed using SHA-1 and submitted to the HIBP-API. Afterwards the returned dataset will be checked if your SHA-1 hashed password is within the returned list. This way your full password will never leave your local machine.
 
 Good luck that there are no matches! If so - taking action is recommended!
 

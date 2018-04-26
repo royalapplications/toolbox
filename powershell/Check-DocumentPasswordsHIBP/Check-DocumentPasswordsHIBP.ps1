@@ -8,9 +8,9 @@
 
   For your own security not your full passwords will be submitted to HIBP. The first
   5 letters from each passwords are going to be hashed using SHA-1 and submitted to
-  the HIBP-API. Afterwards the returned dataset will be checked if your full with
-  SHA-1 hashed password is within the returned list. This way your full password
-  will never leave your local machine.
+  the HIBP-API. Afterwards the returned dataset will be checked if your full SHA-1
+  hashed password is within the returned list. This way your full password will
+  never leave your local machine.
 
   Good luck that there are no matches! If so - taking action is recommended!
 .INPUTS
