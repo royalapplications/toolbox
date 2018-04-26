@@ -78,18 +78,14 @@ Import-Module $RoyalPowerShellModule
 
 # module loaded checks
 if (!(Get-Module "RoyalDocument.PowerShell")) {
-    Write-Error "RoyalDocument module not loaded. Be sure Royal TS is installed and check if RoyalPowerShellModule is set. Aborting." -Category NotImplemented
-    exit
+    Write-Error "RoyalDocument module not loaded. Be sure Royal TS is installed and check if RoyalPowerShellModule is set. Aborting." -Category NotImplemented -ErrorAction Stop
 }
 
 # sanity checks
 if (!(Test-Path $File)) {
-    Write-Error "Royal Document '$File' does not exist. Please provide a existing file. Aborting." -Category OpenError
-    exit
+    Write-Error "Royal Document '$File' does not exist. Please provide a existing file. Aborting." -Category OpenError -ErrorAction Stop
 }
 $RoyalDocFile = $File
-
-# TODO: no password provided? We need one! Check if Enc/Lockdown pwd required?
 
 # check if Encryption and Lockdown Password as Secured Strings
 if ($EncryptionPassword -ne $null -and $EncryptionPassword -isnot [SecureString]) {
@@ -165,6 +161,7 @@ function CheckPasswordWithHIBP()
 
 # prepare some stuff.
 Write-Verbose "+ Preparing..."
+Write-Progress -Activity "Initialization" -Status "Loading data..." -PercentComplete 0
 # create store (container for any documents)
 $store = New-RoyalStore -UserName "HIBP-Checker"
 
@@ -175,17 +172,20 @@ $docObjNames = @{}
 
 # open document
 Write-Verbose "+ Loading document..."
+# TODO: no password provided? We need one! Check if Enc/Lockdown pwd required?
+
 $doc = Open-RoyalDocument -Store $store -FileName $RoyalDocFile -Password $EncryptionPassword -LockdownPassword $LockdownPassword
 # check if loading worked
 if ($doc -eq $null) {
-    Write-Error -Message "Failed loading document. Please check. Aborting." -Category OpenError
-    exit
+    Write-Error -Message "Failed loading document. Please check. Aborting." -Category OpenError -ErrorAction Stop
 }
 
-Write-Verbose "+ Loading credentials..."
+Write-Verbose "+ Loading password properties..."
 # get all objects with passwords
 $passwords = $doc.GetAllPasswordProperties()
+$totalPasswordPropsMax = @($passwords).Count
 $passwords | ForEach-Object {
+    # HINT: no progress bar here as it noticable slows down the process here.
     # get the object.
     $obj = $_.Item1
     # get the cleartext password
@@ -211,21 +211,25 @@ $passwords | ForEach-Object {
 }
 # clear the passwords variable from memory ASAP
 $passwords = $null
+Write-Verbose "Total scanned password properties: $totalPasswordPropsMax"
 
 # output some stats
+# when using get_Count() here we get the actual size of the hashtable, duplicate passwords removed.
 $totalPasswords = $docHashedPasswords.get_Count()
 $totalObjects = $docObjNames.get_Count()
 Write-Host "Total of unique passwords to check: $totalPasswords"
 Write-Host "Total of objects with passwords found: $totalObjects"
 
-# TODO: PROGRESS BAR
 # now we're checking the passwords...
 Write-Verbose "+ Checking passwords against HIBP..."
 $totalMatches = 0
 $hashedPwdCount = 0
 $docHashedPasswords.Keys | ForEach-Object {
     $hashedPwdCount++
-    Write-Host "Checking password #$hashedPwdCount/$totalPasswords..." -ForegroundColor Blue
+    Write-Host "Checking password $hashedPwdCount/$totalPasswords..." -ForegroundColor Blue
+
+    # progress bar. yaay!
+    Write-Progress -Activity "Checking password property $hashedPwdCount of $totalPasswords..." -Status "Processing..." -PercentComplete (($hashedPwdCount / $totalPasswords) * 100)
 
     $hashMatches = CheckPasswordWithHIBP -stringHash $_
     # if we do not get any integer back, anything wrong happend.
@@ -250,6 +254,7 @@ $docHashedPasswords.Keys | ForEach-Object {
 
 # ...and we're done.
 Write-Verbose "+ Password check done."
+Write-Progress -Activity "Scan finished" -Status "Work complete." -PercentComplete 100
 if ($totalMatches -gt 0) {
     Write-Host "In total your passwords has been pwned ${totalMatches}x." -ForegroundColor Red
     Write-Host "Changing affected passwords is strongly recommended!" -ForegroundColor Red
