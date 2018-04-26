@@ -24,28 +24,26 @@
 .PARAMETER LockdownPassword
   The Lockdown password of the specified document, if required.
 .EXAMPLE
-  C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz"
+  C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz"
 .EXAMPLE
-  C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd"
+  C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd"
 .EXAMPLE
-  C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd" -LockdownPassword "LockdownP@ssw0rd"
+  C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd" -LockdownPassword "LockdownP@ssw0rd"
 .NOTES
-  Name:           checkDocumentPasswordsHIBP
-  Version:        0.1.0-beta
+  Name:           Check-DocumentPasswordsHIBP
+  Version:        0.1.1-beta
   Author:         Patrik Kernstock
   Copyright:      (C) 2018 code4ward GmbH
   Creation Date:  April 25, 2018
   Modified Date:  April 26, 2018
   Changelog:      For exact script changelog please check out the git commits history at:
-                  https://github.com/royalapplications/scripts/commits/master/powershell/checkDocumentPasswordsHIBP/checkDocumentPasswordsHIBP.ps1
+                  https://github.com/royalapplications/scripts/commits/master/powershell/Check-DocumentPasswordsHIBP/Check-DocumentPasswordsHIBP.ps1
   Support:        For support please check out the "Support" section in the README file here:
                   https://github.com/royalapplications/scripts/tree/master/README.md#support
   Credits:        Inspiration for HIBP-API calls: https://gist.github.com/mrik23/e8efe6dc9cdfe62c9d0bb84dc25288fa
 .LINK
-  https://github.com/royalapplications/scripts/commits/master/powershell/checkDocumentPasswordsHIBP/
+  https://github.com/royalapplications/scripts/commits/master/powershell/Check-DocumentPasswordsHIBP/
 #>
-
-# TODO: Rename script to Check-DocumentPasswordsHIBP to be more PS-name-like
 
 ###################################
 ### SOME PRE-MAGIC CODE STARTS HERE ###
@@ -172,8 +170,6 @@ $docObjNames = @{}
 
 # open document
 Write-Verbose "+ Loading document..."
-# TODO: no password provided? We need one! Check if Enc/Lockdown pwd required?
-
 $doc = Open-RoyalDocument -Store $store -FileName $RoyalDocFile -Password $EncryptionPassword -LockdownPassword $LockdownPassword
 # check if loading worked
 if ($doc -eq $null) {

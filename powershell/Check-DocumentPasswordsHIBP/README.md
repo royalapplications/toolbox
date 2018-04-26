@@ -1,4 +1,4 @@
-# checkDocumentPasswordsHIBP
+# Check-DocumentPasswordsHIBP
 
 **THIS IS CURRENTLY UNDER BETA!**
 
@@ -30,7 +30,7 @@ Please see details [here](https://github.com/royalapplications/scripts/tree/mast
 Some recent PowerShell versions have a cool `wget` alias to the cmdlet `Invoke-WebRequest` allowing you to easily download files. This way you can use it to quickly download the script like here:
 
 ```powershell
-C:\PS> wget -OutFile checkDocumentPasswordsHIBP.ps1 https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/checkDocumentPasswordsHIBP/checkDocumentPasswordsHIBP.ps1
+C:\PS> wget -OutFile Check-DocumentPasswordsHIBP.ps1 https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/Check-DocumentPasswordsHIBP/Check-DocumentPasswordsHIBP.ps1
 ```
 
 ### PARAMETERS
@@ -46,16 +46,16 @@ C:\PS> wget -OutFile checkDocumentPasswordsHIBP.ps1 https://raw.githubuserconten
 Here are some usage examples:
 
 ```powershell
-C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz"
+C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz"
 [...processing...]
 
-C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd"
+C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd"
 [...processing...]
 
-C:\PS> .\checkDocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd" -LockdownPassword "LockdownP@ssw0rd"
+C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd" -LockdownPassword "LockdownP@ssw0rd"
 [...processing...]
 ```
 
 ## EXAMPLE OUTPUT
 
-![Script Output Screenshot](https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/checkDocumentPasswordsHIBP/screenshots/checkDocumentPasswordsHIBP-1.jpg)
+![Script Output Screenshot](https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/Check-DocumentPasswordsHIBP/screenshots/Check-DocumentPasswordsHIBP-1.jpg)
