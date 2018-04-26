@@ -38,7 +38,7 @@ C:\PS> wget -OutFile Check-DocumentPasswordsHIBP.ps1 https://raw.githubuserconte
 | Parameter                 | Type          | Description | Required | Default |
 | ------------------------- | ------------- | ----------- | -------- | ------- |
 | **File**               | `String`              | The path to your document file. | True | *None* |
-| **EncryptionPassword** | `String/SecureString` | Provide the encryption password for the specified document, if required. | False | *None* |
+| **EncryptionPassword** | `String/SecureString` | Provide the encryption password for the specified document, if required. | False, True if Lockdown enabled. | *None* |
 | **LockdownPassword**   | `String/SecureString` | Provide the lockdown password for the specified document, if required. | False | *None* |
 
 ### EXAMPLES

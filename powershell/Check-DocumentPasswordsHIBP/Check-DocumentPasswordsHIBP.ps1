@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-  Checks your document passwords against Have I been pwned.
+  Checks your document passwords against Have I Been Pwned.
 .DESCRIPTION
   This script allows you to check all your document passwords against the famous and
   great service called "Have I been pwned?". More information about this service can
@@ -40,14 +40,11 @@
                   https://github.com/royalapplications/scripts/commits/master/powershell/Check-DocumentPasswordsHIBP/Check-DocumentPasswordsHIBP.ps1
   Support:        For support please check out the "Support" section in the README file here:
                   https://github.com/royalapplications/scripts/tree/master/README.md#support
-  Credits:        Inspiration for HIBP-API calls: https://gist.github.com/mrik23/e8efe6dc9cdfe62c9d0bb84dc25288fa
+  Credits:        + To mrik23 on GitHub for inspiration how to do HIBP-API calls (https://gist.github.com/mrik23/e8efe6dc9cdfe62c9d0bb84dc25288fa)
+                  + Troy Hunt for his great HaveIBeenPwned.com service! Give him out a donation if you appreciate his service.
 .LINK
   https://github.com/royalapplications/scripts/commits/master/powershell/Check-DocumentPasswordsHIBP/
 #>
-
-###################################
-### SOME PRE-MAGIC CODE STARTS HERE ###
-###################################
 
 ## PARAMETERS
 param(
@@ -91,6 +88,11 @@ if ($EncryptionPassword -ne $null -and $EncryptionPassword -isnot [SecureString]
 }
 if ($LockdownPassword -ne $null -and $LockdownPassword -isnot [SecureString]) {
     $LockdownPassword = $LockdownPassword | ConvertTo-SecureString -Force -AsPlainText
+}
+
+# if lockdown password specified, but no encryption password, something will go wrong later on anyway. so we just abort here.
+if ($LockdownPassword -ne $null -and $EncryptionPassword -eq $null) {
+    Write-Error "When providing lockdown password the encryption password is required too. Aborting." -Category OpenError -ErrorAction Stop
 }
 
 # To stay on the safe side: Force TLS 1.2 for upcoming API requests.
@@ -173,7 +175,7 @@ Write-Verbose "+ Loading document..."
 $doc = Open-RoyalDocument -Store $store -FileName $RoyalDocFile -Password $EncryptionPassword -LockdownPassword $LockdownPassword
 # check if loading worked
 if ($doc -eq $null) {
-    Write-Error -Message "Failed loading document. Please check. Aborting." -Category OpenError -ErrorAction Stop
+    Write-Error -Message "Failed loading document. Missing Encryption/Lockdown password? Please check. Aborting." -Category OpenError -ErrorAction Stop
 }
 
 Write-Verbose "+ Loading password properties..."
