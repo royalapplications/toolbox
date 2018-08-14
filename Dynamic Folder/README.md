@@ -4,7 +4,7 @@ This folder contains Dynamic Folder sample scripts. These are distributed using 
 
 ## Import
 
-To import a Dynamic Folder, download the .rdfe file, select a folder in Royal TS/X and go to "Import - Dynamic Folder", then select the file. A new Dynamic Folder will be created as a child of the currently selected folder.
+To import a Dynamic Folder, first download the .rdfe file. To do so, navigate to the folder on Github where the desired Dynamic Folder export file (.rdfe) is located. Click the .rdfe file and on the next page, option/alt-click the "Raw" button. This will initiate the download of the file. Back in Royal TS/X, select a folder in the navigation panel and go to "Import - Dynamic Folder". Select the file you just downloaded. A new Dynamic Folder will be created as a child of the currently selected folder.
 
 In addition to scripts, Dynamic Folder export files can also contain a description, custom properties and notes. Notes are often used to explain how the Dynamic Folder scripts work and what setup steps are required before initiating a reload for the first time. After importing a Dynamic Folder definition, please read the "Notes" section in the properties of the Dynamic Folder.
 
