@@ -1,0 +1,5 @@
+Name,ComputerName,Username,Password
+VM01,vm01.local,root,abc123
+VM02,vm02.local,root,123abc
+NS01,ns01.local,admin,123456
+NS02,ns02.local,administrator,321123
