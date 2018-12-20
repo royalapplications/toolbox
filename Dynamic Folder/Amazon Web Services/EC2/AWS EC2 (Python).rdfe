@@ -5,6 +5,13 @@
 			"Type": "DynamicFolder",
 			"Name": "AWS EC2 (Python)",
 			"Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2</strong></h2>\n\n<p><strong>Version</strong>: 1.0<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>While the provided script sets the username of created connections, the password will always be empty. There are multiple different ways to solve this. For instance, you could assign a credential to this dynamic folder and change the script to reference credentials from parent folder. Alternatively, you may also just use &quot;Connect with Options - Prompt for Credentials&quot; when establishing a connection.</li>\n</ul>\n",
+			"CustomProperties": [
+				{
+					"Name": "Region",
+					"Type": "Text",
+					"Value": "TODO"
+				}
+			],
 			"ScriptInterpreter": "python",
 			"DynamicCredentialScriptInterpreter": "json",
 			"DynamicCredentialScript": "{\n\t\"Username\": \"user\",\n\t\"Password\": \"pass\"\n}",
