@@ -2,7 +2,7 @@
 
 This folder contains Dynamic Folder sample scripts. These are distributed using a special file format (.rdfe) which makes it easy to import (and export) them in Royal TS/X.
 
-Documentation for the rJSON format and Dynamic Folders in general is available in our [support portal](https://www.royalapplications.com/go/kb-all-royaljson).
+Documentation for the rJSON format and Dynamic Folders in general is [available here](https://www.royalapplications.com/go/rjson-documentation).
 
 ## Import
 
