@@ -1,3 +1,8 @@
+$VMMServer = 'VMM01.powershell.no'
+$VMMCredentialPath = "$env:USERPROFILE\VMM.cred.xml"
+$RDPCredentialName = 'DOMAIN\username'
+$SSHCredentialName = 'username'
+
 function Get-ServerFromSCVMM {
     <#
        .SYNOPSIS
@@ -9,7 +14,6 @@ function Get-ServerFromSCVMM {
             Required modules: VirtualMachineManager
             Required privileges: Read-permission in SC VMM
 
-       .LINK https://www.powershellmagazine.com/?p=13184
        .EXAMPLE
        Get-ServerFromSCVMM -VMMServer SRV01 -Credential (Get-Credential)
        .EXAMPLE
@@ -81,8 +85,6 @@ function Get-ServerFromSCVMM {
 
 }
 
-$VMMCredentialPath = "$env:HOMEPATH\VMM.cred.xml"
-
 if (Test-Path -Path $VMMCredentialPath) {
 
     $VMMCredential = Import-Clixml -Path $VMMCredentialPath
@@ -96,15 +98,61 @@ if (Test-Path -Path $VMMCredentialPath) {
 
 [System.Collections.ArrayList]$Servers = @()
 
-Get-ServerFromSCVMM -ComputerName VMM01.powershell.no -Credential $VMMCredential | ForEach-Object {
+Get-ServerFromSCVMM -ComputerName $VMMServer -Credential $VMMCredential | ForEach-Object {
 
-    $null = $Servers.Add([PSCustomObject]@{
-        Name = $PSItem.Name
-        Type = 'RemoteDesktopConnection'
-        ComputerName = $PSItem.Name
-        CredentialName = 'DOMAIN\username'
-        Path = 'VMM'
-    })
+    $Server = $PSItem
+
+    if ($Server.Description) {
+
+        $Description = ($Server.OperatingSystem.Name + ' (' + $Server.Description + ')')
+
+    } else {
+
+        $Description = $Server.OperatingSystem
+
+    }
+
+    switch -Wildcard ($PSItem.OperatingSystem)
+    {
+        "*Linux*" {
+        
+            $null = $Servers.Add([PSCustomObject]@{
+            Name = $Server.Name
+            Type = 'TerminalConnection'
+            TerminalConnectionType = 'SSH'
+            ComputerName = $Server.Name
+            CredentialName = $SSHCredentialName
+            Path = 'Linux'
+            Description = $Description
+        })
+        }
+    
+        "*Windows*" {
+        
+            $null = $Servers.Add([PSCustomObject]@{
+            Name = $Server.Name
+            Type = 'RemoteDesktopConnection'
+            ComputerName = $Server.Name
+            CredentialName = $RDPCredentialName
+            Path = 'Windows'
+            Description = $Description
+        })
+        
+        }
+    
+        Default {
+        
+            $null = $Servers.Add([PSCustomObject]@{
+            Name = $Server.Name
+            Type = 'RemoteDesktopConnection'
+            ComputerName = $Server.Name
+            Path = 'Other'
+            Description = $Description
+        })
+        
+        }
+    
+    }
 
 } 
 

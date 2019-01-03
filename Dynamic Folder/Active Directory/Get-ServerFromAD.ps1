@@ -1,3 +1,8 @@
+$ADDomainController = 'powershell.no'
+$InactiveComputerObjectThresholdInDays = '14'
+$RDPCredentialName = 'DOMAIN\username'
+$ADCredentialPath = "$env:USERPROFILE\AD.cred.xml"
+
 function Get-ServerFromAD {
     <#
       .SYNOPSIS
@@ -13,7 +18,6 @@ function Get-ServerFromAD {
            Required modules: ActiveDirectory
            Required privileges: Read-permission in AD
 
-      .LINK https://www.powershellmagazine.com/?p=13184
       .EXAMPLE
       Get-ServerFromAD
       .EXAMPLE
@@ -74,7 +78,7 @@ function Get-ServerFromAD {
         
 }
 
-$ADCredentialPath = "$env:HOMEPATH\AD.cred.xml"
+$ADCredentialPath = "$env:USERPROFILE\AD.cred.xml"
 
 if (Test-Path -Path $ADCredentialPath) {
 
@@ -89,7 +93,7 @@ if (Test-Path -Path $ADCredentialPath) {
 
 [System.Collections.ArrayList]$Servers = @()
 
-Get-ServerFromAD -InactiveComputerObjectThresholdInDays 14 -ADDomainController powershell.no -ADCredential $ADCredential | ForEach-Object {
+Get-ServerFromAD -InactiveComputerObjectThresholdInDays $InactiveComputerObjectThresholdInDays -ADDomainController $ADDomainController -ADCredential $ADCredential | ForEach-Object {
 
     $null = $Servers.Add([PSCustomObject]@{
         Name = $PSItem.Name
