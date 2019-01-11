@@ -1,0 +1,22 @@
+{
+  "Name": "Dynamic Folder Export",
+  "Objects": [
+    {
+      "Type": "DynamicFolder",
+      "Name": "Softlayer Servers (Python)",
+      "Description": "Example Dynamic Folder for IBM SoftLayer",
+      "Notes": "<h2><strong>Dynamic Folder sample for IBM Softlayer Virtual Server</strong></h2>\n\n<p><strong>Version</strong>: 1.0<br />\n<strong>Author</strong>: Royal Applications, <a href=\"https://github.com/eightnoneone\">Matt Warren</a></p>\n\n<p>This Dynamic Folder sample for IBM Softlayer supports grabbing all virtual servers of a specified datacenter.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>Softlayer Command Line Interface (CLI) Python pip module&nbsp;needs to be installed and configured for your OS default&nbsp;Python.<br />\n\t<a href=\"https://softlayer-api-python-client.readthedocs.io/en/latest/\">https://softlayer-api-python-client.readthedocs.io/en/latest/</a></li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the datacenter that you want to grab instances from in the &quot;Datacenter&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the SLCLI with a default datacenter.</li>\n\t<li>Depends on a SLCLI config file for username and password/key.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>The provided script sets SSH connections to &quot;Use credentials from parent folder&quot; and sets RDP connections to &quot;Specify a credential name&quot;&nbsp;There are multiple different ways to manage credentials with Royal. Alternatively, you may also just use &quot;Connect with Options - Prompt for Credentials&quot; when establishing a connection.</li>\n</ul>\n",
+      "CustomProperties": [
+        {
+          "Name": "Datacenter",
+          "Type": "Text",
+          "Value": "tor01"
+        }
+      ],
+      "ScriptInterpreter": "python",
+      "DynamicCredentialScriptInterpreter": "json",
+      "DynamicCredentialScript": "{\n\t\"Username\": \"user\",\n\t\"Password\": \"pass\"\n}",
+      "Script": "import SoftLayer\nimport json\n\n\ndef get_instances(datacenter = \"\"):\n\n    client = SoftLayer.Client()\n    mgr = SoftLayer.VSManager(client)\n\n    connections = [ ]\n\n    object_mask = \"mask[hostname,operatingSystemReferenceCode,primaryBackendIpAddress]\"\n    for instance in mgr.list_instances(datacenter=datacenter, mask=object_mask):\n\n        instance_id = instance.get(\"globalIdentifier\", \"\")\n        is_windows = instance.get(\"operatingSystemReferenceCode\").partition('_')[0] == \"WIN\"\n\n\n#         public_ip_address = instance.get(\"PublicIpAddress\", \"\")\n#         public_hostname = instance.get(\"PublicDnsName\", \"\")\n\n        private_ip_address = instance.get(\"primaryBackendIpAddress\", \"\")\n        private_hostname = instance.get(\"hostname\", \"\")\n        name = private_hostname\n\n# Fetching tags on each vs is very time consuming. \n#         tags = details.get(\"tagReferences\")\n#         tagstring = [ ]\n#         for tag in tags:\n#             tagstring.append(tag['tag'].get('name'))\n#         notes = ' '.join(tagstring)\n        \n\n        computer_name = private_ip_address\n\n        if computer_name == \"\":\n            computer_name = public_ip_address\n\n        connection = { }\n\n        if not is_windows:\n            connection[\"Type\"] = \"TerminalConnection\"\n            connection[\"TerminalConnectionType\"] = \"SSH\"\n            connection['CredentialsFromParent'] = True\n        else:\n            connection[\"Type\"] = \"RemoteDesktopConnection\"\n            connection['CredentialName'] = \"AD_Crendentials\"\n\n        connection[\"ID\"] = instance_id\n        connection[\"Name\"] = name\n        connection[\"ComputerName\"] = computer_name\n#         connection['Notes'] = notes\n        \n\n        connections.append(connection)\n\n    store = {\n        \"Objects\": connections\n    }\n\n    store_json = json.dumps(store, indent=2)\n\n    return store_json\n\nprint(get_instances(\"$CustomProperty.Datacenter$\"))"
+    }
+  ]
+}
