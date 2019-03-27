@@ -58,4 +58,4 @@ C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPasswor
 
 ## EXAMPLE OUTPUT
 
-![Script Output Screenshot](https://raw.githubusercontent.com/royalapplications/scripts/master/powershell/Check-DocumentPasswordsHIBP/screenshots/Check-DocumentPasswordsHIBP-1.jpg)
+![Script Output Screenshot](https://raw.githubusercontent.com/royalapplications/scripts/master/Automation/PowerShell/Check-DocumentPasswordsHIBP/screenshots/Check-DocumentPasswordsHIBP-1.jpg)
