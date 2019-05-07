@@ -31,11 +31,11 @@
   C:\PS> .\Check-DocumentPasswordsHIBP.ps1 -File "servers.rtsz" -EncryptionPassword "EncryptionP@ssw0rd" -LockdownPassword "LockdownP@ssw0rd"
 .NOTES
   Name:           Check-DocumentPasswordsHIBP
-  Version:        0.1.1-beta
+  Version:        0.1.2
   Author:         Patrik Kernstock
   Copyright:      (C) 2018 code4ward GmbH
   Creation Date:  April 25, 2018
-  Modified Date:  April 26, 2018
+  Modified Date:  May 7, 2019
   Changelog:      For exact script changelog please check out the git commits history at:
                   https://github.com/royalapplications/scripts/commits/master/powershell/Check-DocumentPasswordsHIBP/Check-DocumentPasswordsHIBP.ps1
   Support:        For support please check out the "Support" section in the README file here:
@@ -64,16 +64,33 @@ param(
 )
 
 ### OTHERS
-## CHANGE IF REQUIRED
-# Path to the PowerShell module within the Royal TS installation directory (if it was installed elsewhere)
-$RoyalPowerShellModule = Join-Path -Path ${env:ProgramFiles(x86)} -ChildPath 'code4ward.net\Royal TS V4\RoyalDocument.PowerShell.dll'
+# load module: Royal TS.
+if (Get-Module -ListAvailable RoyalDocument.PowerShell) {
+    # Check if module is available, if so, load it. This is when module got installed through PSGallery.
+    Import-Module RoyalDocument.PowerShell
 
-# load modules: Royal TS.
-Import-Module $RoyalPowerShellModule
+} else {
+    # If not, we try the legacy way.
+    $psModulePaths = @()
+    $psModulePaths += Join-Path -Path ${env:ProgramFiles(x86)} -ChildPath 'Royal TS V5\RoyalDocument.PowerShell.dll'
+    $psModulePaths += Join-Path -Path ${env:ProgramFiles(x86)} -ChildPath 'code4ward.net\Royal TS V4\RoyalDocument.PowerShell.dll'
+    foreach ($psModulePath in $psModulePaths) {
+        if (Test-Path $psModulePath) {
+            Import-Module $psModulePath
+            break
+        }
+    }
+}
 
-# module loaded checks
 if (!(Get-Module "RoyalDocument.PowerShell")) {
-    Write-Error "RoyalDocument module not loaded. Be sure Royal TS is installed and check if RoyalPowerShellModule is set. Aborting." -Category NotImplemented -ErrorAction Stop
+    Write-Error "Required RoyalDocument module not loaded."
+    Write-Output "Please make sure you have either the PowerShell module installed through"
+    Write-Output "PSGallery (recommended), or have an older Royal TS release installed which still"
+    Write-Output "ships the PowerShell module with the installer. See more info at PSGallery site at:"
+    Write-Output "https://www.powershellgallery.com/packages/RoyalDocument.PowerShell/"
+    Write-Output "Installation using PSGallery: $ Install-Module -Name RoyalDocument.PowerShell"
+    Write-Output "Aborting."
+    exit
 }
 
 # sanity checks
@@ -83,15 +100,15 @@ if (!(Test-Path $File)) {
 $RoyalDocFile = $File
 
 # check if Encryption and Lockdown Password as Secured Strings
-if ($EncryptionPassword -ne $null -and $EncryptionPassword -isnot [SecureString]) {
+if ($null -ne $EncryptionPassword -and $EncryptionPassword -isnot [SecureString]) {
     $EncryptionPassword = $EncryptionPassword | ConvertTo-SecureString -Force -AsPlainText
 }
-if ($LockdownPassword -ne $null -and $LockdownPassword -isnot [SecureString]) {
+if ($null -ne $LockdownPassword -and $LockdownPassword -isnot [SecureString]) {
     $LockdownPassword = $LockdownPassword | ConvertTo-SecureString -Force -AsPlainText
 }
 
 # if lockdown password specified, but no encryption password, something will go wrong later on anyway. so we just abort here.
-if ($LockdownPassword -ne $null -and $EncryptionPassword -eq $null) {
+if ($null -ne $LockdownPassword -and $null -eq $EncryptionPassword) {
     Write-Error "When providing lockdown password the encryption password is required too. Aborting." -Category OpenError -ErrorAction Stop
 }
 
@@ -127,7 +144,7 @@ function CheckPasswordWithHIBP()
     # this is the hashPrefix what is being sent over to the HIBP API
     $hashPrefix = $stringHash.Substring(0, 5)
     # that is the rest of the string after the 5th char
-    $hashSuffix = $stringHash.Substring(5, ($stringHash.Length - 5))
+    $hashSuffix = $stringHash.Substring(5)
 
     # Invoking the web request to HIBP
     try {
@@ -138,10 +155,13 @@ function CheckPasswordWithHIBP()
     }
 
     # If we got any response from the API...
-    if ($response -ne $null) {
+    if ($null -ne $response) {
         $findHashSuffix = $response.Contains($hashSuffix)
         if ($findHashSuffix -eq $true) {
-            $result = $response.Substring($response.IndexOf($hashSuffix), $response.IndexOf([System.Environment]::NewLine, $response.IndexOf($hashSuffix)) - $response.IndexOf($hashSuffix))
+            $result = $response.Substring(
+                $response.IndexOf($hashSuffix),
+                ($response.IndexOf("`r`n", $response.IndexOf($hashSuffix)) - $response.IndexOf($hashSuffix))
+            )
             $resultCount = ($result.Split(":"))[1]
             # oh noes. we found something.
             return [int] $resultCount
@@ -174,7 +194,7 @@ $docObjNames = @{}
 Write-Verbose "+ Loading document..."
 $doc = Open-RoyalDocument -Store $store -FileName $RoyalDocFile -Password $EncryptionPassword -LockdownPassword $LockdownPassword
 # check if loading worked
-if ($doc -eq $null) {
+if ($null -eq $doc) {
     Write-Error -Message "Failed loading document. Missing Encryption/Lockdown password? Please check. Aborting." -Category OpenError -ErrorAction Stop
 }
 
