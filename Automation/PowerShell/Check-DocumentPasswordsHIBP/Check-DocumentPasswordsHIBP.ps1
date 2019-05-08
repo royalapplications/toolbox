@@ -69,8 +69,8 @@ if (Get-Module -ListAvailable RoyalDocument.PowerShell) {
 	# Check if module is available, if so, load it. This is when module got installed through PSGallery.
 	Import-Module RoyalDocument.PowerShell
 
-} else {
-	# If not, we try the legacy way.
+} elseif ([System.Environment]::OSVersion.Platform -eq "Win32NT") {
+	# If not and when Windows platform, we try the legacy way.
 	$psModulePaths = @()
 	$psModulePaths += Join-Path -Path ${env:ProgramFiles(x86)} -ChildPath 'Royal TS V5\RoyalDocument.PowerShell.dll'
 	$psModulePaths += Join-Path -Path ${env:ProgramFiles(x86)} -ChildPath 'code4ward.net\Royal TS V4\RoyalDocument.PowerShell.dll'
