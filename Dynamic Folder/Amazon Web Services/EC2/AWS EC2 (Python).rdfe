@@ -1,21 +1,21 @@
 {
-	"Name": "Dynamic Folder Export",
-	"Objects": [
-		{
-			"Type": "DynamicFolder",
-			"Name": "AWS EC2 (Python)",
-			"Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2</strong></h2>\n\n<p><strong>Version</strong>: 1.0<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>While the provided script sets the username of created connections, the password will always be empty. There are multiple different ways to solve this. For instance, you could assign a credential to this dynamic folder and change the script to reference credentials from parent folder. Alternatively, you may also just use &quot;Connect with Options - Prompt for Credentials&quot; when establishing a connection.</li>\n</ul>\n",
-			"CustomProperties": [
-				{
-					"Name": "Region",
-					"Type": "Text",
-					"Value": "TODO"
-				}
-			],
-			"ScriptInterpreter": "python",
-			"DynamicCredentialScriptInterpreter": "json",
-			"DynamicCredentialScript": "{\n\t\"Username\": \"user\",\n\t\"Password\": \"pass\"\n}",
-			"Script": "import subprocess\nimport json\n\ndef get_instances(region = \"\"):\n\tcmd = \"aws ec2 describe-instances\"\n\n\tif region != \"\":\n\t\tcmd += \" --region \" + region\n\n\taws = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)\n\t(response_json, err) = aws.communicate()\n\texit_code = aws.wait()\n\n\tresponse = json.loads(response_json)\n\n\tconnections = [ ]\n\n\tfor reservation in response.get(\"Reservations\", None):\n\t\tfor instance in reservation.get(\"Instances\", None):\n\t\t\tinstance_id = instance.get(\"InstanceId\", \"\")\n\t\t\tplatform = instance.get(\"Platform\", \"\")\n\n\t\t\tis_windows = platform.lower() == \"windows\"\n\t\t\tusername = \"Administrator\" if is_windows else \"ec2-user\"\n\n\t\t\tpublic_ip_address = instance.get(\"PublicIpAddress\", \"\")\n\t\t\tpublic_hostname = instance.get(\"PublicDnsName\", \"\")\n\n\t\t\tprivate_ip_address = instance.get(\"PrivateIpAddress\", \"\")\n\t\t\tprivate_hostname = instance.get(\"PrivateDnsName\", \"\")\n\n\t\t\ttags = instance.get(\"Tags\")\n\t\t\tname = instance_id\n\n\t\t\tif tags is not None:\n\t\t\t\tfor tag in tags:\n\t\t\t\t\tif tag.get(\"Key\", \"\").lower() == \"name\":\n\t\t\t\t\t\ttagValue = tag.get(\"Value\", \"\")\n\n\t\t\t\t\t\tif tagValue.lower() != \"\":\n\t\t\t\t\t\t\tname = tagValue\n\t\t\t\t\t\t\n\t\t\t\t\t\tbreak\n\n\t\t\tcomputer_name = public_hostname\n\n\t\t\tif computer_name == \"\":\n\t\t\t\tcomputer_name = public_ip_address\n\n\t\t\tif computer_name == \"\":\n\t\t\t\tcomputer_name = private_hostname\n\n\t\t\tif computer_name == \"\":\n\t\t\t\tcomputer_name = private_ip_address\n\n\t\t\tconnection = { }\n\n\t\t\tif not is_windows:\n\t\t\t\tconnection[\"Type\"] = \"TerminalConnection\"\n\t\t\t\tconnection[\"TerminalConnectionType\"] = \"SSH\"\n\t\t\telse:\n\t\t\t\tconnection[\"Type\"] = \"RemoteDesktopConnection\"\n\n\t\t\tconnection[\"ID\"] = instance_id\n\t\t\tconnection[\"Name\"] = name\n\t\t\tconnection[\"ComputerName\"] = computer_name\n\t\t\tconnection[\"Username\"] = username\n\n\t\t\tconnections.append(connection)\n\n\tstore = {\n\t\t\"Objects\": connections\n\t}\n\n\tstore_json = json.dumps(store)\n\n\treturn store_json\n\nprint(get_instances(\"$CustomProperty.Region$\"))"
-		}
-	]
+  "Name": "Dynamic Folder Export",
+  "Objects": [
+    {
+      "Type": "DynamicFolder",
+      "Name": "AWS EC2 (Python)",
+      "Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2</strong></h2>\n\n<p><strong>Version</strong>: 1.0.1<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>While the provided script sets the username of created connections, the password will always be empty. There are multiple different ways to solve this. For instance, you could assign a credential to this dynamic folder and change the script to reference credentials from parent folder. Alternatively, you may also just use &quot;Connect with Options - Prompt for Credentials&quot; when establishing a connection.</li>\n</ul>\n",
+      "CustomProperties": [
+        {
+          "Name": "Region",
+          "Type": "Text",
+          "Value": "TODO"
+        }
+      ],
+      "ScriptInterpreter": "python",
+      "DynamicCredentialScriptInterpreter": "json",
+      "DynamicCredentialScript": "{\n\t\"Username\": \"user\",\n\t\"Password\": \"pass\"\n}",
+      "Script": "import subprocess\nimport json\n\ndef get_instances(region = \"\"):\n\tcmd = \"aws ec2 describe-instances --output json\"\n\n\tif region != \"\":\n\t\tcmd += \" --region \" + region\n\n\taws = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)\n\t(response_json, err) = aws.communicate()\n\texit_code = aws.wait()\n\n\tresponse = json.loads(response_json)\n\n\tconnections = [ ]\n\n\tfor reservation in response.get(\"Reservations\", None):\n\t\tfor instance in reservation.get(\"Instances\", None):\n\t\t\tinstance_id = instance.get(\"InstanceId\", \"\")\n\t\t\tplatform = instance.get(\"Platform\", \"\")\n\n\t\t\tis_windows = platform.lower() == \"windows\"\n\t\t\tusername = \"Administrator\" if is_windows else \"ec2-user\"\n\n\t\t\tpublic_ip_address = instance.get(\"PublicIpAddress\", \"\")\n\t\t\tpublic_hostname = instance.get(\"PublicDnsName\", \"\")\n\n\t\t\tprivate_ip_address = instance.get(\"PrivateIpAddress\", \"\")\n\t\t\tprivate_hostname = instance.get(\"PrivateDnsName\", \"\")\n\n\t\t\ttags = instance.get(\"Tags\")\n\t\t\tname = instance_id\n\n\t\t\tif tags is not None:\n\t\t\t\tfor tag in tags:\n\t\t\t\t\tif tag.get(\"Key\", \"\").lower() == \"name\":\n\t\t\t\t\t\ttagValue = tag.get(\"Value\", \"\")\n\n\t\t\t\t\t\tif tagValue.lower() != \"\":\n\t\t\t\t\t\t\tname = tagValue\n\t\t\t\t\t\t\n\t\t\t\t\t\tbreak\n\n\t\t\tcomputer_name = public_hostname\n\n\t\t\tif computer_name == \"\":\n\t\t\t\tcomputer_name = public_ip_address\n\n\t\t\tif computer_name == \"\":\n\t\t\t\tcomputer_name = private_hostname\n\n\t\t\tif computer_name == \"\":\n\t\t\t\tcomputer_name = private_ip_address\n\n\t\t\tconnection = { }\n\n\t\t\tif not is_windows:\n\t\t\t\tconnection[\"Type\"] = \"TerminalConnection\"\n\t\t\t\tconnection[\"TerminalConnectionType\"] = \"SSH\"\n\t\t\telse:\n\t\t\t\tconnection[\"Type\"] = \"RemoteDesktopConnection\"\n\n\t\t\tconnection[\"ID\"] = instance_id\n\t\t\tconnection[\"Name\"] = name\n\t\t\tconnection[\"ComputerName\"] = computer_name\n\t\t\tconnection[\"Username\"] = username\n\n\t\t\tconnections.append(connection)\n\n\tstore = {\n\t\t\"Objects\": connections\n\t}\n\n\tstore_json = json.dumps(store)\n\n\treturn store_json\n\nprint(get_instances(\"$CustomProperty.Region$\"))"
+    }
+  ]
 }
