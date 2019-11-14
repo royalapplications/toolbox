@@ -1,0 +1,18 @@
+{
+  "Name": "Dynamic Folder Export",
+  "Objects": [
+    {
+      "Type": "DynamicFolder",
+      "Name": "Foreman",
+      "CustomProperties": [
+        {
+          "Name": "Foreman URL",
+          "Type": "URL",
+          "Value": "https:/puppet/"
+        }
+      ],
+      "ScriptInterpreter": "php",
+      "Script": "$host = '$CustomProperty.ForemanURL$';\n$ch = curl_init($host.'/api/hosts');\ncurl_setopt($ch, CURLOPT_USERPWD, \"$EffectiveUsername$:$EffectivePassword$\");\ncurl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);\ncurl_setopt($ch, CURLOPT_HEADER, false);\ncurl_setopt($ch, CURLOPT_TIMEOUT, 30);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);\ncurl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);\ncurl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);\n$return = curl_exec($ch);\ncurl_close($ch);\n\n$hosts = json_decode($return);\n\n$folders = array();\nforeach($hosts->results as $host)\n{\n\tif(!isset($folders[$host->location_name])) $folders[$host->location_name] = array();\n\t$e = &$folders[$host->location_name][];\n\n\t$e['Name'] = $host->name;\n\t$e['ComputerName'] = $host->certname;\n\t$e['MACAddress'] = $host->mac;\n\n\t$desc = '';\n\tif(!empty($host->ip)) $desc.=\"IPv4: {$host->ip}\\r\\n\";\n\tif(!empty($host->ip6)) $desc.=\"IPv6: {$host->ip6}\\r\\n\";\n\tif(!empty($host->operatingsystem_name)) $desc.=\"OS: {$host->operatingsystem_name}\\r\\n\";\n\tif(!empty($host->compute_resource_name)) $desc.=\"VM HOST: {$host->compute_resource_name}\\r\\n\";\n\telse if(!empty($host->model_name)) $desc.=\"Model: {$host->model_name}\\r\\n\";\n\t\n\tif(!empty($desc)) $e['Description'] = \"\\r\\n\".$desc;\n\n\tif(strpos($host->operatingsystem_name, 'windows') !== FALSE)\n\t{\n\t\t$e['Type'] = 'RemoteDesktopConnection';\n\t\t$e['IconName'] ='/Flat/Hardware/Platform OS Windows';\n\t} else {\n\t\t$e['Type'] = 'TerminalConnection';\n\t\t$e['TerminalConnectionType'] = 'SSH';\n\t\t$e['IconName'] ='/Flat/Hardware/Platform OS Linux';\n\t}\n}\n\n$ret = array();\nforeach($folders as $foldername => $entrys)\n{\n\t$e = &$ret[];\n\t$e['Name'] = $foldername;\n\t$e['Type'] = 'Folder';\n\t$e['Objects'] = $entrys;\n}\n\n$json = json_encode(array( \"Objects\" => $ret ));\necho $json;"
+    }
+  ]
+}
