@@ -1,8 +1,8 @@
 {
   "Scripts": [
     {
-      "Name": "AD Servers - Windows PowerShell",
-      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/AD%20Servers%20-%20Windows%20PowerShell.rdfe",
+      "Name": "AD Servers (Windows PowerShell)",
+      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/AD%20Servers%20(Windows%20PowerShell).rdfe",
       "Categories": [
         "Active Directory"
       ],
@@ -23,8 +23,8 @@
       "Notes": "<h2><strong>Active Directory/LDAP Dynamic Folder sample</strong></h2>\n\n<p><strong>Version</strong>: 1.0<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample allows you to import connections from Active Directory or any other LDAP-based directory. It scans a configurable domain controller/LDAP server for computer objects and stores them in folders mimicking the OU structure of the directory. Based on the operating system of the computer object, either a Remote Desktop (Windows), a VNC (macOS) or an SSH (Linux) connection will be created. The &quot;Custom Properties&quot; section contains configuration parameters which must be populated before reloading the dynamic folder. Please also ensure that valid credentials for accessing the specified domain controller/LDAP server are configured in the &quot;Credentials&quot; section.</p>\n\n<h3><strong>Requirements</strong></h3>\n\n<ul>\n\t<li>Python Module: python-ldap</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Specify credentials for accessing the&nbsp;domain controller/LDAP server in the &quot;Credentials&quot; section.</li>\n\t<li>Specify the domain controller/LDAP server in the &quot;DC/LDAP Server&quot; field of the&nbsp;&quot;Custom Properties&quot; section. This can either be a fully qualified domain name or an IP address. (Examples: &quot;mydomain.local&quot;, &quot;mydomaincontroller.mydomain.local&quot;, &quot;192.168.0.1&quot;)</li>\n\t<li>Specify the base search path in the &quot;Search Base&quot; field of the&nbsp;&quot;Custom Properties&quot; section. (Example: &quot;DC=mydomain,DC=local&quot;)</li>\n</ul>\n"
     },
     {
-      "Name": "Basic Active Directory V1.0 (Windows PowerShell)",
-      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Basic%20Active%20Directory%20V1.0%20(Windows%20PowerShell).rdfe",
+      "Name": "Basic Active Directory (Windows PowerShell)",
+      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Basic%20Active%20Directory%20(Windows%20PowerShell).rdfe",
       "Categories": [
         "Active Directory"
       ],
@@ -138,10 +138,21 @@
       "Notes": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\t<head>\r\n\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>\r\n\t\t</title>\r\n\t\t<style type=\"text/css\">\r\n\t\t\t.cs2654AE3A{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}\r\n\t\t\t.cs4306042E{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:bold;font-style:normal;}\r\n\t\t\t.csC8F6D76{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;}\r\n\t\t\t.cs15B7AE4B{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:11pt;font-weight:normal;font-style:normal}\r\n\t\t</style>\r\n\t</head>\r\n\t<body>\r\n\t\t<p class=\"cs2654AE3A\"><span class=\"cs4306042E\">Version:</span><span class=\"csC8F6D76\"> 1.0</span></p><p class=\"cs2654AE3A\"><span class=\"cs4306042E\">Requirements</span></p><p class=\"cs2654AE3A\"><span class=\"csC8F6D76\">&nbsp;</span></p><ul style=\"margin-top:0;margin-bottom:0;\">\r\n\t\t\t<li class=\"cs15B7AE4B\"><span class=\"csC8F6D76\">Working PowerShell installation</span></li><li class=\"cs15B7AE4B\"><span class=\"csC8F6D76\">PowerShell Script Interpreter correctly configured in Royal TS/X</span></li></ul>\r\n\t</body>\r\n</html>\r\n"
     },
     {
-      "Name": "PasswordState",
-      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/PasswordState/PasswordState.rdfe",
+      "Name": "Passwordstate (PowerShell)",
+      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20(PowerShell).rdfe",
       "Categories": [
-        "PasswordState"
+        "Passwordstate"
+      ],
+      "Description": "This Dynamic Folder sample for Passwordstate supports Dynamic Credentials or regular credentials.",
+      "ScriptInterpreter": "powershell",
+      "DynamicCredentialScriptInterpreter": "powershell",
+      "Notes": "<h2><strong>Dynamic Folder sample for Passwordstate</strong></h2>\n\n<p><strong>Version</strong>: 1.0.0<br />\n<strong>Author</strong>: Royal Apps</p>\n\n<p>This Dynamic Folder sample for Passwordstate supports Dynamic Credentials and regular credentials.</p>\n\n<h3><strong>Requirements</strong></h3>\n\n<ul>\n\t<li>This script has only been tested with&nbsp;PowerShell Core 6.x. If you&#39;re using an older version, adjustments might be necessary.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter your &quot;<strong>Server URL</strong>&quot; in the &quot;Custom Properties&quot; section. (ie.&nbsp;<em>https://passwordstatehost:9119</em>)</li>\n\t<li>If you&#39;re using an <strong>untrusted SSL</strong> certificate on your server, set <strong>Skip Certificate Check</strong> to &quot;Yes&quot;.</li>\n\t<li>Assign a&nbsp;credential to the dynamic folder which contains the following information:\n\t<ul>\n\t\t<li><strong>Username</strong>: Either leave the username blank if you&#39;re using a system-wide API key and want to retrieve all credentials&nbsp;or enter the ID of the password list you want to retrieve.</li>\n\t\t<li><strong>Password</strong>: Enter your Passwordstate&nbsp;API key.</li>\n\t</ul>\n\t</li>\n\t<li>By default, the dynamic folder script generates<strong> dynamic credentials</strong>. If you want to use <strong>regular credentials</strong> instead, edit the last line of the dynamic folder script and change <span style=\"font-family:courier new,courier,monospace;\">-createDynamicCredential $true</span> to&nbsp;<span style=\"font-family:courier new,courier,monospace;\">-createDynamicCredential $false</span>.</li>\n</ul>\n"
+    },
+    {
+      "Name": "Passwordstate - Based on management module (PowerShell)",
+      "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20-%20Based%20on%20management%20module%20(PowerShell).rdfe",
+      "Categories": [
+        "Passwordstate"
       ],
       "Description": "Powershell Core Compatible with Windows/Mac",
       "ScriptInterpreter": "powershell",
