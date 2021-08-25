@@ -8,7 +8,7 @@ import urllib.request as req
 class Script:
 	Name = ""
 	ContentURL = ""
-	Categories: list[str] = [ ]
+	Categories: list = [ ]
 	Description = ""
 	ScriptInterpreter = ""
 	DynamicCredentialScriptInterpreter = ""
@@ -18,7 +18,7 @@ class Script:
 		return self.__dict__
 
 class ScriptIndex:
-	Scripts: list[Script] = [ ]
+	Scripts: list = [ ]
 
 	def to_dict(self) -> dict:
 		scripts = [ ]
@@ -47,7 +47,7 @@ class Scraper:
 		self.working_dir = working_dir
 
 	def build_index(self) -> ScriptIndex:
-		scripts: list[Script] = [ ]
+		scripts: list = [ ]
 
 		for file_name in os.listdir(self.working_dir):
 			file_path = os.path.join(self.working_dir, file_name)
@@ -65,8 +65,8 @@ class Scraper:
 
 		return script_index
 	
-	def get_scripts(self, path) -> list[Script]:
-		scripts: list[Script] = []
+	def get_scripts(self, path) -> list:
+		scripts: list = [ ]
 
 		if not os.path.isdir(path):
 			return scripts
@@ -82,7 +82,7 @@ class Scraper:
 
 				if file_extension == self.SCRIPT_FILE_EXTENSION:
 					name = file_name.removesuffix(file_extension)
-					categories: list[str] = []
+					categories: list = []
 
 					relative_file_path = file_path.removeprefix(self.working_dir)
 					relative_path = relative_file_path.removesuffix(file_name)
@@ -123,7 +123,7 @@ class Main:
 		index_file_name = "index.json"
 
 		if last_path_component != expected_last_path_component:
-			self.exit_with_error("This script must be run from the '" + expected_last_path_component + "' directory")
+			self.exit_with_error("Error: This script must be run from the \"" + expected_last_path_component + "\" directory.")
 
 		index_file_path = os.path.join(working_dir, index_file_name)
 
