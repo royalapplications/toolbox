@@ -148,6 +148,17 @@
             "DynamicCredentialScriptInterpreter": "powershell"
         },
         {
+            "Name": "Keychain (Python)",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keychain/Keychain%20%28Python%29.rdfe",
+            "Categories": [
+                "Keychain"
+            ],
+            "Description": "This script dynamically retrieves usernames and passwords from the macOS Keychain.",
+            "Notes": "<h2>Keychain (Python)</h2>\n\n<p>Version: 1.0<br />\nAuthor: Royal Apps</p>\n\n<h3>Description</h3>\n\n<p>This script dynamically retrieves usernames and passwords from the macOS Keychain. You provide the names of the keychain items as a semicolon separated list in the custom properties section. When reloading the dynamic folder, a dynamic credential object&nbsp;will be created for each provided keychain item. When opening a connection that uses one of the dynamic credentials, the username and password will be requested from the keychain.</p>\n\n<h3>Configuration</h3>\n\n<ul>\n\t<li>Add the names of keychain items you want to retrieve as a semicolon separated list to the &quot;<strong>Keychain Item Names</strong>&quot; custom property.</li>\n</ul>\n\n<h3>Prerequisits</h3>\n\n<ul>\n\t<li><strong>Python 3</strong> must be installed and configured.</li>\n</ul>\n",
+            "ScriptInterpreter": "python",
+            "DynamicCredentialScriptInterpreter": "python"
+        },
+        {
             "Name": "LAPS (Windows PowerShell)",
             "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Microsoft/Windows/LAPS%20%28Windows%20PowerShell%29.rdfe",
             "Categories": [
