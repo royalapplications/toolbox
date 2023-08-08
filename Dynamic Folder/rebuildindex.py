@@ -4,6 +4,7 @@ import sys
 import os
 import json
 import urllib.request as req
+import xml.etree.ElementTree as xml
 
 class Script:
 	Name = ""
@@ -38,7 +39,8 @@ class ScriptIndex:
 		return json.dumps(self_as_dict, indent=4)
 
 class Scraper:
-	SCRIPT_FILE_EXTENSION = ".rdfe"
+	JSON_SCRIPT_FILE_EXTENSION = ".rdfe"
+	XML_SCRIPT_FILE_EXTENSION = ".rdfx"
 	CONTENT_URL_BASE = "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder"
 
 	working_dir = ""
@@ -65,6 +67,46 @@ class Scraper:
 
 		return script_index
 	
+	def load_json_data(self, file_path, script: Script) -> None:
+		with open(file_path) as file:
+			file_content: dict = json.load(file)
+			
+			dynamic_folder: dict = file_content.get("Objects", [dict])[0]
+			
+			script.Description = dynamic_folder.get("Description", "")
+			script.Notes = dynamic_folder.get("Notes", "")
+			script.ScriptInterpreter = dynamic_folder.get("ScriptInterpreter", "")
+			script.DynamicCredentialScriptInterpreter = dynamic_folder.get("DynamicCredentialScriptInterpreter", "")
+
+
+	def get_xml_child(self, element: xml.Element, child_name: str):
+		assert element is not None, "Expected `element` to have a value, but `None` found"
+		return element.find(child_name)
+	
+	def expect_xml_child(self, element: xml.Element, child_name: str) -> xml.Element:
+		child = self.get_xml_child(element, child_name)
+		assert child is not None, f"Cannot find <{child_name}> element under <{element.tag}>"
+		return child
+
+	def load_xml_data(self, file_path, script: Script) -> None:
+		tree = xml.parse(file_path)
+		root = tree.getroot()
+
+		objects = self.expect_xml_child(root, "Objects")
+		dynamic_folder = self.expect_xml_child(objects, "DynamicFolderExportObject")
+
+		description = self.get_xml_child(dynamic_folder, "Description")
+		if description is not None: script.Description = description.text
+
+		notes = self.get_xml_child(dynamic_folder, "Notes")
+		if notes is not None: script.Notes = notes.text
+
+		scriptInterpreter = self.get_xml_child(dynamic_folder, "ScriptInterpreter")
+		if scriptInterpreter is not None: script.ScriptInterpreter = scriptInterpreter.text
+
+		dynamicCredentialScriptInterpreter = self.get_xml_child(dynamic_folder, "DynamicCredentialScriptInterpreter")
+		if dynamicCredentialScriptInterpreter is not None: script.DynamicCredentialScriptInterpreter = dynamicCredentialScriptInterpreter.text
+
 	def get_scripts(self, path) -> list:
 		scripts: list = [ ]
 
@@ -80,7 +122,7 @@ class Scraper:
 			elif os.path.isfile(file_path):
 				_, file_extension = os.path.splitext(file_path)
 
-				if file_extension == self.SCRIPT_FILE_EXTENSION:
+				if file_extension == self.JSON_SCRIPT_FILE_EXTENSION or file_extension == self.XML_SCRIPT_FILE_EXTENSION:
 					name = file_name.removesuffix(file_extension)
 					categories: list = []
 
@@ -92,20 +134,15 @@ class Scraper:
 
 					categories = list(filter(None, relative_path.split(os.path.sep)))
 
-					file = open(file_path)
-					file_content: dict = json.load(file)
-					file.close()
-
-					dynamic_folder: dict = file_content.get("Objects", [dict])[0]
-
 					script = Script()
 					script.Name = name
 					script.ContentURL = content_url
 					script.Categories = categories
-					script.Description = dynamic_folder.get("Description", "")
-					script.Notes = dynamic_folder.get("Notes", "")
-					script.ScriptInterpreter = dynamic_folder.get("ScriptInterpreter", "")
-					script.DynamicCredentialScriptInterpreter = dynamic_folder.get("DynamicCredentialScriptInterpreter", "")
+
+					if file_extension == self.JSON_SCRIPT_FILE_EXTENSION:
+						self.load_json_data(file_path, script)
+					else:
+						self.load_xml_data(file_path, script)
 
 					scripts.append(script)
 
