@@ -3,11 +3,12 @@ name: Dynamic Folder Index CI
 on:
   push:
     # Only trigger this on master branch
-    branches: [ master ]
+    branches: [ main, master ]
     
     paths:
-    # Only trigger this on changes to .rdfe files within the "Dynamic Folder" folder
+    # Only trigger this on changes to .rdfe and .rdfx files within the "Dynamic Folder" folder
     - "Dynamic Folder/**.rdfe"
+    - "Dynamic Folder/**.rdfx"
 
   # Allow us to run this workflow manually from the Actions tab
   workflow_dispatch:
