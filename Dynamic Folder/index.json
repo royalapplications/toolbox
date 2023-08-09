@@ -238,17 +238,6 @@
             "DynamicCredentialScriptInterpreter": "json"
         },
         {
-            "Name": "RDFX Test",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/RDFX%20Test/RDFX%20Test.rdfx",
-            "Categories": [
-                "RDFX Test"
-            ],
-            "Description": "A temporary test sample",
-            "Notes": "<p><strong>Temporary</strong>, will be removed soon.</p>\n",
-            "ScriptInterpreter": "json",
-            "DynamicCredentialScriptInterpreter": "json"
-        },
-        {
             "Name": "Softlayer Servers (Python)",
             "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/IBM/Softlayer/Softlayer%20Servers%20%28Python%29.rdfe",
             "Categories": [
