@@ -4,76 +4,43 @@
     <DynamicFolderExportObject>
       <Type>DynamicFolder</Type>
       <Name>Attached Serial Devices</Name>
-      <Description>Version 2.2. Compatible with Windows or Mac. This script utilizes PowerShell to generate a list of available serial devices, along with RTS Custom Properties defining speeds and framing settings, to generate a set of Terminal connections for each combination of port/speed/framing.</Description>
-      <Notes><![CDATA[<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<style type="text/css">.csB7EA527D{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt;line-height:1.2}
-			.cs167BCCEB{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:24pt;font-weight:normal;font-style:normal;}
-			.cs828CB189{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt}
-			.cs69B997E3{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:10.5pt;font-weight:normal;font-style:normal;}
-			.cs6250E9AF{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt;line-height:13.57pt}
-			.cs519FF10D{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:18pt;font-weight:normal;font-style:normal;}
-			.cs39641E51{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:13.5pt;font-weight:normal;font-style:normal;}
-			.csB9B2B44{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:10.5pt;font-weight:normal;font-style:normal}
-			.cs290E6A33{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:10.5pt;font-weight:bold;font-style:normal;}
-			.cs9BE33341{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
-			.csBBC365F6{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
-</style>
-<h1 class="csB7EA527D"><span class="cs167BCCEB">Attached Serial Devices Dynamic Folder</span></h1>
-
-<p class="cs828CB189"><span class="cs69B997E3">This script utilizes PowerShell to generate a list of available serial devices, along with RTS Custom Properties defining speeds and framing settings, to generate a set of Terminal connections for each combination of port/speed/framing.</span></p>
-
-<p class="cs828CB189"><span class="cs69B997E3">The resulting folder structure will look something like the following:</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">Attached Serial Devices</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">|-- USB Serial Device (COM12)</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">| &nbsp;&nbsp;|-- COM12 9600 8N1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">| &nbsp;&nbsp;|-- COM12 9600 7E1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">| &nbsp;&nbsp;|-- COM12 19200 8N1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">| &nbsp;&nbsp;`-- COM12 19200 7E1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">`-- USB-SERIAL CH340 (COM34)</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">&nbsp; &nbsp;&nbsp;|-- COM34 9600 8N1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">&nbsp; &nbsp;&nbsp;|-- COM34 9600 7E1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">&nbsp; &nbsp;&nbsp;|-- COM34 19200 8N1</span></p>
-
-<p class="cs6250E9AF"><span class="cs69B997E3">&nbsp; &nbsp;&nbsp;`-- COM34 19200 7E1</span></p>
-
-<h2 class="cs828CB189"><span class="cs519FF10D">Requirements</span></h2>
-
-<p class="cs828CB189"><span class="cs69B997E3">Installation of PowerShell for Mac OS.</span></p>
-
-<p class="cs828CB189"><span class="cs69B997E3">Setting the exection policy of PowerShell to Remote Signed for Windows.</span></p>
-
-<h2 class="cs828CB189"><span class="cs519FF10D">Custom Properties</span></h2>
-
-<h3 class="cs828CB189"><span class="cs39641E51">Port Speeds</span></h3>
-
-<p class="cs828CB189"><span class="cs69B997E3">This field must contain comma-separated list of serial port speeds in numeric format.</span></p>
-
-<ul style="margin-top:0;margin-bottom:0;">
-	<li class="csB9B2B44"><span class="cs290E6A33">Example 1</span><span class="cs69B997E3">:&nbsp;9600</span></li>
-	<li class="csB9B2B44"><span class="cs290E6A33">Example 2</span><span class="cs69B997E3">:&nbsp;9600,19200,115200</span></li>
-</ul>
-
-<h3 class="cs828CB189"><span class="cs39641E51">Frame Settings</span></h3>
-
-<p class="cs828CB189"><span class="cs69B997E3">This field must contain comma-separated list of serial port framing standards (8N1, 7E1, etc) in alphanumeric format, and each entry must be in double quotes.</span></p>
-
-<ul style="margin-top:0;margin-bottom:0;">
-	<li class="csB9B2B44"><span class="cs290E6A33">Example 1</span><span class="cs69B997E3">:&nbsp;&quot;8N1&quot;</span></li>
-	<li class="csB9B2B44"><span class="cs290E6A33">Example 2</span><span class="cs69B997E3">:&nbsp;&quot;8N1&quot;,&quot;7E1&quot;</span></li>
-</ul>
-
-<p class="cs9BE33341"><span class="csBBC365F6">&nbsp;</span></p>
+      <Description>Version 2.3. Compatible with Windows or Mac (PowerShell must be installed). This script utilizes PowerShell to generate a list of available serial devices, along with RTS Custom Properties defining speeds and framing settings, to generate a set of Terminal connections for each combination of port/speed/framing.</Description>
+      <Notes><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+		</title>
+		<style type="text/css">
+			.csF33C6F81{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt;line-height:1.2}
+			.csFB10625E{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:24pt;font-weight:normal;font-style:normal;}
+			.cs1F6AC03F{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt}
+			.csB4177263{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:10.5pt;font-weight:normal;font-style:normal;}
+			.csE6AF94EF{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt;line-height:13.57pt}
+			.cs1F98E787{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:18pt;font-weight:normal;font-style:normal;}
+			.csB6B59D00{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:13.5pt;font-weight:normal;font-style:normal;}
+			.cs7BF18E24{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:10.5pt;font-weight:normal;font-style:normal}
+			.csEBB6DE4E{color:#000000;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:10.5pt;font-weight:bold;font-style:normal;}
+			.csBC3046CC{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
+			.csC834BE58{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
+		</style>
+	</head>
+	<body>
+		<h1 class="csF33C6F81">
+			<a name="_dx_frag_StartFragment"></a><a name="ATTACHED-SERIAL-DEVICES-DYNAMIC-FOLDER"></a><a name="_dx_frag_EndFragment"></a><span class="csFB10625E">Attached Serial Devices Dynamic Folder</span></h1>
+		<p class="cs1F6AC03F"><span class="csB4177263">This script utilizes PowerShell to generate a list of available serial devices, along with RTS Custom Properties defining speeds and framing settings, to generate a set of Terminal connections for each combination of port/speed/framing.</span></p><p class="cs1F6AC03F"><span class="csB4177263">The resulting folder structure will look something like the following:</span></p><p class="csE6AF94EF"><span class="csB4177263">Attached Serial Devices</span></p><p class="csE6AF94EF"><span class="csB4177263">|-- USB Serial Device (COM12)</span></p><p class="csE6AF94EF"><span class="csB4177263">| &nbsp;&nbsp;|-- COM12 9600 8N1</span></p><p class="csE6AF94EF"><span class="csB4177263">| &nbsp;&nbsp;|-- COM12 9600 7E1</span></p><p class="csE6AF94EF"><span class="csB4177263">| &nbsp;&nbsp;|-- COM12 19200 8N1</span></p><p class="csE6AF94EF"><span class="csB4177263">| &nbsp;&nbsp;`-- COM12 19200 7E1</span></p><p class="csE6AF94EF"><span class="csB4177263">`-- USB-SERIAL CH340 (COM34)</span></p><p class="csE6AF94EF"><span class="csB4177263">&nbsp; &nbsp;&nbsp;|-- COM34 9600 8N1</span></p><p class="csE6AF94EF"><span class="csB4177263">&nbsp; &nbsp;&nbsp;|-- COM34 9600 7E1</span></p><p class="csE6AF94EF"><span class="csB4177263">&nbsp; &nbsp;&nbsp;|-- COM34 19200 8N1</span></p><p class="csE6AF94EF"><span class="csB4177263">&nbsp; &nbsp;&nbsp;`-- COM34 19200 7E1</span></p><h2 class="cs1F6AC03F">
+			<a name="REQUIREMENTS"></a><span class="cs1F98E787">Requirements</span></h2>
+		<p class="cs1F6AC03F"><span class="csB4177263">Installation of PowerShell for Mac OS.</span></p><p class="cs1F6AC03F"><span class="csB4177263">Setting the execution policy of PowerShell to Remote Signed for Windows.</span></p><h2 class="cs1F6AC03F">
+			<a name="CUSTOM-PROPERTIES"></a><span class="cs1F98E787">Custom Properties</span></h2>
+		<h3 class="cs1F6AC03F">
+			<a name="PORT-SPEEDS"></a><span class="csB6B59D00">Port Speeds</span></h3>
+		<p class="cs1F6AC03F"><span class="csB4177263">This field must contain comma-separated list of serial port speeds in numeric format.</span></p><ul style="margin-top:0;margin-bottom:0;">
+			<li class="cs7BF18E24"><span class="csEBB6DE4E">Example 1</span><span class="csB4177263">:&nbsp;9600</span></li><li class="cs7BF18E24"><span class="csEBB6DE4E">Example 2</span><span class="csB4177263">:&nbsp;9600,19200,115200</span></li></ul>
+		<h3 class="cs1F6AC03F">
+			<a name="FRAME-SETTINGS"></a><span class="csB6B59D00">Frame Settings</span></h3>
+		<p class="cs1F6AC03F"><span class="csB4177263">This field must contain comma-separated list of serial port framing standards (8N1, 7E1, etc) in alphanumeric format, and each entry must be in double quotes.</span></p><ul style="margin-top:0;margin-bottom:0;">
+			<li class="cs7BF18E24"><span class="csEBB6DE4E">Example 1</span><span class="csB4177263">:&nbsp;&quot;8N1&quot;</span></li><li class="cs7BF18E24"><span class="csEBB6DE4E">Example 2</span><span class="csB4177263">:&nbsp;&quot;8N1&quot;,&quot;7E1&quot;</span></li></ul>
+		<p class="csBC3046CC"><span class="csC834BE58">&nbsp;</span></p></body>
+</html>
 ]]></Notes>
       <CustomProperties>
         <CustomProperty>
@@ -89,7 +56,7 @@
       </CustomProperties>
       <ScriptInterpreter>powershell</ScriptInterpreter>
       <Script><![CDATA[# Royal TS Attached Serial Devices Dynamic Folder script
-# version 2.2
+# version 2.3
 
 $ErrorActionPreference = "STOP"
 
@@ -115,8 +82,9 @@ if ($IsOSWindows){
     $comPorts = Get-WmiObject -query 'SELECT * FROM Win32_PnPEntity WHERE ClassGuid="{4d36e978-e325-11ce-bfc1-08002be10318}"'
 }
 elseif ($IsOSMacOS){
-    # Collect a list of available usb serial devices for Mac OS
-    $comPorts = ls /dev/tty.usbserial*
+    # Collect a list of available usb serial and modem devices for Mac OS
+    $comPorts = @(Get-ChildItem -Path "/dev/tty.usbserial*" | Select-Object -ExpandProperty Name
+    ; Get-ChildItem -Path "/dev/tty.usbmodem*" | Select-Object -ExpandProperty Name)
 }
 else {
     Write-Host "[ERROR] OS not detected. Halting" -ForegroundColor Red
@@ -130,7 +98,11 @@ foreach ($comPort in $comPorts) {
   if ($comPortCaption -match '.*\((COM\d+)\)') {
     $comPortDevice = $Matches[1]
   }
-  elseif ($comPort -match '(usbserial.\d+)') {
+  elseif ($comPort -match '(usbserial.+)') {
+    $comPortCaption = $comPort
+    $comPortDevice = $Matches[1]
+  }
+  elseif ($comPort -match '(usbmodem.+)') {
     $comPortCaption = $comPort
     $comPortDevice = $Matches[1]
   }
