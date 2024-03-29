@@ -1,0 +1,102 @@
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>Clients (LAPS)</Name>
+      <Notes><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+		</title>
+		<style type="text/css">
+			.csFC40E5FF{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
+			.csAABFD46C{color:#000000;background-color:transparent;font-family:Calibri;font-size:14pt;font-weight:bold;font-style:normal;}
+			.cs73EF5A7D{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;}
+			.csE900F44F{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;text-decoration: none;}
+			.csD77EFB98{color:#0000FF;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;text-decoration: underline;}
+			.csD0F74F29{color:#000000;background-color:transparent;font-family:Calibri;font-size:12pt;font-weight:bold;font-style:normal;}
+			.cs1E274505{color:#242424;background-color:transparent;font-family:Calibri;font-size:12pt;font-weight:bold;font-style:normal;}
+			.cs7866C708{color:#3C3C3C;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;}
+			.csE001836B{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:bold;font-style:italic;}
+		</style>
+	</head>
+	<body>
+		<p class="csFC40E5FF"><span class="csAABFD46C">Local Administrator Password Solution (LAPS)</span></p><p class="csFC40E5FF"><span class="cs73EF5A7D">&nbsp;</span></p><p class="csFC40E5FF"><span class="cs73EF5A7D">More information on LAPS can be found here:</span></p><p class="csFC40E5FF"><span class="cs73EF5A7D"><a class="csE900F44F" href="https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview"><span class="csD77EFB98">https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview</span></a></span><span class="cs73EF5A7D"> <br/>&nbsp;</span></p><p class="csFC40E5FF"><span class="csD0F74F29">Requirements:</span></p><p class="csFC40E5FF"><span class="cs73EF5A7D">The dynamic credential script executes the </span><span class="cs1E274505">Get-LapsADPassword</span><span class="cs7866C708"> cmdlet of the new LAPS (April 2023 Update) module:<br/>Make sure the new LAPS is installed on the System</span></p><p class="csFC40E5FF"><span class="cs73EF5A7D">&nbsp;</span></p><p class="csFC40E5FF"><span class="csD0F74F29">Configuration:</span></p><p class="csFC40E5FF"><span class="cs73EF5A7D">The dynamic folder script creates a list of available machine from the Active Directory. Configure the </span><span class="csE001836B">SearchBase and Filter</span><span class="cs73EF5A7D"> path in the </span><span class="csE001836B">Custom Properties</span><span class="cs73EF5A7D">.</span></p></body>
+</html>
+]]></Notes>
+      <CustomProperties>
+        <CustomProperty>
+          <Name>SearchBase</Name>
+          <Type>Text</Type>
+          <Value>OU=ADM01,OU=ADM,DC=vie01,DC=local</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Filter</Name>
+          <Type>Text</Type>
+          <Value>(OperatingSystem -like "Windows 10*" -or OperatingSystem -like "Windows 11*") -and (Enabled -eq $true)</Value>
+        </CustomProperty>
+      </CustomProperties>
+      <ScriptInterpreter>powershell</ScriptInterpreter>
+      <Script><![CDATA[$ErrorActionPreference = "Stop"
+
+[string] $JSON = "{ `"Objects`" : [ `n"
+
+#foreach ($comp in (Get-ADComputer -SearchBase "$CustomProperty.SearchBase$" -filter *))
+foreach ($comp in (Get-ADComputer -SearchBase "$CustomProperty.SearchBase$" -Properties Description -filter '$CustomProperty.Filter$')|sort)
+{
+    $JSON += "{`n"
+    $JSON += " `"Type`" : `"RemoteDesktopConnection`",`n"
+    $JSON += " `"Name`" : `"$($comp.Name)`",`n"
+    $JSON += " `"ComputerName`" : `"$($comp.DNSHostName)`",`n"
+    $JSON += " `"Description`" : `"$($comp.Description)`",`n"
+#	$JSON += " `"Path`" : `"Connections`",`n"
+	$JSON += " `"CredentialID`" : `"LAPS`"`n"
+    $JSON += "},`n"
+}
+
+$JSON += "{`n"
+$JSON += " `"Type`" : `"DynamicCredential`",`n"
+$JSON += " `"Name`" : `"LAPSAdmin`",`n"
+$JSON += " `"ID`" : `"LAPS`"`n"
+$JSON += "},`n"
+
+
+$JSON = $JSON.Substring(0, $JSON.Length - 2)
+$JSON += "`n]`n}`n"
+[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+Write-Host $JSON]]></Script>
+      <DynamicCredentialScriptInterpreter>powershell</DynamicCredentialScriptInterpreter>
+      <DynamicCredentialScript><![CDATA[# ---------------------------------------------------------------------------------------------------------------------
+# Note that the whole output of the script will be parsed as rJSON and should be UTF8 encoded
+# The following lines ensure that informational cmdlet output, warnings or errors are not written to the output stream 
+# ---------------------------------------------------------------------------------------------------------------------
+$global:ErrorActionPreference = "Stop"
+$global:WarningPreference = "SilentlyContinue"
+$global:InformationPreference = "SilentlyContinue"
+$global:VerbosePreference = "SilentlyContinue"
+$global:DebugPreference = "SilentlyContinue"
+$global:ProgressPreference = "SilentlyContinue"
+$global:OutputEncoding = New-Object Text.Utf8Encoding -ArgumentList (,$false) # BOM-less
+[Console]::OutputEncoding = $global:OutputEncoding
+# ---------------------------------------------------------------------------------------------------------------------
+
+$computername = "$Target.Name$"
+#$computername = "wvie01002"
+$LAPS = Get-LapsADPassword -AsPlainText $computername
+$Pass = $LAPS.Password
+$Username = $computername + "\\" + $LAPS.Account
+#$Username = (Get-LapsADPassword -AsPlainText $computername).Account
+
+
+
+$JSON = ""
+$JSON += "{`n"
+$JSON += "  `"Username`" : `"$Username`",`n"
+$JSON += "  `"Password`" : `"$($Pass)`"`n"
+$JSON += "}`n"
+[System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+Write-Host $JSON]]></DynamicCredentialScript>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
