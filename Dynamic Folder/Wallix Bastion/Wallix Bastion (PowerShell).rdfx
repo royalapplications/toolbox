@@ -1,0 +1,189 @@
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>Wallix Bastion</Name>
+      <Description>Imports servers SSH and RDP from Wallix Bastion</Description>
+      <Notes><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+		</title>
+		<style type="text/css">
+			.csB4B32984{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
+			.cs6E44565{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:18pt;font-weight:bold;font-style:normal;}
+			.cs24E52B3E{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt}
+			.csE0E507E5{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:bold;font-style:normal;}
+			.cs199E85DE{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
+			.cs4397C400{text-align:left;text-indent:0pt;margin:12pt 0pt 0pt 0pt}
+			.csD5E60F86{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:13.5pt;font-weight:bold;font-style:normal;}
+			.csDB5B53AA{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal}
+			.csA97625F2{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:circle;color:#000000;background-color:transparent;font-family:'Courier New';font-size:12pt;font-weight:normal;font-style:normal}
+		</style>
+	</head>
+	<body>
+		<h2 class="csB4B32984">
+			<span class="cs6E44565">Dynamic Folder for Wallix Bastion connections</span></h2>
+		<p class="cs24E52B3E"><span class="csE0E507E5">Version</span><span class="cs199E85DE">: 1.0</span></p><p class="cs24E52B3E"><span class="cs199E85DE">This Dynamic Folder allows you to import SSH and RDP connections from a Wallix Bastion. It is then possible to connect more easily to a server through the Wallix Bastion, while avoiding the Bastion selection screen.</span></p><h3 class="cs4397C400">
+			<span class="csD5E60F86">Tested with</span></h3>
+		<ul style="margin-top:0;margin-bottom:0;">
+			<li class="csDB5B53AA"><span class="cs199E85DE">Wallix Bastion 9.0 and PowerShell 5.1 on Windows</span></li></ul>
+		<h3 class="cs4397C400">
+			<span class="csD5E60F86">Setup</span></h3>
+		<ul style="margin-top:0;margin-bottom:0;">
+			<li class="csDB5B53AA"><span class="cs199E85DE">In the &laquo;&nbsp;Custom Properties&nbsp;&raquo;</span><ul style="margin-top:0;margin-bottom:0;">
+				<li class="csA97625F2"><span class="cs199E85DE">set the hostname of Wallix Bastion</span></li><li class="csA97625F2"><span class="cs199E85DE">define if Wallix API use HTTPS or HTTP</span></li><li class="csA97625F2"><span class="cs199E85DE">set the Wallix Bastion&rsquo;s fingerprint</span></li></ul>
+			</li><li class="csDB5B53AA"><span class="cs199E85DE">In the &laquo;&nbsp;Credentials&nbsp;&raquo;</span><ul style="margin-top:0;margin-bottom:0;">
+				<li class="csA97625F2"><span class="cs199E85DE">Configure your credentials</span></li></ul>
+			</li></ul>
+		<h3 class="cs4397C400">
+			<span class="csD5E60F86">How it works</span></h3>
+		<p class="csB4B32984"><span class="cs199E85DE">This script uses the Bastion API with HTTP/HTTPS to retrieve a list of all SSH and RDP connections. For the connection to a server, it uses the credentials assigned to the dynamic folder. It builds the servers list with the Wallix hostname as computer name and assigns dynamic credentials. If it&#39;s a Linux server, the Wallix Bastion fingerprint is also added. When connecting to a server via SSH or RDP, the dynamic credential script is called. It will use CustomField1, containing the concatenation of some Bastion information to generate the login allowing direct access to the server without having to go through the Bastion selection screen.</span></p><h3 class="cs4397C400">
+			<span class="csD5E60F86">Limitation</span></h3>
+		<p class="csB4B32984"><span class="cs199E85DE">With PowerShell 5.1 it is not possible to bypass SSL certificate verification for HTTPS calls to the Wallix Bastion API. You must therefore have a valid certificate to use HTTPS.</span></p></body>
+</html>
+]]></Notes>
+      <CustomProperties>
+        <CustomProperty>
+          <Name>Hostname</Name>
+          <Type>Text</Type>
+          <Value>TODO</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Use HTTPS ?</Name>
+          <Type>YesNo</Type>
+          <Value>True</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Wallix Fingerprint</Name>
+          <Type>Text</Type>
+          <Value>TODO</Value>
+        </CustomProperty>
+      </CustomProperties>
+      <ScriptInterpreter>powershell</ScriptInterpreter>
+      <Script><![CDATA[# ---------------------------------------------------------------------------------------------------------------------
+# Note that the whole output of the script will be parsed as rJSON and should be UTF8 encoded
+# The following lines ensure that informational cmdlet output, warnings or errors are not written to the output stream 
+# ---------------------------------------------------------------------------------------------------------------------
+$global:ErrorActionPreference = "Stop"
+$global:WarningPreference = "SilentlyContinue"
+$global:InformationPreference = "SilentlyContinue"
+$global:VerbosePreference = "SilentlyContinue"
+$global:DebugPreference = "SilentlyContinue"
+$global:ProgressPreference = "SilentlyContinue"
+$global:OutputEncoding = New-Object Text.Utf8Encoding -ArgumentList (,$false) # BOM-less
+[Console]::OutputEncoding = $global:OutputEncoding
+# ---------------------------------------------------------------------------------------------------------------------
+
+<#
+	Folder script for import Wallix Bastion connections
+#>
+
+# Variables replaced by Royal TS
+$WallixUsername = "$EffectiveUsername$"
+$WallixPassword = "$EffectivePassword$"
+$WallixHostname = "$CustomProperty.Hostname$".Trim()
+$WallixUseHTPPS = "$CustomProperty.UseHTTPS$"
+$WallixFingerprint = "$CustomProperty.WallixFingerprint$".Trim()
+
+# Constants
+$ROYALTS_ID_CREDENTIALS = "DynamicCred01"
+
+$Protocol = "http"
+if ($WallixUseHTPPS) {
+	$Protocol = "https"
+}
+
+# Call Wallix Bastion API with basic authentication
+$EncodedCreds = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("${WallixUsername}:${WallixPassword}"))
+$Headers = @{
+	Authorization = "Basic ${EncodedCreds}"
+}
+$Response = Invoke-RestMethod -Uri "${Protocol}://${WallixHostname}/api/sessionrights?limit=500&fields=service_protocol,account,domain,device,service,authorization,device_description" -Method "GET" -Headers $Headers
+$ListObjects = @()
+
+foreach ($Item in $Response) {
+	$WallixFullTargetName = "$($Item.account)@$($Item.domain)@$($Item.device):$($Item.service):$($Item.authorization)"
+	$RoyalTSObjectType = $null
+	$RoyalTSIconName = ""
+	if ($Item.service_protocol.Equals("SSH")) {
+		$RoyalTSObjectType = "TerminalConnection"
+		$RoyalTSIconName = "Flat/Hardware/Platform OS Linux"
+	}
+	elseif ($Item.service_protocol.Equals("RDP")) {
+		$RoyalTSObjectType = "RemoteDesktopConnection"
+		$RoyalTSIconName = "Flat/Hardware/Platform OS Windows"
+	}
+	if ($null -ne $RoyalTSObjectType) {
+		# Create serveur connection
+		$Object = @{
+			Type = $RoyalTSObjectType
+			Name = $Item.device
+			ComputerName = $WallixHostname
+			Description = $Item.device_description
+			IconName = $RoyalTSIconName
+			Path = "Connections"
+			# Dynamic credentials
+			CredentialID = $ROYALTS_ID_CREDENTIALS
+			# Used for the dynamic credential Script
+			CustomField1 = $WallixFullTargetName
+		}
+		# Add fingerprint
+		if ($Item.service_protocol.Equals("SSH") -and $WallixFingerprint.Length -gt 0) {
+			$Object["Properties"] = @{
+				Fingerprint = $WallixFingerprint
+			}
+		}
+		$ListObjects += $Object
+	}
+}
+
+# Creating dynamic credentials
+$ListObjects += @{
+	Type = "DynamicCredential"
+	Name = "Dynamic credentials"
+	Description = "Dynamically generated identifiers on login"
+	ID = $ROYALTS_ID_CREDENTIALS
+	Path = "Credentials"
+}
+
+# Create final object
+$Result = @{
+	Objects = ($ListObjects | Sort-Object -Property Path, Name)
+}
+$Result | ConvertTo-Json -Depth 100 | Write-Host
+]]></Script>
+      <DynamicCredentialScriptInterpreter>powershell</DynamicCredentialScriptInterpreter>
+      <DynamicCredentialScript><![CDATA[# ---------------------------------------------------------------------------------------------------------------------
+# Note that the whole output of the script will be parsed as rJSON and should be UTF8 encoded
+# The following lines ensure that informational cmdlet output, warnings or errors are not written to the output stream 
+# ---------------------------------------------------------------------------------------------------------------------
+$global:ErrorActionPreference = "Stop"
+$global:WarningPreference = "SilentlyContinue"
+$global:InformationPreference = "SilentlyContinue"
+$global:VerbosePreference = "SilentlyContinue"
+$global:DebugPreference = "SilentlyContinue"
+$global:ProgressPreference = "SilentlyContinue"
+$global:OutputEncoding = New-Object Text.Utf8Encoding -ArgumentList (,$false) # BOM-less
+[Console]::OutputEncoding = $global:OutputEncoding
+# ---------------------------------------------------------------------------------------------------------------------
+
+<#
+	Credentials script for connection to Wallix Bastion throw SSH or RDP
+#>
+
+# Variables replaced by Royal TS
+$WallixUsername = "$Target.CustomField1$:$EffectiveUsername$"
+$WallixPassword = "$EffectivePassword$"
+
+# Return credentials
+$Object = @{
+	Username = "${WallixUsername}"
+	Password = "${WallixPassword}"
+}
+$Object | ConvertTo-Json -Depth 100 | Write-Host
+]]></DynamicCredentialScript>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
