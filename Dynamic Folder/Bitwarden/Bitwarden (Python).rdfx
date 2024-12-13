@@ -97,6 +97,13 @@ import json
 import subprocess
 import os
 
+# Disable deprecation warnings for node version of bw client
+os.environ["NODE_OPTIONS"] = (
+    " --no-deprecation"
+    if os.getenv("NODE_OPTIONS", "") == ""
+    else os.getenv("NODE_OPTIONS") + " --no-deprecation"
+)
+
 is_unix = _platform.lower().startswith("darwin") or _platform.lower().startswith(
     "linux"
 )
