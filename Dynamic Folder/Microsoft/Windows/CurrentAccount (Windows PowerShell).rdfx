@@ -1,0 +1,70 @@
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>CurrentAccount (Windows PowerShell)</Name>
+      <Description>This returns dynamic objects reflecting data from the current user account.</Description>
+      <Notes><![CDATA[<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style type="text/css">.cs2654AE3A{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
+			.cs4306042E{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:bold;font-style:normal;}
+			.csC8F6D76{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;}
+			.cs15B7AE4B{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:11pt;font-weight:normal;font-style:normal}
+</style>
+<p class="cs2654AE3A"><span class="cs4306042E">Version:</span><span class="csC8F6D76"> 1.0</span></p>
+
+<p class="cs2654AE3A"><span class="cs4306042E">Requirements</span></p>
+
+<p class="cs2654AE3A"><span class="csC8F6D76">&nbsp;</span></p>
+
+<ul style="margin-top:0;margin-bottom:0;">
+	<li class="cs15B7AE4B"><span class="csC8F6D76">Working PowerShell installation</span></li>
+	<li class="cs15B7AE4B"><span class="csC8F6D76">PowerShell Script Interpreter correctly configured in Royal TS/X</span></li>
+</ul>
+]]></Notes>
+      <ScriptInterpreter>powershell</ScriptInterpreter>
+      <Script><![CDATA[$ErrorActionPreference = "Stop"
+
+# get data
+$account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+$domain = $account.split("\")[0]
+$username = $account.split("\")[1]
+
+# output objects
+@{
+    Objects = @(
+        @{
+            ID = "CURRENT_DOMUSER";
+            Type = "Credential";
+            Name = "Current UserName with domain";
+            Username = $account;
+            Password = "";
+            Path = "/";
+            IconName = "VMware Clarity/Core/Avatar Solid";
+            Description = "This reflects the current logged-on user account, including domain.";
+            CustomProperties = @{
+                DOMAIN = $domain;
+                USERNAME = $username;
+            }
+        },
+        @{
+            ID = "CURRENT_USERNAME";
+            Type = "Credential";
+            Name = "Current UserName without domain";
+            Username = $username;
+            Password = "";
+            Path = "/";
+            IconName = "VMware Clarity/Core/Avatar Line";
+            Description = "This reflects the current logged-on user account, without domain.";
+            CustomProperties = @{
+                DOMAIN = $domain;
+            }
+        }
+    )
+} | ConvertTo-Json -Depth 10 | Write-Host
+]]></Script>
+      <DynamicCredentialScriptInterpreter>json</DynamicCredentialScriptInterpreter>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
