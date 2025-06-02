@@ -12,25 +12,49 @@
             "DynamicCredentialScriptInterpreter": "python"
         },
         {
-            "Name": "Active Directory (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Active%20Directory%20%28Python%29.rdfx",
-            "Categories": [
-                "Active Directory"
-            ],
-            "Description": "This Dynamic Folder sample allows you to import connections from Active Directory or any other LDAP-based directory.",
-            "Notes": "<h2><strong>Active Directory/LDAP Dynamic Folder sample</strong></h2>\n\n<p><strong>Version</strong>: 1.0<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample allows you to import connections from Active Directory or any other LDAP-based directory. It scans a configurable domain controller/LDAP server for computer objects and stores them in folders mimicking the OU structure of the directory. Based on the operating system of the computer object, either a Remote Desktop (Windows), a VNC (macOS) or an SSH (Linux) connection will be created. The &quot;Custom Properties&quot; section contains configuration parameters which must be populated before reloading the dynamic folder. Please also ensure that valid credentials for accessing the specified domain controller/LDAP server are configured in the &quot;Credentials&quot; section.</p>\n\n<h3><strong>Requirements</strong></h3>\n\n<ul>\n\t<li>Python Module: python-ldap</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Specify credentials for accessing the&nbsp;domain controller/LDAP server in the &quot;Credentials&quot; section.</li>\n\t<li>Specify the domain controller/LDAP server in the &quot;DC/LDAP Server&quot; field of the&nbsp;&quot;Custom Properties&quot; section. This can either be a fully qualified domain name or an IP address. (Examples: &quot;mydomain.local&quot;, &quot;mydomaincontroller.mydomain.local&quot;, &quot;192.168.0.1&quot;)</li>\n\t<li>Specify the base search path in the &quot;Search Base&quot; field of the&nbsp;&quot;Custom Properties&quot; section. (Example: &quot;DC=mydomain,DC=local&quot;)</li>\n</ul>\n",
-            "ScriptInterpreter": "python",
-            "DynamicCredentialScriptInterpreter": "json"
-        },
-        {
             "Name": "AD Servers (Windows PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/AD%20Servers%20%28Windows%20PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/AD%20Servers%20%28Windows%20PowerShell%29.rdfe",
             "Categories": [
                 "Active Directory"
             ],
             "Description": "This script allows you to query Active Directory to add computers from your Active Directory environment to RoyalTS.",
             "Notes": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\r\n\t<head>\r\n\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" /><title>\r\n\t\t</title>\r\n\t\t<style type=\"text/css\">\r\n\t\t\t.cs8A51E7C1{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}\r\n\t\t\t.cs681C7707{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal;}\r\n\t\t\t.csFE155C7F{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}\r\n\t\t\t.csBC2ED951{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:decimal;color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:11pt;font-weight:normal;font-style:normal}\r\n\t\t\t.cs45A849ED{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:decimal;color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal}\r\n\t\t\t.cs284B461E{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: none;}\r\n\t\t\t.csF6B96A77{color:#0000FF;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: underline;}\r\n\t\t</style>\r\n\t</head>\r\n\t<body>\r\n\t\t<p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">This script requires Windows PowerShell 4.x/5.x as well as the Active Directory </span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">Powershell Cmdlets.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">This script allows you to query Active Directory to add computers from your Active Directory environment to RoyalTS.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">To use this application, update the Custom Property ConfigFileName with the name of the configuration file for the dynamic folder. &nbsp;This allows you to configure multiple dynamic folders using the same script without having to update the Custom Properties multiple times - the only time will be to set the setting file name. &nbsp;If this field is not updated, the setting file will be set as Settings.xml.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">Upon launching the form the first time, you are prompted to fill in a few settings.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">The first setting is the domain name. &nbsp;After you type in the domain name, the ldap dc path and Primary Domain Controller Emulator will autopopulate the DC Root and DC fields. &nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">The next field to fill in is the Connection Type dropdown. &nbsp;This list contains all of the valid connection types the script is able to connect. &nbsp;Depending on what option is selected other options will appear below the dropdown. &nbsp;These settings include if the connection should use Cim sessions, what port number to use, and if the connection should be a admin/console connection.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">The next field to fill in is the Credential Name. &nbsp;This is the name of the credential in RoyalTS to have the computers open up with. &nbsp;If you wish to set the credentials at the Dynamic Folder level in the same way of typical folders, you can leave this field blank and all the connections will be set to auto inherit their credentials from the Dynamic Folder.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">SearchBase takes in the OU Path that the computers should be located in. &nbsp;You can populate this field by clicking on the button to the right of the text box. &nbsp;This button will load a GUI to select the correct OU.</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">SearchScope is how to search under the selected OU entered in SearchBase. &nbsp;The three options under here are:</span></p><ol start=\"1\" style=\"margin-top:0;margin-bottom:0;\">\r\n\t\t\t<li class=\"csBC2ED951\"><span class=\"cs681C7707\">Base - only computers contained in the selected OU are listed</span></li><li class=\"csBC2ED951\"><span class=\"cs681C7707\">SubTree - all computers in all of the OUs under the selected OU are listed</span></li><li class=\"csBC2ED951\"><span class=\"cs681C7707\">OneLevel - all computers in the OUs one level under the selcted OU are listed</span></li></ol>\r\n\t\t<p class=\"cs8A51E7C1\"><span class=\"cs681C7707\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">The filter field allows for adding in filters which are compatible with the PowerShell AD CMDLTS. &nbsp;By default the filter is * which will return all comptuers. &nbsp;Example filters are below.</span></p><ol start=\"1\" style=\"margin-top:0;margin-bottom:0;\">\r\n\t\t\t<li class=\"cs45A849ED\"><span class=\"csFE155C7F\">name -like &#39;test*&#39;</span></li><li class=\"cs45A849ED\"><span class=\"csFE155C7F\">name -eq &#39;testpd09&#39;</span></li></ol>\r\n\t\t<p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">After your settings are entered, click Submit to save the data.</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">Every time you run the script to enumerate the computers, the Royal TS Dynamic Folder Configurator dialog will appear. &nbsp;If the mouse is not moved over the screen within five seconds, the dialog assumes no data needs to be modified for the filter and the current selected filter is accepted. &nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">If the configuration file is missing and cannot be loaded by the script, then the dialog will not automatically close as these settings are required to produce a list of computers.</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">Configuration Walkthrough Video: <a class=\"cs284B461E\" href=\"https://youtu.be/wMnqSQd1tYU\"><span class=\"csF6B96A77\">https://youtu.be/wMnqSQd1tYU</span></a></span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">&nbsp;</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">Version: 1.1</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">Author: Paul DeArment Jr</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">Twitter: pdearmen</span></p><p class=\"cs8A51E7C1\"><span class=\"csFE155C7F\">Github: https://github.com/armentpau</span></p></body>\r\n</html>\r\n",
             "ScriptInterpreter": "powershell",
+            "DynamicCredentialScriptInterpreter": "json"
+        },
+        {
+            "Name": "AWS EC2 (Python)",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20%28Python%29.rdfe",
+            "Categories": [
+                "Amazon Web Services",
+                "EC2"
+            ],
+            "Description": "This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.",
+            "Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2</strong></h2>\n\n<p><strong>Version</strong>: 1.0.1<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>While the provided script sets the username of created connections, the password will always be empty. There are multiple different ways to solve this. For instance, you could assign a credential to this dynamic folder and change the script to reference credentials from parent folder. Alternatively, you may also just use &quot;Connect with Options - Prompt for Credentials&quot; when establishing a connection.</li>\n</ul>\n",
+            "ScriptInterpreter": "python",
+            "DynamicCredentialScriptInterpreter": "json"
+        },
+        {
+            "Name": "AWS EC2 SSM (Python)",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20SSM%20%28Python%29.rdfe",
+            "Categories": [
+                "Amazon Web Services",
+                "EC2"
+            ],
+            "Description": "This Dynamic Folder sample for AWS SSM EC2 supports grabbing all EC2 instances of a specified region managed by AWS Systems Manager.",
+            "Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2 managed by SSM</strong></h2>\n\n<p><strong>Version</strong>: 1.0.0<br />\n<strong>Author</strong>: Chrysostomos Galatoulas</p>\n\n<p>This Dynamic Folder sample for AWS EC2 SSM supports grabbing all EC2 instances of a specified region managed by SSM. The script creates terminal connections with custom commands which is a feature only Royal TSX (for macOS) supports at the moment. That means this script currently only works on macOS and does NOT support Windows.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>You can append the --profile option on AWS cli commands to use a configured profile instead of a default.</li>\n</ul>\n",
+            "ScriptInterpreter": "python",
+            "DynamicCredentialScriptInterpreter": ""
+        },
+        {
+            "Name": "Active Directory (Python)",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Active%20Directory%20%28Python%29.rdfe",
+            "Categories": [
+                "Active Directory"
+            ],
+            "Description": "This Dynamic Folder sample allows you to import connections from Active Directory or any other LDAP-based directory.",
+            "Notes": "<h2><strong>Active Directory/LDAP Dynamic Folder sample</strong></h2>\n\n<p><strong>Version</strong>: 1.0<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample allows you to import connections from Active Directory or any other LDAP-based directory. It scans a configurable domain controller/LDAP server for computer objects and stores them in folders mimicking the OU structure of the directory. Based on the operating system of the computer object, either a Remote Desktop (Windows), a VNC (macOS) or an SSH (Linux) connection will be created. The &quot;Custom Properties&quot; section contains configuration parameters which must be populated before reloading the dynamic folder. Please also ensure that valid credentials for accessing the specified domain controller/LDAP server are configured in the &quot;Credentials&quot; section.</p>\n\n<h3><strong>Requirements</strong></h3>\n\n<ul>\n\t<li>Python Module: python-ldap</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Specify credentials for accessing the&nbsp;domain controller/LDAP server in the &quot;Credentials&quot; section.</li>\n\t<li>Specify the domain controller/LDAP server in the &quot;DC/LDAP Server&quot; field of the&nbsp;&quot;Custom Properties&quot; section. This can either be a fully qualified domain name or an IP address. (Examples: &quot;mydomain.local&quot;, &quot;mydomaincontroller.mydomain.local&quot;, &quot;192.168.0.1&quot;)</li>\n\t<li>Specify the base search path in the &quot;Search Base&quot; field of the&nbsp;&quot;Custom Properties&quot; section. (Example: &quot;DC=mydomain,DC=local&quot;)</li>\n</ul>\n",
+            "ScriptInterpreter": "python",
             "DynamicCredentialScriptInterpreter": "json"
         },
         {
@@ -45,32 +69,8 @@
             "DynamicCredentialScriptInterpreter": "json"
         },
         {
-            "Name": "AWS EC2 (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20%28Python%29.rdfx",
-            "Categories": [
-                "Amazon Web Services",
-                "EC2"
-            ],
-            "Description": "This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.",
-            "Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2</strong></h2>\n\n<p><strong>Version</strong>: 1.0.1<br />\n<strong>Author</strong>: Royal Applications</p>\n\n<p>This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>While the provided script sets the username of created connections, the password will always be empty. There are multiple different ways to solve this. For instance, you could assign a credential to this dynamic folder and change the script to reference credentials from parent folder. Alternatively, you may also just use &quot;Connect with Options - Prompt for Credentials&quot; when establishing a connection.</li>\n</ul>\n",
-            "ScriptInterpreter": "python",
-            "DynamicCredentialScriptInterpreter": "json"
-        },
-        {
-            "Name": "AWS EC2 SSM (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20SSM%20%28Python%29.rdfx",
-            "Categories": [
-                "Amazon Web Services",
-                "EC2"
-            ],
-            "Description": "This Dynamic Folder sample for AWS SSM EC2 supports grabbing all EC2 instances of a specified region managed by AWS Systems Manager.",
-            "Notes": "<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2 managed by SSM</strong></h2>\n\n<p><strong>Version</strong>: 1.0.0<br />\n<strong>Author</strong>: Chrysostomos Galatoulas</p>\n\n<p>This Dynamic Folder sample for AWS EC2 SSM supports grabbing all EC2 instances of a specified region managed by SSM. The script creates terminal connections with custom commands which is a feature only Royal TSX (for macOS) supports at the moment. That means this script currently only works on macOS and does NOT support Windows.</p>\n\n<h3><strong>Prerequisites</strong></h3>\n\n<ul>\n\t<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>\n</ul>\n\n<h3><strong>Setup</strong></h3>\n\n<ul>\n\t<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>\n</ul>\n\n<h3><strong>Notes</strong></h3>\n\n<ul>\n\t<li>You can append the --profile option on AWS cli commands to use a configured profile instead of a default.</li>\n</ul>\n",
-            "ScriptInterpreter": "python",
-            "DynamicCredentialScriptInterpreter": ""
-        },
-        {
             "Name": "Basic Active Directory (Windows PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfe",
             "Categories": [
                 "Active Directory"
             ],
@@ -103,7 +103,7 @@
         },
         {
             "Name": "CSV (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28PowerShell%29.rdfe",
             "Categories": [
                 "CSV"
             ],
@@ -114,7 +114,7 @@
         },
         {
             "Name": "CSV (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28Python%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28Python%29.rdfe",
             "Categories": [
                 "CSV"
             ],
@@ -137,7 +137,7 @@
         },
         {
             "Name": "Foreman (PHP)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Foreman/Foreman%20%28PHP%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Foreman/Foreman%20%28PHP%29.rdfe",
             "Categories": [
                 "Foreman"
             ],
@@ -148,7 +148,7 @@
         },
         {
             "Name": "Hetzner Cloud (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Hetzner/Hetzner%20Cloud/Hetzner%20Cloud%20%28Python%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Hetzner/Hetzner%20Cloud/Hetzner%20Cloud%20%28Python%29.rdfe",
             "Categories": [
                 "Hetzner",
                 "Hetzner Cloud"
@@ -160,7 +160,7 @@
         },
         {
             "Name": "Keeper (Powershell Core)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keeper/Keeper%20%28Powershell%20Core%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keeper/Keeper%20%28Powershell%20Core%29.rdfe",
             "Categories": [
                 "Keeper"
             ],
@@ -171,7 +171,7 @@
         },
         {
             "Name": "Keychain (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keychain/Keychain%20%28Python%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keychain/Keychain%20%28Python%29.rdfe",
             "Categories": [
                 "Keychain"
             ],
@@ -204,7 +204,7 @@
         },
         {
             "Name": "Passwordstate (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20%28PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20%28PowerShell%29.rdfe",
             "Categories": [
                 "Passwordstate"
             ],
@@ -215,7 +215,7 @@
         },
         {
             "Name": "Passwordstate - Based on management module (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfe",
             "Categories": [
                 "Passwordstate"
             ],
@@ -226,7 +226,7 @@
         },
         {
             "Name": "Pleasant Password (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Pleasant%20Password%20Server/Pleasant%20Password%20%28Python%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Pleasant%20Password%20Server/Pleasant%20Password%20%28Python%29.rdfe",
             "Categories": [
                 "Pleasant Password Server"
             ],
@@ -237,7 +237,7 @@
         },
         {
             "Name": "Port Scan (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Port%20Scan/Port%20Scan%20%28Python%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Port%20Scan/Port%20Scan%20%28Python%29.rdfe",
             "Categories": [
                 "Port Scan"
             ],
@@ -248,7 +248,7 @@
         },
         {
             "Name": "Softlayer Servers (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/IBM/Softlayer/Softlayer%20Servers%20%28Python%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/IBM/Softlayer/Softlayer%20Servers%20%28Python%29.rdfe",
             "Categories": [
                 "IBM",
                 "Softlayer"
@@ -260,7 +260,7 @@
         },
         {
             "Name": "Thycotic Secret Server (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Thycotic%20Secret%20Server/Thycotic%20Secret%20Server%20%28PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Thycotic%20Secret%20Server/Thycotic%20Secret%20Server%20%28PowerShell%29.rdfe",
             "Categories": [
                 "Thycotic Secret Server"
             ],
@@ -271,7 +271,7 @@
         },
         {
             "Name": "VMware-Pull (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/VMware/VMware-Pull%20%28PowerShell%29.rdfx",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/VMware/VMware-Pull%20%28PowerShell%29.rdfe",
             "Categories": [
                 "VMware"
             ],
