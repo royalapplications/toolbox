@@ -2,19 +2,26 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using static System.Console;
 using static System.StringComparer;
 
 static class ToolboxIndex
 {
     const string BaseUrl = "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/";
+    const string GeneratedSuffix = ".autogen";
 
-    static readonly Dictionary<string, string> InterpreterScriptExtensions = new()
+    static readonly Dictionary<string, (string Extension, string? CommentPrefix)> KnownInterpreters = new(OrdinalIgnoreCase)
     {
-        { "json", ".json" },
-        { "php", ".php" },
-        { "powershell", ".ps1" },
-        { "python", ".py" },
+        { "bash", (".sh", "#") },
+        { "javascript", (".js", "//") },
+        { "json", (".json", null) }, // avoid JSON comments; can break consumers if their parses aren't tolerant
+        { "perl", (".pl", "#") },
+        { "php", (".php", "#") },
+        { "powershell", (".ps1", "#") },
+        { "python", (".py", "#") },
+        { "ruby", (".rb", "#") },
     };
 
     static int Main(string[] args)
@@ -27,20 +34,48 @@ static class ToolboxIndex
             return Error($"Input directory not found or not accessible: {inputDir}");
 
         inputDir = Path.GetFullPath(inputDir);
-        bool migrateToRdfx = args.Length > 1 && args[1] is "--migrate-rdfe-to-rdfx";
 
-        return ProcessFiles(inputDir, migrateToRdfx);
+        var extractScripts = false;
+        var generateReadme = false;
+        var migrateToRdfx = false;
+        for (var i = 1; i < args.Length; i++)
+        {
+            switch (args[i])
+            {
+            case "--extract-script-files":
+                extractScripts = true;
+                break;
+            case "--generate-readme-files":
+                generateReadme = true;
+                break;
+            case "--migrate-rdfe-to-rdfx":
+                migrateToRdfx = true;
+                break;
+            default:
+                return Error($"Invalid argument: '{args[i]}'");
+            }
+        }
+
+        return ProcessFiles(inputDir, extractScripts, generateReadme, migrateToRdfx);
 
         static int Error(string message)
         {
             Console.Error.WriteLine($"""
                 {message}
 
-                Usage: {typeof(ToolboxIndex).Assembly.GetName().Name} <input-dir> [--migrate-rdfe-to-rdfx]
+                Usage: {typeof(ToolboxIndex).Assembly.GetName().Name} <input-dir> [options...]
 
-                Arguments:
+                Required arguments:
                     <input-dir>
                         Path to the directory containing .rdfe/.rdfx files to process.
+
+                Options:
+                    --extract-script-files
+                        If specified, extracts `Script` and `DynamicCredentialScript` contents
+                        into files placed next to the original .rdfe/.rdfx files. (optional; default = no)
+                    --generate-readme-files
+                        If specified, converts the HTML `Notes` content in .rdfe/.rdfx files into
+                        Markdown, writing one `README.md` file per directory.  (optional; default = no)
                     --migrate-rdfe-to-rdfx
                         If specified, migrates .rdfe (JSON) files to .rdfx (XML) format,
                         removing the original .rdfe files. (optional; default = no)
@@ -49,9 +84,12 @@ static class ToolboxIndex
         }
     }
 
-    static int ProcessFiles(string inputDir, bool migrateToRdfx)
+    static int ProcessFiles(string inputDir, bool extractScripts, bool generateReadme, bool migrateToRdfx)
     {
-        var extensionsToCleanup = new HashSet<string>(InterpreterScriptExtensions.Values, OrdinalIgnoreCase);
+        var extensionsToCleanup = new HashSet<string>(OrdinalIgnoreCase);
+        foreach ((string extension, _) in KnownInterpreters.Values)
+            extensionsToCleanup.Add(extension);
+
         var filesToProcess = new SortedDictionary<string, SortedSet<string>>(OrdinalIgnoreCase);
         var filesToCleanup = new SortedSet<string>(OrdinalIgnoreCase);
 
@@ -120,7 +158,9 @@ static class ToolboxIndex
                 }
 
                 readme.Add(rdf);
-                ExtractScriptFiles(rdf, file, filesToCleanup);
+
+                if (extractScripts)
+                    ExtractScriptFiles(rdf, file, filesToCleanup);
 
                 string shortPath = dir[prefix.Length..];
                 var dirSegments = new List<string>(shortPath.Split(Path.DirectorySeparatorChar));
@@ -143,7 +183,8 @@ static class ToolboxIndex
                 });
             }
 
-            Markdown.GenerateReadme(readme, dir, filesToCleanup);
+            if (generateReadme)
+                Markdown.GenerateReadme(readme, dir, filesToCleanup);
         }
 
         JsonIndex.Generate(indexEntries, inputDir);
@@ -167,27 +208,89 @@ static class ToolboxIndex
         string baseName = Path.GetFileNameWithoutExtension(filePath);
         string dir = Path.GetDirectoryName(filePath)!;
 
-        rdf.ScriptFile = WriteFile(data.Script, data.ScriptInterpreter, dir, baseName + ".script", filesToCleanup);
+        rdf.ScriptFile = WriteFile(data.Script, data.ScriptInterpreter, dir, baseName + ".script",
+            rdf.FileName, filesToCleanup);
 
-        rdf.DynamicCredentialScriptFile = WriteFile(data.DynamicCredentialScript,
-            data.DynamicCredentialScriptInterpreter, dir, baseName + ".dynamicCredential", filesToCleanup);
+        if (data.DynamicCredentialScript is string credScript
+            && data.DynamicCredentialScriptInterpreter is string credInterpreter
+            && !IsDefaultCredentialScript(credScript, credInterpreter))
+        {
+            rdf.DynamicCredentialScriptFile = WriteFile(credScript, credInterpreter, dir,
+                baseName + ".dyncred-script", rdf.FileName, filesToCleanup);
+        }
     }
 
-    static string? WriteFile(string? script, string? interpreter, string dir, string baseName,
+    static string? WriteFile(string? script, string? interpreter, string dir, string baseName, string? sourceName,
         SortedSet<string> filesToDelete)
     {
         Debug.Assert(Path.IsPathRooted(dir));
+        Debug.Assert(!string.IsNullOrWhiteSpace(sourceName));
         Debug.Assert(!baseName.Contains(Path.DirectorySeparatorChar));
 
         if (string.IsNullOrWhiteSpace(script))
             return null;
 
-        if (!InterpreterScriptExtensions.TryGetValue(interpreter ?? "", out string? extension))
+        if (!KnownInterpreters.TryGetValue(interpreter ?? "", out var config))
             throw new Exception($"Unknown file extension for interpreter: '{interpreter}'");
 
-        string filePath = Path.Join(dir, $"{baseName}{extension}");
+        if (config.CommentPrefix is {} prefix)
+        {
+            string autoGeneratedComment = $"""
+                {prefix} ----------------------
+                {prefix} <auto-generated>
+                {prefix}    WARNING: this file was generated by an automated tool; manual edits will be lost when it is re-generated.
+                {prefix}
+                {prefix}    The source code below was extracted from `./{sourceName}`
+                {prefix}
+                {prefix}    Do not edit this file; instead update the scripts embedded in `./{sourceName}`
+                {prefix} </auto-generated>
+                {prefix} ----------------------
+
+
+                """.ReplaceLineEndings("\n");
+
+            script = autoGeneratedComment + script;
+        }
+
+        string filePath = Path.Join(dir, $"{baseName}{GeneratedSuffix}{config.Extension}");
         File.WriteAllText(filePath, script);
         filesToDelete.Remove(filePath);
         return Path.GetFileName(filePath);
+    }
+
+    static bool IsDefaultCredentialScript(string? script, string? interpreter)
+    {
+        if (string.IsNullOrWhiteSpace(script))
+            return true;
+
+        if (!OrdinalIgnoreCase.Equals(interpreter, "json"))
+            return false;
+
+        JsonNode? rootNode;
+        try
+        {
+            rootNode = JsonNode.Parse(script);
+        }
+        catch
+        {
+            return false;
+        }
+
+        if (rootNode is not JsonObject root) return false;
+        if (root.Count is not 2) return false;
+
+        if (!root.TryGetPropertyValue("Username", out var usernameNode)
+            || usernameNode is not JsonValue username
+            || username.GetValueKind() is not JsonValueKind.String
+            || username.GetValue<string>() is not "user")
+            return false;
+
+        if (!root.TryGetPropertyValue("Password", out var passwordNode)
+            || passwordNode is not JsonValue password
+            || password.GetValueKind() is not JsonValueKind.String
+            || password.GetValue<string>() is not "pass")
+            return false;
+
+        return true;
     }
 }
