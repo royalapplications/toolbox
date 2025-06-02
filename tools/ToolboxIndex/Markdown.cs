@@ -1,0 +1,107 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
+using ReverseMarkdown;
+
+static class Markdown
+{
+    internal static void GenerateReadme(List<DynamicFolderExport> rdfs, string dir, SortedSet<string> filesToCleanup)
+    {
+        Debug.Assert(rdfs is { Count: > 0 });
+        Debug.Assert(Path.IsPathRooted(dir));
+
+        var sb = new StringBuilder();
+        if (rdfs.Count > 1)
+        {
+            sb.AppendLine("# Table of Contents").AppendLine();
+
+            foreach (var rdf in rdfs)
+                sb.AppendLine($"- [{rdf.FileName}](#{rdf.FileName.HtmlSafeID()})");
+
+            sb.AppendLine();
+        }
+
+        foreach (var rdf in rdfs)
+        {
+            Debug.Assert(!string.IsNullOrWhiteSpace(rdf.FileName));
+
+            sb.AppendLine($"""# <a name="{rdf.FileName.HtmlSafeID()}"></a> {rdf.FileName}""").AppendLine();
+
+            // description
+            DynamicFolderExportObject obj = rdf.Objects[0];
+            if (!string.IsNullOrWhiteSpace(obj.Description))
+            {
+                var html = $"<p>{WebUtility.HtmlEncode(obj.Description)}</p>";
+                string markdown = MarkdownFromHtml(html);
+
+                sb.AppendLine(markdown).AppendLine();
+            }
+
+            // source files
+            sb.AppendLine($"""
+                Source files:
+
+                - [`{rdf.FileName}`]({rdf.FileName.ToMarkdownAnchor()})
+                """);
+
+            if (!string.IsNullOrWhiteSpace(rdf.ScriptFile))
+                sb.AppendLine($"- [`{rdf.ScriptFile}`]({rdf.ScriptFile.ToMarkdownAnchor()})");
+            if (!string.IsNullOrWhiteSpace(rdf.DynamicCredentialScriptFile))
+                sb.AppendLine($"- [`{rdf.DynamicCredentialScriptFile}`]({rdf.DynamicCredentialScriptFile.ToMarkdownAnchor()})");
+            sb.AppendLine();
+
+            // notes
+            if (!string.IsNullOrWhiteSpace(obj.Notes))
+            {
+                string markdown = MarkdownFromHtml(obj.Notes);
+
+                sb.AppendLine(markdown).AppendLine();
+            }
+        }
+
+        string fileName = Path.Join(dir, "README.md");
+        File.WriteAllText(fileName, sb.ToString());
+        filesToCleanup.Remove(fileName);
+    }
+
+    static string HtmlSafeID(this string? value)
+    {
+        Debug.Assert(!string.IsNullOrWhiteSpace(value));
+
+        var sb = new StringBuilder("toc-");
+        var last = '-';
+
+        foreach (char c in value)
+        {
+            char safe = char.ToUpperInvariant(c) is (>= 'A' and <= 'Z') or (>= '0' and <= '9')
+                ? c
+                : '-';
+
+            if (safe is not '-') sb.Append(c);
+            else if (last is not '-') sb.Append(safe);
+
+            last = safe;
+        }
+
+        return sb.ToString();
+    }
+
+    static string ToMarkdownAnchor(this string fileName)
+        => $"./{Uri.EscapeDataString(fileName)}";
+
+    static string MarkdownFromHtml(string html)
+        => string.IsNullOrWhiteSpace(html) ? "" : HtmlToMarkdownOptions.Convert(html);
+
+    static readonly Converter HtmlToMarkdownOptions = new(new Config
+    {
+        CleanupUnnecessarySpaces = true,
+        GithubFlavored = true,
+        RemoveComments = true,
+        TableWithoutHeaderRowHandling = Config.TableWithoutHeaderRowHandlingOption.EmptyRow,
+        UnknownTags = Config.UnknownTagsOption.Bypass, // render contents
+        WhitelistUriSchemes = ["http", "https"],
+    });
+}

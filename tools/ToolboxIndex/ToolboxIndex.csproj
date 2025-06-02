@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <RootNamespace />
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net9.0</TargetFramework>
+
+        <Nullable>enable</Nullable>
+        <LangVersion>preview</LangVersion>
+        <Deterministic>true</Deterministic>
+        <Features>strict</Features>
+
+        <ImplicitUsings>disable</ImplicitUsings>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="ReverseMarkdown" Version="4.7.0" />
+    </ItemGroup>
+</Project>
