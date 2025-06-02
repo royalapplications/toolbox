@@ -1,10 +1,10 @@
-# <a name="toc-Keychain-Python-rdfe"></a> Keychain (Python).rdfe
+# <a name="toc-Keychain-Python-rdfx"></a> Keychain (Python).rdfx
 
 This script dynamically retrieves usernames and passwords from the macOS Keychain.
 
 Source files:
 
-- [`Keychain (Python).rdfe`](./Keychain%20%28Python%29.rdfe)
+- [`Keychain (Python).rdfx`](./Keychain%20%28Python%29.rdfx)
 - [`Keychain (Python).script.py`](./Keychain%20%28Python%29.script.py)
 - [`Keychain (Python).dynamicCredential.py`](./Keychain%20%28Python%29.dynamicCredential.py)
 

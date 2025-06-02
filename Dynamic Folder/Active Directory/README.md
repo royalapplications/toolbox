@@ -1,16 +1,16 @@
 # Table of Contents
 
-- [Active Directory (Python).rdfe](#toc-Active-Directory-Python-rdfe)
-- [AD Servers (Windows PowerShell).rdfe](#toc-AD-Servers-Windows-PowerShell-rdfe)
-- [Basic Active Directory (Windows PowerShell).rdfe](#toc-Basic-Active-Directory-Windows-PowerShell-rdfe)
+- [Active Directory (Python).rdfx](#toc-Active-Directory-Python-rdfx)
+- [AD Servers (Windows PowerShell).rdfx](#toc-AD-Servers-Windows-PowerShell-rdfx)
+- [Basic Active Directory (Windows PowerShell).rdfx](#toc-Basic-Active-Directory-Windows-PowerShell-rdfx)
 
-# <a name="toc-Active-Directory-Python-rdfe"></a> Active Directory (Python).rdfe
+# <a name="toc-Active-Directory-Python-rdfx"></a> Active Directory (Python).rdfx
 
 This Dynamic Folder sample allows you to import connections from Active Directory or any other LDAP-based directory.
 
 Source files:
 
-- [`Active Directory (Python).rdfe`](./Active%20Directory%20%28Python%29.rdfe)
+- [`Active Directory (Python).rdfx`](./Active%20Directory%20%28Python%29.rdfx)
 - [`Active Directory (Python).script.py`](./Active%20Directory%20%28Python%29.script.py)
 - [`Active Directory (Python).dynamicCredential.json`](./Active%20Directory%20%28Python%29.dynamicCredential.json)
 
@@ -32,13 +32,13 @@ This Dynamic Folder sample allows you to import connections from Active Director
 - Specify the domain controller/LDAP server in the "DC/LDAP Server" field of the "Custom Properties" section. This can either be a fully qualified domain name or an IP address. (Examples: "mydomain.local", "mydomaincontroller.mydomain.local", "192.168.0.1")
 - Specify the base search path in the "Search Base" field of the "Custom Properties" section. (Example: "DC=mydomain,DC=local")
 
-# <a name="toc-AD-Servers-Windows-PowerShell-rdfe"></a> AD Servers (Windows PowerShell).rdfe
+# <a name="toc-AD-Servers-Windows-PowerShell-rdfx"></a> AD Servers (Windows PowerShell).rdfx
 
 This script allows you to query Active Directory to add computers from your Active Directory environment to RoyalTS.
 
 Source files:
 
-- [`AD Servers (Windows PowerShell).rdfe`](./AD%20Servers%20%28Windows%20PowerShell%29.rdfe)
+- [`AD Servers (Windows PowerShell).rdfx`](./AD%20Servers%20%28Windows%20PowerShell%29.rdfx)
 - [`AD Servers (Windows PowerShell).script.ps1`](./AD%20Servers%20%28Windows%20PowerShell%29.script.ps1)
 
 This script requires Windows PowerShell 4.x/5.x as well as the Active Directory 
@@ -90,13 +90,13 @@ Twitter: pdearmen
 
 Github: https://github.com/armentpau
 
-# <a name="toc-Basic-Active-Directory-Windows-PowerShell-rdfe"></a> Basic Active Directory (Windows PowerShell).rdfe
+# <a name="toc-Basic-Active-Directory-Windows-PowerShell-rdfx"></a> Basic Active Directory (Windows PowerShell).rdfx
 
 In this example the Get-ADComputer commandlet is used to retrieve information from the Active Directory and shows all found computer objects in a tree structure mimicking the OU structure in the Active Directory.
 
 Source files:
 
-- [`Basic Active Directory (Windows PowerShell).rdfe`](./Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfe)
+- [`Basic Active Directory (Windows PowerShell).rdfx`](./Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfx)
 - [`Basic Active Directory (Windows PowerShell).script.ps1`](./Basic%20Active%20Directory%20%28Windows%20PowerShell%29.script.ps1)
 
 Dynamic Folder for Basic Active Directory Synchronization

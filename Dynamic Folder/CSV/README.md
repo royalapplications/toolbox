@@ -1,15 +1,15 @@
 # Table of Contents
 
-- [CSV (PowerShell).rdfe](#toc-CSV-PowerShell-rdfe)
-- [CSV (Python).rdfe](#toc-CSV-Python-rdfe)
+- [CSV (PowerShell).rdfx](#toc-CSV-PowerShell-rdfx)
+- [CSV (Python).rdfx](#toc-CSV-Python-rdfx)
 
-# <a name="toc-CSV-PowerShell-rdfe"></a> CSV (PowerShell).rdfe
+# <a name="toc-CSV-PowerShell-rdfx"></a> CSV (PowerShell).rdfx
 
 This Dynamic Folder sample for CSV files allows you to import connections from a CSV file.
 
 Source files:
 
-- [`CSV (PowerShell).rdfe`](./CSV%20%28PowerShell%29.rdfe)
+- [`CSV (PowerShell).rdfx`](./CSV%20%28PowerShell%29.rdfx)
 - [`CSV (PowerShell).script.ps1`](./CSV%20%28PowerShell%29.script.ps1)
 
 ## **Dynamic Folder sample for CSV**
@@ -24,13 +24,13 @@ This Dynamic Folder sample for CSV files allows you to import connections from a
 
 - Enter the path to your CSV file in the "CSV Path" field in the "Custom Properties" section.
 
-# <a name="toc-CSV-Python-rdfe"></a> CSV (Python).rdfe
+# <a name="toc-CSV-Python-rdfx"></a> CSV (Python).rdfx
 
 This Dynamic Folder sample for CSV files allows you to import connections from a CSV file.
 
 Source files:
 
-- [`CSV (Python).rdfe`](./CSV%20%28Python%29.rdfe)
+- [`CSV (Python).rdfx`](./CSV%20%28Python%29.rdfx)
 - [`CSV (Python).script.py`](./CSV%20%28Python%29.script.py)
 
 ## **Dynamic Folder sample for CSV**

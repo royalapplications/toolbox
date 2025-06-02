@@ -1,10 +1,10 @@
-# <a name="toc-Thycotic-Secret-Server-PowerShell-rdfe"></a> Thycotic Secret Server (PowerShell).rdfe
+# <a name="toc-Thycotic-Secret-Server-PowerShell-rdfx"></a> Thycotic Secret Server (PowerShell).rdfx
 
 This Dynamic Folder sample for Thycotic Secret Server supports Dynamic Credentials and Multi-Factor-Authentication (MFA).
 
 Source files:
 
-- [`Thycotic Secret Server (PowerShell).rdfe`](./Thycotic%20Secret%20Server%20%28PowerShell%29.rdfe)
+- [`Thycotic Secret Server (PowerShell).rdfx`](./Thycotic%20Secret%20Server%20%28PowerShell%29.rdfx)
 - [`Thycotic Secret Server (PowerShell).script.ps1`](./Thycotic%20Secret%20Server%20%28PowerShell%29.script.ps1)
 - [`Thycotic Secret Server (PowerShell).dynamicCredential.ps1`](./Thycotic%20Secret%20Server%20%28PowerShell%29.dynamicCredential.ps1)
 

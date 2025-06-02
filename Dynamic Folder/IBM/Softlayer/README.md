@@ -1,10 +1,10 @@
-# <a name="toc-Softlayer-Servers-Python-rdfe"></a> Softlayer Servers (Python).rdfe
+# <a name="toc-Softlayer-Servers-Python-rdfx"></a> Softlayer Servers (Python).rdfx
 
 This Dynamic Folder sample for IBM Softlayer supports grabbing all virtual servers of a specified datacenter.
 
 Source files:
 
-- [`Softlayer Servers (Python).rdfe`](./Softlayer%20Servers%20%28Python%29.rdfe)
+- [`Softlayer Servers (Python).rdfx`](./Softlayer%20Servers%20%28Python%29.rdfx)
 - [`Softlayer Servers (Python).script.py`](./Softlayer%20Servers%20%28Python%29.script.py)
 - [`Softlayer Servers (Python).dynamicCredential.json`](./Softlayer%20Servers%20%28Python%29.dynamicCredential.json)
 

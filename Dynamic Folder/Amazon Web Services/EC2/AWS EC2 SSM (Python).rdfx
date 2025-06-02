@@ -1,0 +1,103 @@
+<DynamicFolderExport>
+    <Name>Dynamic Folder Export</Name>
+    <Objects>
+        <DynamicFolderExportObject>
+            <Type>DynamicFolder</Type>
+            <Name>AWS EC2 SSM (Python)</Name>
+            <Description>This Dynamic Folder sample for AWS SSM EC2 supports grabbing all EC2 instances of a specified region managed by AWS Systems Manager.</Description>
+            <Notes><![CDATA[<h2><strong>Dynamic Folder sample for Amazon Web Services (AWS) EC2 managed by SSM</strong></h2>
+
+<p><strong>Version</strong>: 1.0.0<br />
+<strong>Author</strong>: Chrysostomos Galatoulas</p>
+
+<p>This Dynamic Folder sample for AWS EC2 SSM supports grabbing all EC2 instances of a specified region managed by SSM. The script creates terminal connections with custom commands which is a feature only Royal TSX (for macOS) supports at the moment. That means this script currently only works on macOS and does NOT support Windows.</p>
+
+<h3><strong>Prerequisites</strong></h3>
+
+<ul>
+	<li>AWS Command Line Interface (CLI) needs to be installed and configured.</li>
+</ul>
+
+<h3><strong>Setup</strong></h3>
+
+<ul>
+	<li>Enter the region that you want to grab instances from in the &quot;Region&quot; field in the &quot;Custom Properties&quot; section or leave it as an empty string if you configured the AWS CLI with a default region.</li>
+</ul>
+
+<h3><strong>Notes</strong></h3>
+
+<ul>
+	<li>You can append the --profile option on AWS cli commands to use a configured profile instead of a default.</li>
+</ul>
+]]></Notes>
+            <CustomProperties>
+                <CustomProperty>
+                    <Name>Region</Name>
+                    <Type>Text</Type>
+                    <Value>us-east-1</Value>
+                </CustomProperty>
+            </CustomProperties>
+            <ScriptInterpreter>python</ScriptInterpreter>
+            <Script><![CDATA[import subprocess
+import json
+
+def get_instances(region = ""):
+	cmd = "aws ssm describe-instance-information --output json"
+
+	if region != "":
+		cmd += " --region " + region
+
+	aws = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+	(response_json, err) = aws.communicate()
+	exit_code = aws.wait()
+
+	response = json.loads(response_json)
+
+	connections = [ ]
+
+	for instance in response.get("InstanceInformationList", None):
+		instance_id = instance.get("InstanceId", "")
+		platform = instance.get("PlatformType", "")
+
+		is_windows = platform.lower() == "windows"
+
+		computer_name = instance.get("ComputerName", "")
+		private_ip_address = instance.get("IPAddress", "")
+
+		name = instance_id
+
+		connection = { }
+		if not is_windows:
+			connection["Type"] = "TerminalConnection"
+			connection["TerminalConnectionType"] = "CustomTerminal"
+		else:
+			connection["Type"] = "RemoteDesktopConnection"
+
+		connection["ID"] = instance_id
+		connection["Name"] = computer_name
+		connection["ComputerName"] = computer_name
+
+		connection["CustomCommand"] = f"aws ssm start-session --target {instance_id}"		
+		
+		
+		connection["Properties"] = {}
+		connection["Properties"]["RunInsideLoginShell"] = True
+		
+		
+		connections.append(connection)
+
+	store = {
+		"Objects": connections
+	}
+
+	store_json = json.dumps(store)
+
+	return store_json
+	
+print(get_instances("$CustomProperty.Region$"))
+]]></Script>
+            <DynamicCredentialScriptInterpreter />
+            <DynamicCredentialScript />
+        </DynamicFolderExportObject>
+    </Objects>
+</DynamicFolderExport>

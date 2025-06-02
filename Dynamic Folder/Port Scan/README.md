@@ -1,10 +1,10 @@
-# <a name="toc-Port-Scan-Python-rdfe"></a> Port Scan (Python).rdfe
+# <a name="toc-Port-Scan-Python-rdfx"></a> Port Scan (Python).rdfx
 
 This Dynamic Folder sample scans your main network interface's IP subnet for open ports.
 
 Source files:
 
-- [`Port Scan (Python).rdfe`](./Port%20Scan%20%28Python%29.rdfe)
+- [`Port Scan (Python).rdfx`](./Port%20Scan%20%28Python%29.rdfx)
 - [`Port Scan (Python).script.py`](./Port%20Scan%20%28Python%29.script.py)
 - [`Port Scan (Python).dynamicCredential.json`](./Port%20Scan%20%28Python%29.dynamicCredential.json)
 

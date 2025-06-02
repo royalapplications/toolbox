@@ -1,15 +1,15 @@
 # Table of Contents
 
-- [Passwordstate (PowerShell).rdfe](#toc-Passwordstate-PowerShell-rdfe)
-- [Passwordstate - Based on management module (PowerShell).rdfe](#toc-Passwordstate-Based-on-management-module-PowerShell-rdfe)
+- [Passwordstate (PowerShell).rdfx](#toc-Passwordstate-PowerShell-rdfx)
+- [Passwordstate - Based on management module (PowerShell).rdfx](#toc-Passwordstate-Based-on-management-module-PowerShell-rdfx)
 
-# <a name="toc-Passwordstate-PowerShell-rdfe"></a> Passwordstate (PowerShell).rdfe
+# <a name="toc-Passwordstate-PowerShell-rdfx"></a> Passwordstate (PowerShell).rdfx
 
 This Dynamic Folder sample for Passwordstate supports Dynamic Credentials or regular credentials.
 
 Source files:
 
-- [`Passwordstate (PowerShell).rdfe`](./Passwordstate%20%28PowerShell%29.rdfe)
+- [`Passwordstate (PowerShell).rdfx`](./Passwordstate%20%28PowerShell%29.rdfx)
 - [`Passwordstate (PowerShell).script.ps1`](./Passwordstate%20%28PowerShell%29.script.ps1)
 - [`Passwordstate (PowerShell).dynamicCredential.ps1`](./Passwordstate%20%28PowerShell%29.dynamicCredential.ps1)
 
@@ -34,13 +34,13 @@ This Dynamic Folder sample for Passwordstate supports Dynamic Credentials and re
     - **Password**: Enter your Passwordstate API key.
 - By default, the dynamic folder script generates **dynamic credentials**. If you want to use **regular credentials** instead, edit the last line of the dynamic folder script and change -createDynamicCredential $true to -createDynamicCredential $false.
 
-# <a name="toc-Passwordstate-Based-on-management-module-PowerShell-rdfe"></a> Passwordstate - Based on management module (PowerShell).rdfe
+# <a name="toc-Passwordstate-Based-on-management-module-PowerShell-rdfx"></a> Passwordstate - Based on management module (PowerShell).rdfx
 
 Get dynamic credentials from passwordstate server
 
 Source files:
 
-- [`Passwordstate - Based on management module (PowerShell).rdfe`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfe)
+- [`Passwordstate - Based on management module (PowerShell).rdfx`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfx)
 - [`Passwordstate - Based on management module (PowerShell).script.ps1`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.script.ps1)
 - [`Passwordstate - Based on management module (PowerShell).dynamicCredential.ps1`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.dynamicCredential.ps1)
 

@@ -1,10 +1,10 @@
-# <a name="toc-Hetzner-Cloud-Python-rdfe"></a> Hetzner Cloud (Python).rdfe
+# <a name="toc-Hetzner-Cloud-Python-rdfx"></a> Hetzner Cloud (Python).rdfx
 
 This Dynamic Folder script will list all your servers for the given API Key of the Hetzner Cloud.
 
 Source files:
 
-- [`Hetzner Cloud (Python).rdfe`](./Hetzner%20Cloud%20%28Python%29.rdfe)
+- [`Hetzner Cloud (Python).rdfx`](./Hetzner%20Cloud%20%28Python%29.rdfx)
 - [`Hetzner Cloud (Python).script.py`](./Hetzner%20Cloud%20%28Python%29.script.py)
 
 ## 

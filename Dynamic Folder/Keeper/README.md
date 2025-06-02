@@ -1,10 +1,10 @@
-# <a name="toc-Keeper-Powershell-Core-rdfe"></a> Keeper (Powershell Core).rdfe
+# <a name="toc-Keeper-Powershell-Core-rdfx"></a> Keeper (Powershell Core).rdfx
 
 Get dynamic credentials from Keeper Secrets Manager
 
 Source files:
 
-- [`Keeper (Powershell Core).rdfe`](./Keeper%20%28Powershell%20Core%29.rdfe)
+- [`Keeper (Powershell Core).rdfx`](./Keeper%20%28Powershell%20Core%29.rdfx)
 - [`Keeper (Powershell Core).script.ps1`](./Keeper%20%28Powershell%20Core%29.script.ps1)
 - [`Keeper (Powershell Core).dynamicCredential.ps1`](./Keeper%20%28Powershell%20Core%29.dynamicCredential.ps1)
 

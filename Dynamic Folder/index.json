@@ -13,7 +13,7 @@
         },
         {
             "Name": "Active Directory (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Active%20Directory%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Active%20Directory%20%28Python%29.rdfx",
             "Categories": [
                 "Active Directory"
             ],
@@ -24,7 +24,7 @@
         },
         {
             "Name": "AD Servers (Windows PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/AD%20Servers%20%28Windows%20PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/AD%20Servers%20%28Windows%20PowerShell%29.rdfx",
             "Categories": [
                 "Active Directory"
             ],
@@ -46,7 +46,7 @@
         },
         {
             "Name": "AWS EC2 (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20%28Python%29.rdfx",
             "Categories": [
                 "Amazon Web Services",
                 "EC2"
@@ -58,7 +58,7 @@
         },
         {
             "Name": "AWS EC2 SSM (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20SSM%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Amazon%20Web%20Services/EC2/AWS%20EC2%20SSM%20%28Python%29.rdfx",
             "Categories": [
                 "Amazon Web Services",
                 "EC2"
@@ -70,7 +70,7 @@
         },
         {
             "Name": "Basic Active Directory (Windows PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Active%20Directory/Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfx",
             "Categories": [
                 "Active Directory"
             ],
@@ -103,7 +103,7 @@
         },
         {
             "Name": "CSV (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28PowerShell%29.rdfx",
             "Categories": [
                 "CSV"
             ],
@@ -114,7 +114,7 @@
         },
         {
             "Name": "CSV (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/CSV/CSV%20%28Python%29.rdfx",
             "Categories": [
                 "CSV"
             ],
@@ -137,7 +137,7 @@
         },
         {
             "Name": "Foreman (PHP)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Foreman/Foreman%20%28PHP%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Foreman/Foreman%20%28PHP%29.rdfx",
             "Categories": [
                 "Foreman"
             ],
@@ -148,7 +148,7 @@
         },
         {
             "Name": "Hetzner Cloud (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Hetzner/Hetzner%20Cloud/Hetzner%20Cloud%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Hetzner/Hetzner%20Cloud/Hetzner%20Cloud%20%28Python%29.rdfx",
             "Categories": [
                 "Hetzner",
                 "Hetzner Cloud"
@@ -160,7 +160,7 @@
         },
         {
             "Name": "Keeper (Powershell Core)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keeper/Keeper%20%28Powershell%20Core%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keeper/Keeper%20%28Powershell%20Core%29.rdfx",
             "Categories": [
                 "Keeper"
             ],
@@ -171,7 +171,7 @@
         },
         {
             "Name": "Keychain (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keychain/Keychain%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Keychain/Keychain%20%28Python%29.rdfx",
             "Categories": [
                 "Keychain"
             ],
@@ -204,7 +204,7 @@
         },
         {
             "Name": "Passwordstate (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20%28PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20%28PowerShell%29.rdfx",
             "Categories": [
                 "Passwordstate"
             ],
@@ -215,7 +215,7 @@
         },
         {
             "Name": "Passwordstate - Based on management module (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Passwordstate/Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfx",
             "Categories": [
                 "Passwordstate"
             ],
@@ -226,7 +226,7 @@
         },
         {
             "Name": "Pleasant Password (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Pleasant%20Password%20Server/Pleasant%20Password%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Pleasant%20Password%20Server/Pleasant%20Password%20%28Python%29.rdfx",
             "Categories": [
                 "Pleasant Password Server"
             ],
@@ -237,7 +237,7 @@
         },
         {
             "Name": "Port Scan (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Port%20Scan/Port%20Scan%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Port%20Scan/Port%20Scan%20%28Python%29.rdfx",
             "Categories": [
                 "Port Scan"
             ],
@@ -248,7 +248,7 @@
         },
         {
             "Name": "Softlayer Servers (Python)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/IBM/Softlayer/Softlayer%20Servers%20%28Python%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/IBM/Softlayer/Softlayer%20Servers%20%28Python%29.rdfx",
             "Categories": [
                 "IBM",
                 "Softlayer"
@@ -260,7 +260,7 @@
         },
         {
             "Name": "Thycotic Secret Server (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Thycotic%20Secret%20Server/Thycotic%20Secret%20Server%20%28PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Thycotic%20Secret%20Server/Thycotic%20Secret%20Server%20%28PowerShell%29.rdfx",
             "Categories": [
                 "Thycotic Secret Server"
             ],
@@ -271,7 +271,7 @@
         },
         {
             "Name": "VMware-Pull (PowerShell)",
-            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/VMware/VMware-Pull%20%28PowerShell%29.rdfe",
+            "ContentURL": "https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/VMware/VMware-Pull%20%28PowerShell%29.rdfx",
             "Categories": [
                 "VMware"
             ],

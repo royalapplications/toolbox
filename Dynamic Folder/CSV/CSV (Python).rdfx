@@ -1,0 +1,69 @@
+<DynamicFolderExport>
+    <Name>Dynamic Folder Export</Name>
+    <Objects>
+        <DynamicFolderExportObject>
+            <Type>DynamicFolder</Type>
+            <Name>CSV (Python)</Name>
+            <Description>This Dynamic Folder sample for CSV files allows you to import connections from a CSV file.</Description>
+            <Notes><![CDATA[<h2><strong>Dynamic Folder sample for CSV</strong></h2>
+
+<p><strong>Version</strong>: 1.0<br />
+<strong>Author</strong>: Royal Applications</p>
+
+<p>This Dynamic Folder sample for CSV files allows you to import connections from a CSV file.</p>
+
+<h3><strong>Setup</strong></h3>
+
+<ul>
+	<li>Enter the path to your CSV file in the &quot;CSV Path&quot; field in the &quot;Custom Properties&quot; section.</li>
+</ul>
+]]></Notes>
+            <CustomProperties>
+                <CustomProperty>
+                    <Name>CSV Path</Name>
+                    <Type>URL</Type>
+                    <Value>TODO</Value>
+                </CustomProperty>
+            </CustomProperties>
+            <ScriptInterpreter>python</ScriptInterpreter>
+            <Script><![CDATA[import os
+import csv
+import json
+
+def get_entries(csv_path):
+    csvfile = open(os.path.expanduser(csv_path))
+    reader = csv.DictReader(csvfile)
+
+    connections = []
+
+    for row in reader:
+        name = row["Name"]
+        computerName = row["ComputerName"]
+        username = row["Username"]
+        password = row["Password"]
+
+        connection = {
+            "Type": "TerminalConnection",
+            "TerminalConnectionType": "SSH",
+            "Name": name,
+            "ComputerName": computerName,
+            "Username": username,
+            "Password": password
+        }
+
+        connections.append(connection)
+
+    store = {
+        "Objects": connections
+    }
+
+    store_json = json.dumps(store)
+
+    return store_json
+
+print(get_entries("$CustomProperty.CSVPath$"))]]></Script>
+            <DynamicCredentialScriptInterpreter>json</DynamicCredentialScriptInterpreter>
+            <DynamicCredentialScript />
+        </DynamicFolderExportObject>
+    </Objects>
+</DynamicFolderExport>

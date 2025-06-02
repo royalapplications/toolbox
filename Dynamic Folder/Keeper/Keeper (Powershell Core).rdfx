@@ -1,0 +1,106 @@
+<DynamicFolderExport>
+    <Name>Dynamic Folder Export</Name>
+    <Objects>
+        <DynamicFolderExportObject>
+            <Type>DynamicFolder</Type>
+            <Name>Keeper (Powershell Core)</Name>
+            <Description>Get dynamic credentials from Keeper Secrets Manager</Description>
+            <Notes><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+		</title>
+		<style type="text/css">
+			.cs2F633E06{text-align:left;text-indent:0pt;margin:0pt 0pt 12pt 0pt;line-height:1.25;background-color:#FFFFFF}
+			.cs284A0245{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:24pt;font-weight:bold;font-style:normal;}
+			.cs274ABB97{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:12pt;font-weight:bold;font-style:normal;}
+			.cs4AEF82F9{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:12pt;font-weight:normal;font-style:normal;}
+			.cs4052EF37{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:12pt;font-weight:bold;font-style:normal;text-decoration: none;}
+			.csB4B5109A{color:#0000FF;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: underline;}
+			.cs11DAF544{text-align:left;text-indent:0pt;margin:18pt 0pt 12pt 0pt;line-height:1.25;background-color:#FFFFFF}
+			.csBA0AB85A{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:18pt;font-weight:bold;font-style:normal;}
+			.csA4B3A5CA{text-align:left;text-indent:0pt;margin:0pt 0pt 12pt 0pt;background-color:#FFFFFF}
+			.cs55E59E38{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:14pt;font-weight:bold;font-style:normal;}
+			.cs213807E6{color:#24292E;background-color:#FFFFFF;font-family:'Microsoft Sans Serif';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: none;}
+			.cs2C821426{color:#0366D6;background-color:transparent;font-family:'Microsoft Sans Serif';font-size:12pt;font-weight:normal;font-style:normal;}
+			.csBCD626A0{color:#000000;background-color:#FFFFFF;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
+		</style>
+	</head>
+	<body>
+		<h1 class="cs2F633E06">
+			<a name="_dx_frag_StartFragment"></a><span class="cs284A0245">Keeper (Powershell) Dynamic Folder</span></h1>
+		<h1 class="cs2F633E06">
+			<span class="cs274ABB97">Version: </span><span class="cs4AEF82F9">1.0.0</span><span class="cs274ABB97"><br/>Author</span><a name="_dx_frag_StartFragment"></a><a name="_dx_frag_EndFragment"></a><span class="cs274ABB97">: <a class="cs4052EF37" href="https://github.com/WillEllis"><span class="csB4B5109A">https://github.com/WillEllis</span></a></span></h1>
+		<h2 class="cs11DAF544">
+			<span class="csBA0AB85A">How to use</span></h2>
+		<p class="csA4B3A5CA"><span class="cs4AEF82F9">Ensure you set the RoyalTS script interpreter as Powershell Core. E.g. &quot;C:\Program Files\PowerShell\7\pwsh.exe&quot;</span></p><h3 class="cs11DAF544">
+			<span class="cs55E59E38">Create a Keeper application</span></h3>
+		<p class="csA4B3A5CA"><span class="cs4AEF82F9">You will need to create an application in Keeper and get a one time access token.&nbsp;Follow the quick start guide here: <a class="cs213807E6" href="https://docs.keeper.io/secrets-manager/secrets-manager/quick-start-guide#create-a-secrets-manager-application"><span class="cs2C821426">Keeper Create an Application</span></a></span></p><h3 class="cs11DAF544">
+			<span class="cs55E59E38">Create a Keeper application</span></h3>
+		<p class="csA4B3A5CA"><span class="cs4AEF82F9">Setup Keeper Secrets Manager for Powershell (in Powershell core) following this guide&nbsp;<a class="cs213807E6" href="https://docs.keeper.io/secrets-manager/secrets-manager/integrations/powershell-plugin#installation"><span class="cs2C821426">Keeper Powershell Plugin - Installation</span></a></span></p><h3 class="cs11DAF544">
+			<span class="cs55E59E38">Connect Dynamic Folder to Powershell Keeper Vault</span></h3>
+		<h3 class="cs11DAF544">
+			<span class="cs4AEF82F9">If you&#39;ve done the above then you&#39;ll have a Powershell Vault in place for Keeper. Simply set the name of the vault and the password (if set) within the custom properties of this Dynamic folder.</span></h3>
+		<p class="csA4B3A5CA"><span class="csBCD626A0">&nbsp;</span></p></body>
+</html>
+]]></Notes>
+            <CustomProperties>
+                <CustomProperty>
+                    <Name>PowerShell Vault Name</Name>
+                    <Type>Text</Type>
+                    <Value>TODO</Value>
+                </CustomProperty>
+                <CustomProperty>
+                    <Name>PowerShell Vault Password</Name>
+                    <Type>Protected</Type>
+                    <Value>TODO</Value>
+                </CustomProperty>
+            </CustomProperties>
+            <ScriptInterpreter>powershell</ScriptInterpreter>
+            <Script><![CDATA[$ErrorActionPreference = 'Stop'
+
+if ('$CustomProperty.PowerShellVaultName$' -eq '') {
+    throw 'Vault Name needed'
+}
+if ('$CustomProperty.PowerShellVaultPassword$' -eq '') {
+    throw 'Vault password needed'
+}
+
+$Secure = ConvertTo-SecureString -String '$CustomProperty.PowerShellVaultPassword$' -AsPlainText -Force
+Unlock-SecretStore -Password $Secure
+
+$results = Get-SecretInfo -Vault '$CustomProperty.PowerShellVaultName$'
+$credentials = @()
+foreach ($item in $results) {
+    $ID,$name = $item.Name -split ' ',2
+    $credentials += [pscustomobject]@{
+        Type     = 'DynamicCredential'
+        Name     = $name
+        Username = ''
+        Password = ''
+        ID       = $ID
+    }
+}
+
+$final = [pscustomobject]@{
+    Objects = ($credentials | Sort-Object Name)
+}
+$final | ConvertTo-Json -Depth 100 | Write-Output]]></Script>
+            <DynamicCredentialScriptInterpreter>powershell</DynamicCredentialScriptInterpreter>
+            <DynamicCredentialScript><![CDATA[$ErrorActionPreference = 'Stop'
+
+if ('$CustomProperty.PowerShellVaultName$' -eq '') {
+    throw 'Vault Name needed'
+}
+if ('$CustomProperty.PowerShellVaultPassword$' -eq '') {
+    throw 'Vault password needed'
+}
+
+$Secure = ConvertTo-SecureString -String '$CustomProperty.PowerShellVaultPassword$' -AsPlainText -Force
+Unlock-SecretStore -Password $Secure
+
+$results = Get-Secret '$DynamicCredential.EffectiveID$' -AsPlainText
+$results | Select-Object @{Name='username';Expression={$_.login}},password | ConvertTo-Json -Depth 100 | Write-Output]]></DynamicCredentialScript>
+        </DynamicFolderExportObject>
+    </Objects>
+</DynamicFolderExport>

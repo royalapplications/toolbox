@@ -1,10 +1,10 @@
-# <a name="toc-Foreman-PHP-rdfe"></a> Foreman (PHP).rdfe
+# <a name="toc-Foreman-PHP-rdfx"></a> Foreman (PHP).rdfx
 
 This Dynamic Folder script will list all your servers from your Foreman Instance
 
 Source files:
 
-- [`Foreman (PHP).rdfe`](./Foreman%20%28PHP%29.rdfe)
+- [`Foreman (PHP).rdfx`](./Foreman%20%28PHP%29.rdfx)
 - [`Foreman (PHP).script.php`](./Foreman%20%28PHP%29.script.php)
 
 ## 

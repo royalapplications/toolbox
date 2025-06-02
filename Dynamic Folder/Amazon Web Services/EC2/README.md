@@ -1,15 +1,15 @@
 # Table of Contents
 
-- [AWS EC2 (Python).rdfe](#toc-AWS-EC2-Python-rdfe)
-- [AWS EC2 SSM (Python).rdfe](#toc-AWS-EC2-SSM-Python-rdfe)
+- [AWS EC2 (Python).rdfx](#toc-AWS-EC2-Python-rdfx)
+- [AWS EC2 SSM (Python).rdfx](#toc-AWS-EC2-SSM-Python-rdfx)
 
-# <a name="toc-AWS-EC2-Python-rdfe"></a> AWS EC2 (Python).rdfe
+# <a name="toc-AWS-EC2-Python-rdfx"></a> AWS EC2 (Python).rdfx
 
 This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.
 
 Source files:
 
-- [`AWS EC2 (Python).rdfe`](./AWS%20EC2%20%28Python%29.rdfe)
+- [`AWS EC2 (Python).rdfx`](./AWS%20EC2%20%28Python%29.rdfx)
 - [`AWS EC2 (Python).script.py`](./AWS%20EC2%20%28Python%29.script.py)
 - [`AWS EC2 (Python).dynamicCredential.json`](./AWS%20EC2%20%28Python%29.dynamicCredential.json)
 
@@ -33,13 +33,13 @@ This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a 
 
 - While the provided script sets the username of created connections, the password will always be empty. There are multiple different ways to solve this. For instance, you could assign a credential to this dynamic folder and change the script to reference credentials from parent folder. Alternatively, you may also just use "Connect with Options - Prompt for Credentials" when establishing a connection.
 
-# <a name="toc-AWS-EC2-SSM-Python-rdfe"></a> AWS EC2 SSM (Python).rdfe
+# <a name="toc-AWS-EC2-SSM-Python-rdfx"></a> AWS EC2 SSM (Python).rdfx
 
 This Dynamic Folder sample for AWS SSM EC2 supports grabbing all EC2 instances of a specified region managed by AWS Systems Manager.
 
 Source files:
 
-- [`AWS EC2 SSM (Python).rdfe`](./AWS%20EC2%20SSM%20%28Python%29.rdfe)
+- [`AWS EC2 SSM (Python).rdfx`](./AWS%20EC2%20SSM%20%28Python%29.rdfx)
 - [`AWS EC2 SSM (Python).script.py`](./AWS%20EC2%20SSM%20%28Python%29.script.py)
 
 ## **Dynamic Folder sample for Amazon Web Services (AWS) EC2 managed by SSM**

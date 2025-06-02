@@ -1,10 +1,10 @@
-# <a name="toc-VMware-Pull-PowerShell-rdfe"></a> VMware-Pull (PowerShell).rdfe
+# <a name="toc-VMware-Pull-PowerShell-rdfx"></a> VMware-Pull (PowerShell).rdfx
 
 Imports Virtual Machines from VMware ESXi Hosts or vCenter Servers
 
 Source files:
 
-- [`VMware-Pull (PowerShell).rdfe`](./VMware-Pull%20%28PowerShell%29.rdfe)
+- [`VMware-Pull (PowerShell).rdfx`](./VMware-Pull%20%28PowerShell%29.rdfx)
 - [`VMware-Pull (PowerShell).script.ps1`](./VMware-Pull%20%28PowerShell%29.script.ps1)
 - [`VMware-Pull (PowerShell).dynamicCredential.json`](./VMware-Pull%20%28PowerShell%29.dynamicCredential.json)
 
