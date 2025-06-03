@@ -14,6 +14,8 @@ This Dynamic Folder sample for Delinea Secret Server supports Dynamic Credential
 Source files:
 
 - [`Delinea Secret Server (PowerShell).rdfe`](./Delinea%20Secret%20Server%20%28PowerShell%29.rdfe)
+- [`Delinea Secret Server (PowerShell).script.autogen.ps1`](./Delinea%20Secret%20Server%20%28PowerShell%29.script.autogen.ps1)
+- [`Delinea Secret Server (PowerShell).dyncred-script.autogen.ps1`](./Delinea%20Secret%20Server%20%28PowerShell%29.dyncred-script.autogen.ps1)
 
 ## **Dynamic Folder sample for Secret Server**
 

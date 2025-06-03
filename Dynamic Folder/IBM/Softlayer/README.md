@@ -14,6 +14,7 @@ This Dynamic Folder sample for IBM Softlayer supports grabbing all virtual serve
 Source files:
 
 - [`Softlayer Servers (Python).rdfe`](./Softlayer%20Servers%20%28Python%29.rdfe)
+- [`Softlayer Servers (Python).script.autogen.py`](./Softlayer%20Servers%20%28Python%29.script.autogen.py)
 
 ## **Dynamic Folder sample for IBM Softlayer Virtual Server**
 

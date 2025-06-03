@@ -14,6 +14,8 @@ This Dynamic Folder sample allows you to import dynamic credentials from 1Passwo
 Source files:
 
 - [`1Password v8 (Python).rdfx`](./1Password%20v8%20%28Python%29.rdfx)
+- [`1Password v8 (Python).script.autogen.py`](./1Password%20v8%20%28Python%29.script.autogen.py)
+- [`1Password v8 (Python).dyncred-script.autogen.py`](./1Password%20v8%20%28Python%29.dyncred-script.autogen.py)
 
 ## 1Password v8+ Dynamic Folder sample
 

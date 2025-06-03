@@ -19,6 +19,7 @@ This Dynamic Folder sample for CSV files allows you to import connections from a
 Source files:
 
 - [`CSV (PowerShell).rdfe`](./CSV%20%28PowerShell%29.rdfe)
+- [`CSV (PowerShell).script.autogen.ps1`](./CSV%20%28PowerShell%29.script.autogen.ps1)
 
 ## **Dynamic Folder sample for CSV**
 
@@ -39,6 +40,7 @@ This Dynamic Folder sample for CSV files allows you to import connections from a
 Source files:
 
 - [`CSV (Python).rdfe`](./CSV%20%28Python%29.rdfe)
+- [`CSV (Python).script.autogen.py`](./CSV%20%28Python%29.script.autogen.py)
 
 ## **Dynamic Folder sample for CSV**
 

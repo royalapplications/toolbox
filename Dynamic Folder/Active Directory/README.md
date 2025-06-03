@@ -20,6 +20,7 @@ This Dynamic Folder sample allows you to import connections from Active Director
 Source files:
 
 - [`Active Directory (Python).rdfe`](./Active%20Directory%20%28Python%29.rdfe)
+- [`Active Directory (Python).script.autogen.py`](./Active%20Directory%20%28Python%29.script.autogen.py)
 
 ## **Active Directory/LDAP Dynamic Folder sample**
 
@@ -46,6 +47,7 @@ This script allows you to query Active Directory to add computers from your Acti
 Source files:
 
 - [`AD Servers (Windows PowerShell).rdfe`](./AD%20Servers%20%28Windows%20PowerShell%29.rdfe)
+- [`AD Servers (Windows PowerShell).script.autogen.ps1`](./AD%20Servers%20%28Windows%20PowerShell%29.script.autogen.ps1)
 
 This script requires Windows PowerShell 4.x/5.x as well as the Active Directory 
 
@@ -103,6 +105,7 @@ In this example the Get-ADComputer commandlet is used to retrieve information fr
 Source files:
 
 - [`Basic Active Directory (Windows PowerShell).rdfe`](./Basic%20Active%20Directory%20%28Windows%20PowerShell%29.rdfe)
+- [`Basic Active Directory (Windows PowerShell).script.autogen.ps1`](./Basic%20Active%20Directory%20%28Windows%20PowerShell%29.script.autogen.ps1)
 
 Dynamic Folder for Basic Active Directory Synchronization
 

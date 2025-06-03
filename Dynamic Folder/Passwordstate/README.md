@@ -19,6 +19,8 @@ This Dynamic Folder sample for Passwordstate supports Dynamic Credentials or reg
 Source files:
 
 - [`Passwordstate (PowerShell).rdfe`](./Passwordstate%20%28PowerShell%29.rdfe)
+- [`Passwordstate (PowerShell).script.autogen.ps1`](./Passwordstate%20%28PowerShell%29.script.autogen.ps1)
+- [`Passwordstate (PowerShell).dyncred-script.autogen.ps1`](./Passwordstate%20%28PowerShell%29.dyncred-script.autogen.ps1)
 
 ## **Dynamic Folder sample for Passwordstate**
 
@@ -48,6 +50,8 @@ Get dynamic credentials from passwordstate server
 Source files:
 
 - [`Passwordstate - Based on management module (PowerShell).rdfe`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.rdfe)
+- [`Passwordstate - Based on management module (PowerShell).script.autogen.ps1`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.script.autogen.ps1)
+- [`Passwordstate - Based on management module (PowerShell).dyncred-script.autogen.ps1`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.dyncred-script.autogen.ps1)
 
 # 
 		Password State Dynamic Folder

@@ -14,6 +14,8 @@ Imports Virtual Machines from VMware ESXi Hosts or vCenter Servers
 Source files:
 
 - [`VMware-Pull (PowerShell).rdfe`](./VMware-Pull%20%28PowerShell%29.rdfe)
+- [`VMware-Pull (PowerShell).script.autogen.ps1`](./VMware-Pull%20%28PowerShell%29.script.autogen.ps1)
+- [`VMware-Pull (PowerShell).dyncred-script.autogen.json`](./VMware-Pull%20%28PowerShell%29.dyncred-script.autogen.json)
 
 VMware ESXi Host / vCenter Dynamic Folder Example
 

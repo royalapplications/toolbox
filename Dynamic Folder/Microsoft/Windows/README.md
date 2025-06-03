@@ -20,6 +20,7 @@ This returns dynamic objects reflecting data from the current user account.
 Source files:
 
 - [`CurrentAccount (Windows PowerShell).rdfx`](./CurrentAccount%20%28Windows%20PowerShell%29.rdfx)
+- [`CurrentAccount (Windows PowerShell).script.autogen.ps1`](./CurrentAccount%20%28Windows%20PowerShell%29.script.autogen.ps1)
 
 Version: 1.0
 
@@ -33,6 +34,8 @@ Requirements
 Source files:
 
 - [`LAPS (deprecated) (Windows PowerShell).rdfx`](./LAPS%20%28deprecated%29%20%28Windows%20PowerShell%29.rdfx)
+- [`LAPS (deprecated) (Windows PowerShell).script.autogen.ps1`](./LAPS%20%28deprecated%29%20%28Windows%20PowerShell%29.script.autogen.ps1)
+- [`LAPS (deprecated) (Windows PowerShell).dyncred-script.autogen.ps1`](./LAPS%20%28deprecated%29%20%28Windows%20PowerShell%29.dyncred-script.autogen.ps1)
 
 Local Administrator Password Solution (LAPS)
 
@@ -57,6 +60,8 @@ The dynamic folder script creates a list of available machine from the Active Di
 Source files:
 
 - [`LAPS April 2023 (Windows PowerShell).rdfx`](./LAPS%20April%202023%20%28Windows%20PowerShell%29.rdfx)
+- [`LAPS April 2023 (Windows PowerShell).script.autogen.ps1`](./LAPS%20April%202023%20%28Windows%20PowerShell%29.script.autogen.ps1)
+- [`LAPS April 2023 (Windows PowerShell).dyncred-script.autogen.ps1`](./LAPS%20April%202023%20%28Windows%20PowerShell%29.dyncred-script.autogen.ps1)
 
 Local Administrator Password Solution (LAPS)
 

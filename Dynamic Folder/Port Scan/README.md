@@ -14,6 +14,7 @@ This Dynamic Folder sample scans your main network interface's IP subnet for ope
 Source files:
 
 - [`Port Scan (Python).rdfe`](./Port%20Scan%20%28Python%29.rdfe)
+- [`Port Scan (Python).script.autogen.py`](./Port%20Scan%20%28Python%29.script.autogen.py)
 
 ## **Port Scan Dynamic Folder sample**
 

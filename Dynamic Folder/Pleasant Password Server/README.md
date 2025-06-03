@@ -14,6 +14,8 @@ This Dynamic Folder sample for Pleasant Password Server supports Dynamic Credent
 Source files:
 
 - [`Pleasant Password (Python).rdfe`](./Pleasant%20Password%20%28Python%29.rdfe)
+- [`Pleasant Password (Python).script.autogen.py`](./Pleasant%20Password%20%28Python%29.script.autogen.py)
+- [`Pleasant Password (Python).dyncred-script.autogen.py`](./Pleasant%20Password%20%28Python%29.dyncred-script.autogen.py)
 
 ## **Dynamic Folder sample for Pleasant Password Server**
 

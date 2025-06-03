@@ -14,6 +14,8 @@ Imports servers SSH and RDP from Wallix Bastion
 Source files:
 
 - [`Wallix Bastion (PowerShell).rdfx`](./Wallix%20Bastion%20%28PowerShell%29.rdfx)
+- [`Wallix Bastion (PowerShell).script.autogen.ps1`](./Wallix%20Bastion%20%28PowerShell%29.script.autogen.ps1)
+- [`Wallix Bastion (PowerShell).dyncred-script.autogen.ps1`](./Wallix%20Bastion%20%28PowerShell%29.dyncred-script.autogen.ps1)
 
 ## 		Dynamic Folder for Wallix Bastion connections
 	
