@@ -30,7 +30,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Run Rebuild Index Tool
-        run: dotnet run --project ./tools/ToolboxIndex -- "./Dynamic Folder"
+        run: dotnet run --project ./tools/ToolboxIndex -- "./Dynamic Folder" --generate-readme-files
       
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
