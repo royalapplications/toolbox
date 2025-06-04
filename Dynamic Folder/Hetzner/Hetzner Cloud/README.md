@@ -14,6 +14,7 @@ This Dynamic Folder script will list all your servers for the given API Key of t
 Source files:
 
 - [`Hetzner Cloud (Python).rdfe`](./Hetzner%20Cloud%20%28Python%29.rdfe)
+- [`Hetzner Cloud (Python).script.autogen.py`](./Hetzner%20Cloud%20%28Python%29.script.autogen.py)
 
 ## 
 		Dynamic Folder support for Hetzner Cloud

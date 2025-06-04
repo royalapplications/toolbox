@@ -14,6 +14,8 @@ Get dynamic credentials from Keeper Secrets Manager
 Source files:
 
 - [`Keeper (Powershell Core).rdfe`](./Keeper%20%28Powershell%20Core%29.rdfe)
+- [`Keeper (Powershell Core).script.autogen.ps1`](./Keeper%20%28Powershell%20Core%29.script.autogen.ps1)
+- [`Keeper (Powershell Core).dyncred-script.autogen.ps1`](./Keeper%20%28Powershell%20Core%29.dyncred-script.autogen.ps1)
 
 # 
 		Keeper (Powershell) Dynamic Folder

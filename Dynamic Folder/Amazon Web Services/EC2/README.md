@@ -19,6 +19,7 @@ This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a 
 Source files:
 
 - [`AWS EC2 (Python).rdfe`](./AWS%20EC2%20%28Python%29.rdfe)
+- [`AWS EC2 (Python).script.autogen.py`](./AWS%20EC2%20%28Python%29.script.autogen.py)
 
 ## **Dynamic Folder sample for Amazon Web Services (AWS) EC2**
 
@@ -47,6 +48,7 @@ This Dynamic Folder sample for AWS SSM EC2 supports grabbing all EC2 instances o
 Source files:
 
 - [`AWS EC2 SSM (Python).rdfe`](./AWS%20EC2%20SSM%20%28Python%29.rdfe)
+- [`AWS EC2 SSM (Python).script.autogen.py`](./AWS%20EC2%20SSM%20%28Python%29.script.autogen.py)
 
 ## **Dynamic Folder sample for Amazon Web Services (AWS) EC2 managed by SSM**
 

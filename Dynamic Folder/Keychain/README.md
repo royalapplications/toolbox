@@ -14,6 +14,8 @@ This script dynamically retrieves usernames and passwords from the macOS Keychai
 Source files:
 
 - [`Keychain (Python).rdfe`](./Keychain%20%28Python%29.rdfe)
+- [`Keychain (Python).script.autogen.py`](./Keychain%20%28Python%29.script.autogen.py)
+- [`Keychain (Python).dyncred-script.autogen.py`](./Keychain%20%28Python%29.dyncred-script.autogen.py)
 
 ## Keychain (Python)
 

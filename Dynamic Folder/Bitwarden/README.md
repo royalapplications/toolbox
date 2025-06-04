@@ -19,6 +19,7 @@ This Dynamic Folder sample allows you to import credentials from Bitwarden using
 Source files:
 
 - [`Bitwarden (PowerShell).rdfx`](./Bitwarden%20%28PowerShell%29.rdfx)
+- [`Bitwarden (PowerShell).script.autogen.ps1`](./Bitwarden%20%28PowerShell%29.script.autogen.ps1)
 
 ##  Bitwarden Dynamic Folder sample with Powershell
 
@@ -59,6 +60,7 @@ This Dynamic Folder sample allows you to import credentials from Bitwarden.
 Source files:
 
 - [`Bitwarden (Python).rdfx`](./Bitwarden%20%28Python%29.rdfx)
+- [`Bitwarden (Python).script.autogen.py`](./Bitwarden%20%28Python%29.script.autogen.py)
 
 ## **Bitwarden Dynamic Folder sample**
 

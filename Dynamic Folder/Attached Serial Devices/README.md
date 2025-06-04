@@ -14,6 +14,7 @@ Version 2.3. Compatible with Windows or Mac (PowerShell must be installed). This
 Source files:
 
 - [`Attached Serial Devices (PowerShell - Windows & Mac).rdfx`](./Attached%20Serial%20Devices%20%28PowerShell%20-%20Windows%20%26%20Mac%29.rdfx)
+- [`Attached Serial Devices (PowerShell - Windows & Mac).script.autogen.ps1`](./Attached%20Serial%20Devices%20%28PowerShell%20-%20Windows%20%26%20Mac%29.script.autogen.ps1)
 
 # 		Attached Serial Devices Dynamic Folder
 	
