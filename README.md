@@ -1,12 +1,12 @@
 # Royal Toolbox
 
-This official repository contains various automation scripts for [Royal TS (for Windows)](https://www.royalapps.com/ts/win) and [Royal TSX (for macOS)](https://www.royalapps.com/ts/mac). Also included are dynamic folder samples. The collection consists of first-party scripts by the Royal Apps team and contributions from our great user-base!
+This official repository features a collection of automation scripts for [Royal TS (for Windows)](https://www.royalapps.com/ts/win) and [Royal TSX (for macOS)](https://www.royalapps.com/ts/mac), along with dynamic folder examples. It includes both first-party scripts developed by the Royal Apps team and valuable contributions from our amazing user community.
 
 ## Disclaimer
 
-Please notice that all content is provided without any guarantees nor are we/the authors responsible for any unintentional issues or side-effects. Even when the authors are trying to provide the best, bug-free experience, scripts may have issues not covered by tests.
+All content is provided "as is" without any guarantees. Neither the authors nor the Royal Apps team can be held responsible for unintended issues or side effects. While every effort has been made to ensure a high-quality, bug-free experience, some scripts may still contain untested or unforeseen issues.
 
-Furthermore, please feel free to change them to suit your needs, but please respect the license of the individual scripts.
+You are welcome to modify the scripts to fit your needs—just be sure to respect the license terms associated with each individual script.
 
 ## Support
 
