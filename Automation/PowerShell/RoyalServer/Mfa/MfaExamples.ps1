@@ -11,8 +11,8 @@
     - Example 8: Remove one MFA user entry
     - Example 9: Change properties of an existing TOTP MFA config
 
-    10-05-2023  Creation
-    21-07-2025  Adaptation, added methods for specific MFA provider
+    2023-05-10  Creation
+    2025-07-21  Adaptation, added methods for specific MFA provider
 #>
 $ScriptDir = Split-Path -parent $MyInvocation.MyCommand.Path
 Import-Module $ScriptDir\RoyalServer.PowerShell.Mfa.psm1

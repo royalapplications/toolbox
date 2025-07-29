@@ -5,7 +5,7 @@
         1. Opens a local document
         2. exports all objects of the specified types in a .csv file
 
-    29-07-2025  Creation
+    2025-07-29  Creation
 #>
 Import-Module RoyalDocument.PowerShell
 

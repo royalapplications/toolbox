@@ -2,7 +2,7 @@
     The example code below demonstrates how to define custom Rebex Highlighting
     Definitions for a Rebex Terminal Connection via PowerShell
 
-    28-07-2025  Creation
+    2025-07-28  Creation
 #>
 import-module royaldocument.powershell
 import-Module newtonsoft.json

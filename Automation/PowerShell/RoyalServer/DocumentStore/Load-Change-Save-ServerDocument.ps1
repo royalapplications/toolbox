@@ -4,7 +4,7 @@
     - 2. Modify that document in memory
     - 3. Save it back to Royal Server
 
-    23-07-2025  Creation
+    2025-07-23  Creation
 #>
 Import-Module -Name RoyalDocument.PowerShell
 Import-Module RoyalDocument.PowerShell

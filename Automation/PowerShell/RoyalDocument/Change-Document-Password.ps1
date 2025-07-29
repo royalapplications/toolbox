@@ -10,7 +10,7 @@
             to always save a document with a changed password/lockdown password
             to a new file.
 
-    29-07-2025  Creation
+    2025-07-29  Creation
 #>
 Import-Module RoyalDocument.PowerShell
 
