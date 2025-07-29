@@ -4,7 +4,7 @@
     Steps: 
         1. Opens a local Royal TS document with a password
         2. Set the document password, a lockdown password and lockdown policies on it
-        2. Saves it to a new file
+        3. Saves it to a new file
 
     remark: Because of the way how the file content is encrypted it is adviced
             to always save a document with a changed password/lockdown password
