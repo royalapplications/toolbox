@@ -2,7 +2,7 @@
     <PropertyGroup>
         <RootNamespace />
         <OutputType>Exe</OutputType>
-        <TargetFramework>net9.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
 
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
@@ -16,6 +16,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ReverseMarkdown" Version="4.7.0" />
+        <PackageReference Include="ReverseMarkdown" Version="4.7.1" />
     </ItemGroup>
 </Project>
