@@ -3,65 +3,42 @@
   <Objects>
     <DynamicFolderExportObject>
       <Type>DynamicFolder</Type>
-      <Name>lemon Bitwarden (PowerShell)</Name>
-      <Description>This Dynamic Folder sample allows you to import credentials from Bitwarden using Powershell.</Description>
-      <Notes><![CDATA[<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title></title>
-<style type="text/css">.csB8AC2BC8{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
-			.csCE67CBC9{color:#000000;background-color:transparent;font-family:Calibri;font-size:11pt;font-weight:normal;font-style:normal;}
-			.cs8A3D3EFA{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:18pt;font-weight:bold;font-style:normal;}
-			.cs32D317EB{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt}
-			.csD05B7528{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:bold;font-style:normal;}
-			.csD599CF66{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
-			.cs3785182E{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: none;}
-			.cs5E4473C3{color:#0000FF;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: underline;}
-			.cs73206D29{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:13.5pt;font-weight:bold;font-style:normal;}
-			.cs6B0FFF63{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal}
-			.csC22FCEB2{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:circle;color:#000000;background-color:transparent;font-family:'Courier New';font-size:12pt;font-weight:normal;font-style:normal}
-			.csE1537053{color:#000000;background-color:transparent;font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;}
-			.csB67336A5{text-align:left;text-indent:-18pt;margin:0pt 0pt 0pt 36pt}
-			.csD08E4B8C{color:#C00000;background-color:transparent;font-family:'Times New Roman';font-size:13.5pt;font-weight:bold;font-style:normal;text-decoration: underline;}
-</style>
-<h2 class="csB8AC2BC8"><span class="csCE67CBC9">&nbsp;</span><span class="cs8A3D3EFA">Bitwarden Dynamic Folder sample with Powershell</span></h2>
-
-<p class="cs32D317EB"><span class="csD05B7528">Version</span><span class="csD599CF66">: 1.0.1</span><br />
-<span class="csD05B7528">Author</span><span class="csD599CF66">: Nicolas Grimler</span></p>
-
-<p class="cs32D317EB"><span class="csD599CF66">This Dynamic Folder sample allows you to import credentials from Bitwarden. The Bitwarden CLI client is required and the full executable path where it is installed must be configured in the &quot;Custom Properties&quot; section. Also, your Bitwarden login details must be provided in the &quot;Credentials&quot; section.</span></p>
-
-<p class="cs32D317EB"><span class="csD599CF66">It use the Bitwarden User API to login and the master password to unlock the vault. Please read <a class="cs3785182E" href="https://bitwarden.com/help/personal-api-key/"><span class="cs5E4473C3">https://bitwarden.com/help/personal-api-key/</span></a></span><span class="csD599CF66"> to know how to get your personal API Key.<br />
-If you don&#39;t want to use an API Key, please ensure that you are already logged in using the bw.exe CLI tool as the script will not handle the TOTP 2FA handshake.</span></p>
-
-<p class="cs32D317EB"><span class="csD599CF66">At the moment, only credentials and secure notes are collected. The folder structure is as presented in Bitwarden (Folder, Folder/Subfolder, ...). Support for full directory structure may be implemented in future version.</span></p>
-
-<h3 class="csB8AC2BC8"><span class="cs73206D29">Requirements</span></h3>
-
-<ul style="margin-top:0;margin-bottom:0;">
-	<li class="cs6B0FFF63"><span class="csD599CF66"><a class="cs3785182E" href="https://help.bitwarden.com/article/cli"><span class="cs5E4473C3">Bitwarden command-line tool (CLI)</span></a></span></li>
-	<li class="cs6B0FFF63"><span class="csD599CF66">PowerShell, either:</span>
-	<ul style="margin-top:0;margin-bottom:0;">
-		<li class="csC22FCEB2"><span class="csD599CF66">Legacy PowerShell (version 5.1 as standard Windows installation)</span></li>
-		<li class="csC22FCEB2"><span class="csD599CF66">PowerShell Core (6.x and later) available in <a class="cs3785182E" href="https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D?hl=en-us&amp;gl=us"><span class="cs5E4473C3">Microsoft Store</span></a></span><span class="csD599CF66"> or <a class="cs3785182E" href="https://github.com/PowerShell/PowerShell"><span class="cs5E4473C3">GitHub</span></a></span></li>
-	</ul>
-	</li>
-</ul>
-
-<p class="csB8AC2BC8"><span class="csE1537053">&nbsp;</span></p>
-
-<h3 class="csB8AC2BC8"><span class="cs73206D29">Setup</span></h3>
-
-<ul style="margin-top:0;margin-bottom:0;">
-	<li class="cs6B0FFF63"><span class="csD599CF66">Specify the full, absolute path to the Bitwarden CLI tool in the &quot;Custom Properties&quot; section.</span></li>
-	<li class="cs6B0FFF63"><span class="csD599CF66">Specify your server URL if on-premise instance, or offical Bitwarden URL</span></li>
-	<li class="cs6B0FFF63"><span class="csD599CF66">Specify your ClientID &amp; ClientSecret for the API</span></li>
-	<li class="cs6B0FFF63"><span class="csD599CF66">Specify you master password to unlock the vault</span></li>
-</ul>
-
-<p class="csB67336A5"><span class="csD599CF66">&nbsp;</span></p>
-
-<p class="csB8AC2BC8"><span class="csD08E4B8C">Important note:</span></p>
-
-<p class="csB8AC2BC8"><span class="csD599CF66">In the configuration of the interpreter used to run the script, </span><span class="csD05B7528">check</span><span class="csD599CF66"> the box &quot;Do not load the PowerShell profile&quot; as it may otherwise add unwanted messages invalidating the JSON output and causing errors.</span></p>
+      <Name>Bitwarden (PowerShell)</Name>
+      <Description>This Dynamic Folder sample allows you to import credentials and SSH Keys from Bitwarden using Powershell.</Description>
+      <Notes><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><title>
+		</title>
+		<style type="text/css">
+			.cs3EB31D72{text-align:left;text-indent:0pt;margin:12pt 0pt 12pt 0pt}
+			.cs5564256B{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:14pt;font-weight:bold;font-style:normal;}
+			.cs1F126FCB{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:bold;font-style:normal;}
+			.cs32C715A1{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
+			.cs26577F8A{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: none;}
+			.cs213CC355{color:#0000FF;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;text-decoration: underline;}
+			.csE58D0D{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
+			.csBEE824A{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:13.5pt;font-weight:bold;font-style:normal;}
+			.csCCF36E45{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:disc;color:#000000;background-color:transparent;font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal}
+			.cs942D037A{color:#000000;background-color:transparent;font-family:Arial;font-size:12pt;font-weight:normal;font-style:normal;}
+			.cs9B6BF8EA{text-align:left;margin:0pt 0pt 0pt 0pt;list-style-type:circle;color:#000000;background-color:transparent;font-family:'Courier New';font-size:12pt;font-weight:normal;font-style:normal}
+			.cs9DE1588F{text-align:left;text-indent:-18pt;margin:0pt 0pt 0pt 36pt}
+			.csBD240BC2{color:#C00000;background-color:transparent;font-family:'Times New Roman';font-size:13.5pt;font-weight:bold;font-style:normal;text-decoration: underline;}
+		</style>
+	</head>
+	<body>
+		<p class="cs3EB31D72"><a name="_dx_frag_StartFragment"></a><a name="_dx_frag_EndFragment"></a><span class="cs5564256B">Bitwarden Dynamic Folder sample with Powershell</span></p><p class="cs3EB31D72"><span class="cs1F126FCB">Version</span><span class="cs32C715A1">: 1.0.2<br/></span><span class="cs1F126FCB">Author</span><span class="cs32C715A1">: Michael Seirer<br/></span><span class="cs1F126FCB">Change</span><span class="cs32C715A1">: Importing SSH Keys from Bitwarden as well</span></p><p class="cs3EB31D72"><span class="cs1F126FCB">Version</span><span class="cs32C715A1">: 1.0.1<br/></span><span class="cs1F126FCB">Author</span><span class="cs32C715A1">: Nicolas Grimler</span></p><p class="cs3EB31D72"><span class="cs32C715A1">This Dynamic Folder sample allows you to import credentials and SSH Keys from Bitwarden. The Bitwarden CLI client is required and the full executable path where it is installed must be configured in the &quot;Custom Properties&quot; section. Also, your Bitwarden login details must be provided in the &quot;Credentials&quot; section.</span></p><p class="cs3EB31D72"><span class="cs32C715A1">It use the Bitwarden User API to login and the master password to unlock the vault. Please read <a class="cs26577F8A" href="https://bitwarden.com/help/personal-api-key/"><span class="cs213CC355">https://bitwarden.com/help/personal-api-key/</span></a></span><span class="cs32C715A1"> to know how to get your personal API Key.<br/>If you don&#39;t want to use an API Key, please ensure that you are already logged in using the bw.exe CLI tool as the script will not handle the TOTP 2FA handshake.</span></p><p class="cs3EB31D72"><span class="cs32C715A1">At the moment, only credentials and secure notes are collected. The folder structure is as presented in Bitwarden (Folder, Folder/Subfolder, ...). Support for full directory structure may be implemented in future version.</span></p><h3 class="csE58D0D">
+			<span class="csBEE824A">Requirements</span></h3>
+		<ul style="margin-top:0;margin-bottom:0;">
+			<li class="csCCF36E45"><span class="cs32C715A1"><a class="cs26577F8A" href="https://help.bitwarden.com/article/cli"><span class="cs213CC355">Bitwarden command-line tool (CLI)</span></a></span></li><li class="csCCF36E45"><span class="cs32C715A1">PowerShell, either:</span><span class="cs942D037A"> </span><ul style="margin-top:0;margin-bottom:0;">
+				<li class="cs9B6BF8EA"><span class="cs32C715A1">Legacy PowerShell (version 5.1 as standard Windows installation)</span></li><li class="cs9B6BF8EA"><span class="cs32C715A1">PowerShell Core (6.x and later) available in <a class="cs26577F8A" href="https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D?hl=en-us&amp;gl=us"><span class="cs213CC355">Microsoft Store</span></a></span><span class="cs32C715A1"> or <a class="cs26577F8A" href="https://github.com/PowerShell/PowerShell"><span class="cs213CC355">GitHub</span></a></span></li></ul>
+			</li></ul>
+		<p class="csE58D0D"><span class="cs942D037A">&nbsp;</span></p><h3 class="csE58D0D">
+			<span class="csBEE824A">Setup</span></h3>
+		<ul style="margin-top:0;margin-bottom:0;">
+			<li class="csCCF36E45"><span class="cs32C715A1">Specify the full, absolute path to the Bitwarden CLI tool in the &quot;Custom Properties&quot; section.</span></li><li class="csCCF36E45"><span class="cs32C715A1">Specify your server URL if on-premise instance, or offical Bitwarden URL</span></li><li class="csCCF36E45"><span class="cs32C715A1">Specify your ClientID &amp; ClientSecret for the API</span></li><li class="csCCF36E45"><span class="cs32C715A1">Specify you master password to unlock the vault</span></li></ul>
+		<p class="cs9DE1588F"><span class="cs32C715A1">&nbsp;</span></p><p class="csE58D0D"><span class="csBD240BC2">Important note:</span></p><p class="csE58D0D"><span class="cs32C715A1">In the configuration of the interpreter used to run the script, </span><span class="cs1F126FCB">check</span><span class="cs32C715A1"> the box &quot;Do not load the PowerShell profile&quot; as it may otherwise add unwanted messages invalidating the JSON output and causing errors.</span></p></body>
+</html>
 ]]></Notes>
       <CustomProperties>
         <CustomProperty>
@@ -228,6 +205,45 @@ function Get-VaultItems {
         $row.CustomProperties = $itemFields
         $items += $row
       }
+	  "5" { # SSH KEY
+        $row = "" | Select-Object Type,ID,Name,Notes,KeyFileContent,CustomProperties
+        $row.Type = "Credential"
+        $row.ID = $item.id
+        $row.Name = $item.name
+        if ($null -ne $item.notes) {
+          $row.Notes = $item.notes.Replace("`r`n", "<br />").Replace("`r", "<br />").Replace("`n", "<br />")
+        }
+		$row.KeyFileContent=$item.sshKey.privateKey
+		$row.CustomProperties = [array]@()
+        if ($item.fields.count -gt 0) {
+          $itemFields = [array]@()
+          $fieldIndex = 0
+          foreach ($field in $item.fields) {
+            $frow = "" | Select-Object Type,Name,Value
+            switch ($field.type) {
+              "0" { $frow.Type = "Text" }
+              "1" { $frow.Type = "Protected" }
+              "2" { $frow.Type = "YesNo" }
+            }
+			if ($null -eq $frow.Type) {
+			  continue
+			}
+            if ($null -eq $field.name) {
+              $frow.Name = "UnnamedField$($fieldIndex)"
+              $fieldIndex++
+            } else {
+              $frow.Name = $field.name
+            }
+			
+			$frow.Value = $field.value
+
+            $itemFields += $frow
+          }
+          
+          $row.CustomProperties = $itemFields
+        }
+        $items += $row
+      }
     }
   }
 
@@ -324,6 +340,40 @@ if ($PSVersionTable.PSVersion -ge '6.2') {
 }
 ]]></Script>
       <DynamicCredentialScriptInterpreter>json</DynamicCredentialScriptInterpreter>
+      <DynamicCredentialScript><![CDATA[{
+	"Objects": [
+		{
+			"Type": "Credential",
+			"Name": "Root",
+			"Username": "root",
+			"Password": "!ehrfew9fe9gew7rgew@",
+			"ID": "000001",
+			"Path": "/Credentials"
+		}, {
+			"Type": "Folder",
+			"Name": "Connections",
+			"Objects": [
+				{
+					"Type": "TerminalConnection",
+					"TerminalConnectionType": "SSH",
+					"Name": "VM01",
+					"ComputerName": "vm01",
+					"CredentialID": "000001"
+				}
+			]
+		}
+	]
+}]]></DynamicCredentialScript>
+      <DynamicFolderScriptTokenMode>ReplaceInline</DynamicFolderScriptTokenMode>
+      <DynamicFolderScriptEnvironmentPrefix>DynFolder_</DynamicFolderScriptEnvironmentPrefix>
+      <DynamicFolderScriptTokens>
+        <Token />
+      </DynamicFolderScriptTokens>
+      <DynamicCredentialScriptTokenMode>ReplaceInline</DynamicCredentialScriptTokenMode>
+      <DynamicCredentialScriptEnvironmentPrefix>DynCredential_</DynamicCredentialScriptEnvironmentPrefix>
+      <DynamicCredentialScriptTokens>
+        <Token />
+      </DynamicCredentialScriptTokens>
     </DynamicFolderExportObject>
   </Objects>
 </DynamicFolderExport>
