@@ -140,6 +140,45 @@ function Get-VaultItems {
         $row.CustomProperties = $itemFields
         $items += $row
       }
+	  "5" { # SSH KEY
+        $row = "" | Select-Object Type,ID,Name,Notes,KeyFileContent,CustomProperties
+        $row.Type = "Credential"
+        $row.ID = $item.id
+        $row.Name = $item.name
+        if ($null -ne $item.notes) {
+          $row.Notes = $item.notes.Replace("`r`n", "<br />").Replace("`r", "<br />").Replace("`n", "<br />")
+        }
+		$row.KeyFileContent=$item.sshKey.privateKey
+		$row.CustomProperties = [array]@()
+        if ($item.fields.count -gt 0) {
+          $itemFields = [array]@()
+          $fieldIndex = 0
+          foreach ($field in $item.fields) {
+            $frow = "" | Select-Object Type,Name,Value
+            switch ($field.type) {
+              "0" { $frow.Type = "Text" }
+              "1" { $frow.Type = "Protected" }
+              "2" { $frow.Type = "YesNo" }
+            }
+			if ($null -eq $frow.Type) {
+			  continue
+			}
+            if ($null -eq $field.name) {
+              $frow.Name = "UnnamedField$($fieldIndex)"
+              $fieldIndex++
+            } else {
+              $frow.Name = $field.name
+            }
+			
+			$frow.Value = $field.value
+
+            $itemFields += $frow
+          }
+          
+          $row.CustomProperties = $itemFields
+        }
+        $items += $row
+      }
     }
   }
 

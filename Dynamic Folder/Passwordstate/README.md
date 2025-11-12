@@ -73,19 +73,19 @@ First you will need to setup the environment for PasswordState. This prevents yo
 		For API Key
 
 	
-    Set-PasswordStateEnvironment  -baseuri "https://passwordstatserver.co.uk" -apikey "dsiwjdi9e0377dw84w45dsw5sw"
+Set-PasswordStateEnvironment  -baseuri "https://passwordstatserver.co.uk" -apikey "dsiwjdi9e0377dw84w45dsw5sw"
 
 #### 
 		For Windows Auth With Pass Through Authentication
 
 	
-    Set-PasswordStateEnvironment  -baseuri "https://passwordstateserver.co.uk" -WindowsAuthOnly
+Set-PasswordStateEnvironment  -baseuri "https://passwordstateserver.co.uk" -WindowsAuthOnly
 
 #### 
 		For Windows Auth With Custom Credentials
 
 	
-    Set-PasswordStateEnvironment  -baseuri "https://passwordstateserver.co.uk" -customcredentials $(Get-Credential)
+Set-PasswordStateEnvironment  -baseuri "https://passwordstateserver.co.uk" -customcredentials $(Get-Credential)
 
 This will save a file called passwordstate.json under the users profile folder.
 

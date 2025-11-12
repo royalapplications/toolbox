@@ -36,13 +36,13 @@ Attached Serial Devices
 
 `-- USB-SERIAL CH340 (COM34)
 
-    |-- COM34 9600 8N1
+|-- COM34 9600 8N1
 
-    |-- COM34 9600 7E1
+|-- COM34 9600 7E1
 
-    |-- COM34 19200 8N1
+|-- COM34 19200 8N1
 
-    `-- COM34 19200 7E1
+`-- COM34 19200 7E1
 
 ## 		Requirements
 	
