@@ -14,40 +14,47 @@
 
 # <a name="toc-Bitwarden-PowerShell-rdfx"></a> Bitwarden (PowerShell).rdfx
 
-This Dynamic Folder sample allows you to import credentials from Bitwarden using Powershell.
+This Dynamic Folder sample allows you to import credentials and SSH Keys from Bitwarden using Powershell.
 
 Source files:
 
 - [`Bitwarden (PowerShell).rdfx`](./Bitwarden%20%28PowerShell%29.rdfx)
 - [`Bitwarden (PowerShell).script.autogen.ps1`](./Bitwarden%20%28PowerShell%29.script.autogen.ps1)
+- [`Bitwarden (PowerShell).dyncred-script.autogen.json`](./Bitwarden%20%28PowerShell%29.dyncred-script.autogen.json)
 
-##  Bitwarden Dynamic Folder sample with Powershell
+Bitwarden Dynamic Folder sample with Powershell
+
+Version: 1.0.2
+Author: Michael Seirer
+Change: Importing SSH Keys from Bitwarden as well
 
 Version: 1.0.1
-
 Author: Nicolas Grimler
 
-This Dynamic Folder sample allows you to import credentials from Bitwarden. The Bitwarden CLI client is required and the full executable path where it is installed must be configured in the "Custom Properties" section. Also, your Bitwarden login details must be provided in the "Credentials" section.
+This Dynamic Folder sample allows you to import credentials and SSH Keys from Bitwarden. The Bitwarden CLI client is required and the full executable path where it is installed must be configured in the "Custom Properties" section. Also, your Bitwarden login details must be provided in the "Credentials" section.
 
 It use the Bitwarden User API to login and the master password to unlock the vault. Please read [https://bitwarden.com/help/personal-api-key/](https://bitwarden.com/help/personal-api-key/) to know how to get your personal API Key.
-
 If you don't want to use an API Key, please ensure that you are already logged in using the bw.exe CLI tool as the script will not handle the TOTP 2FA handshake.
 
 At the moment, only credentials and secure notes are collected. The folder structure is as presented in Bitwarden (Folder, Folder/Subfolder, ...). Support for full directory structure may be implemented in future version.
 
-### Requirements
-
+### 		Requirements
+	
 - [Bitwarden command-line tool (CLI)](https://help.bitwarden.com/article/cli)
-- PowerShell, either:
+- PowerShell, either: 
     - Legacy PowerShell (version 5.1 as standard Windows installation)
     - PowerShell Core (6.x and later) available in [Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D?hl=en-us&amp;gl=us) or [GitHub](https://github.com/PowerShell/PowerShell)
 
-### Setup
+	
+
+### 		Setup
 
 - Specify the full, absolute path to the Bitwarden CLI tool in the "Custom Properties" section.
 - Specify your server URL if on-premise instance, or offical Bitwarden URL
 - Specify your ClientID & ClientSecret for the API
 - Specify you master password to unlock the vault
+
+	
 
 Important note:
 

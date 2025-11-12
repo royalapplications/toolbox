@@ -49,7 +49,7 @@ Source files:
 - [`AD Servers (Windows PowerShell).rdfe`](./AD%20Servers%20%28Windows%20PowerShell%29.rdfe)
 - [`AD Servers (Windows PowerShell).script.autogen.ps1`](./AD%20Servers%20%28Windows%20PowerShell%29.script.autogen.ps1)
 
-This script requires Windows PowerShell 4.x/5.x as well as the Active Directory 
+This script requires Windows PowerShell 4.x/5.x as well as the Active Directory
 
 Powershell Cmdlets.
 
@@ -59,7 +59,7 @@ To use this application, update the Custom Property ConfigFileName with the name
 
 Upon launching the form the first time, you are prompted to fill in a few settings.
 
-The first setting is the domain name.  After you type in the domain name, the ldap dc path and Primary Domain Controller Emulator will autopopulate the DC Root and DC fields.  
+The first setting is the domain name.  After you type in the domain name, the ldap dc path and Primary Domain Controller Emulator will autopopulate the DC Root and DC fields.
 
 The next field to fill in is the Connection Type dropdown.  This list contains all of the valid connection types the script is able to connect.  Depending on what option is selected other options will appear below the dropdown.  These settings include if the connection should use Cim sessions, what port number to use, and if the connection should be a admin/console connection.
 
@@ -84,7 +84,7 @@ The filter field allows for adding in filters which are compatible with the Powe
 
 After your settings are entered, click Submit to save the data.
 
-Every time you run the script to enumerate the computers, the Royal TS Dynamic Folder Configurator dialog will appear.  If the mouse is not moved over the screen within five seconds, the dialog assumes no data needs to be modified for the filter and the current selected filter is accepted.  
+Every time you run the script to enumerate the computers, the Royal TS Dynamic Folder Configurator dialog will appear.  If the mouse is not moved over the screen within five seconds, the dialog assumes no data needs to be modified for the filter and the current selected filter is accepted.
 
 If the configuration file is missing and cannot be loaded by the script, then the dialog will not automatically close as these settings are required to produce a list of computers.
 

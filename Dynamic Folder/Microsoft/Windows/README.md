@@ -67,7 +67,7 @@ Local Administrator Password Solution (LAPS)
 
 More information on LAPS can be found here:
 
-[https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview](https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview) 
+[https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview](https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview)
 
 Requirements:
 
