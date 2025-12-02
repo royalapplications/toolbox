@@ -24,6 +24,10 @@ Source files:
 
 Bitwarden Dynamic Folder sample with Powershell
 
+Version: 1.0.3
+Author: Michael Seirer
+Change: Items that are assigned to multiple collections in bitwarden are now only imported once which prevents the Dynamic Folder Script from crashing. Credentials which are reference via IDs in Royal TS will still work since their location within the Document is irrelevant.
+
 Version: 1.0.2
 Author: Michael Seirer
 Change: Importing SSH Keys from Bitwarden as well

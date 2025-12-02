@@ -29,6 +29,7 @@ if (!(Test-Path -Path "$($Bitwarden.exec_path)" -PathType Leaf)) {
 
 # Structures
 $final = @{ Objects = @(@{ Type = "Folder"; ID = "personal"; Name = "Personal Vault"; IconName = "Flat/Objects/User Record"; Objects = @(); }); }
+$existingIDs = [System.Collections.ArrayList]@()
 
 # Functions
 function Get-VaultItems {
@@ -54,6 +55,9 @@ function Get-VaultItems {
     # Skip shared items with an organization to prevent duplicates
     if ($folderid -ne "" -and $null -ne $item.organizationid) { continue }
 
+    # Skip iems that are shared in multiple collections
+    if($existingIDs.Contains($item.id))  { continue }
+	
     # Parse item of type Login/Secure Note only
     switch ($item.type) {
       "1" { # Login
@@ -180,6 +184,7 @@ function Get-VaultItems {
         $items += $row
       }
     }
+	$existingIDs.Add($item.id) | Out-Null
   }
 
   return $items
