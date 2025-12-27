@@ -33,7 +33,7 @@ jobs:
         run: dotnet run --project ./tools/ToolboxIndex -- "./Dynamic Folder" --generate-readme-files --extract-script-files
       
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           commit-message: "[ci] Dynamic Folder Index updated"
           title: "[ci] Dynamic Folder Index updated"
