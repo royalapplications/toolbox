@@ -114,6 +114,6 @@ static class Markdown
         RemoveComments = true,
         TableWithoutHeaderRowHandling = Config.TableWithoutHeaderRowHandlingOption.EmptyRow,
         UnknownTags = Config.UnknownTagsOption.Bypass, // render contents
-        WhitelistUriSchemes = ["http", "https"],
+        WhitelistUriSchemes = {"http", "https"},
     });
 }

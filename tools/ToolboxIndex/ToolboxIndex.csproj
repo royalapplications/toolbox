@@ -7,7 +7,7 @@
         <Nullable>enable</Nullable>
         <LangVersion>preview</LangVersion>
         <Deterministic>true</Deterministic>
-        <Features>strict</Features>
+        <Features>$(Features);strict</Features>
 
         <ImplicitUsings>disable</ImplicitUsings>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -16,6 +16,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ReverseMarkdown" Version="4.7.1" />
+        <PackageReference Include="ReverseMarkdown" Version="5.3.0" />
     </ItemGroup>
 </Project>
