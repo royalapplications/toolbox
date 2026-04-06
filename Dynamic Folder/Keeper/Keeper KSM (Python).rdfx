@@ -1,0 +1,1112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>Keeper Secrets Manager (Python)</Name>
+      <Description>Dynamic credentials from Keeper Secrets Manager (KSM) using Python on Windows and macOS — server, database, login, and SSH key records. Set KSM config path and optional database client paths in Custom Properties.</Description>
+      <Notes><![CDATA[<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Keeper Secrets Manager Dynamic Folder</title>
+<style type="text/css">
+h2 { font-family: Arial; font-size: 16pt; font-weight: bold; }
+h3 { font-family: Arial; font-size: 14pt; font-weight: bold; }
+p, li { font-family: Arial; font-size: 11pt; }
+code { font-family: monospace; background-color: #f0f0f0; padding: 2px 4px; }
+</style>
+
+<h2>Keeper Secrets Manager Dynamic Folder</h2>
+
+<p>This Dynamic Folder imports credentials from Keeper Security using the <strong>Keeper Secrets Manager (KSM) SDK</strong>. This Python implementation works on both <strong>Windows and macOS</strong>.</p>
+
+<p>Items are imported as Dynamic Credentials. The username and password fields remain empty after reloading and are only fetched when a connection is established.</p>
+
+<h3>Requirements</h3>
+<ul>
+  <li>Royal TS v7 or higher / Royal TSX v6 or higher</li>
+  <li>Python 3.9 or higher</li>
+  <li>Keeper Secrets Manager SDK: <code>pip install keeper-secrets-manager-core</code></li>
+  <li>Keeper Business or Enterprise account with Secrets Manager enabled</li>
+  <li>KSM Configuration file (.ini, .json, or .base64 from Keeper Vault)</li>
+</ul>
+
+<h3>Configuration</h3>
+<p>Set the <strong>KSM Config Path</strong> custom property to point to your config file. Supported formats:</p>
+<ul>
+  <li><code>.json</code> - From Keeper Vault → Secrets Manager → Add Device → Configuration File → JSON</li>
+  <li><code>.base64</code> - From Keeper Vault → Secrets Manager → Add Device → Configuration File → Base64</li>
+  <li><code>.ini</code> - From Keeper CLI: create KSM app, get one-time token, run <code>ksm init default --token YOUR_TOKEN</code></li>
+</ul>
+<p>All config formats work on both <strong>Windows (Royal TS)</strong> and <strong>macOS (Royal TSX)</strong>. Use the platform-specific path fields (KSM Config Path for Windows / macOS).</p>
+
+<h3>Supported Record Types</h3>
+<ul>
+  <li><code>login</code> - Standard username/password credentials</li>
+  <li><code>serverCredentials</code> - Server credentials with host/port</li>
+  <li><code>databaseCredentials</code> - Database credentials (MySQL, PostgreSQL, MSSQL, Oracle, MongoDB, Redis; Windows: External Application; macOS: Terminal/iTerm2 with helper script)</li>
+  <li><code>sshKeys</code> - SSH private keys (KeyFileContent supported)</li>
+</ul>
+<p>For <code>databaseCredentials</code>: Supports <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>MSSQL</strong>, <strong>Oracle</strong>, <strong>MongoDB</strong>, and <strong>Redis</strong>. Database type is read from the Keeper record's Type field. <strong>Windows</strong> uses External Application; <strong>macOS</strong> uses Terminal (iTerm2-compatible) with a helper script. Set each database client path you use and KSM Config Path in Custom Properties. On macOS, the helper script is written to <code>~/.config/royal-keeper/db_connect.py</code>. Credentials are never logged or exposed.</p>
+
+<h3>Usage</h3>
+<ol>
+  <li>Reload the Dynamic Folder to see your Keeper credentials</li>
+  <li>Create a new connection (SSH, RDP, SFTP, etc.)</li>
+  <li>Enter the host and port manually</li>
+  <li>In the Credentials tab, select "Specify a credential name"</li>
+  <li>Choose your Keeper credential from the dropdown</li>
+  <li>Connect - credentials are fetched securely from Keeper</li>
+</ol>
+
+<h3>Documentation</h3>
+<p><strong>Keeper:</strong> Create a Secrets Manager application, share records, and obtain a configuration file — see the <a href="https://docs.keeper.io/en/keeperpam/secrets-manager/quick-start-guide">Secrets Manager Quick Start</a> and <a href="https://docs.keeper.io/en/keeperpam/secrets-manager">Secrets Manager documentation</a>.</p>
+<p><strong>Royal TS / Royal TSX:</strong> Importing Dynamic Folders, plugins, and connection types — see <a href="https://www.royalapplications.com/ts/win">Royal TS</a> and <a href="https://www.royalapplications.com/ts/mac">Royal TSX</a> product help.</p>
+
+<h3>Author</h3>
+<p>Keeper Security</p>
+]]></Notes>
+      <CustomProperties>
+        <CustomProperty>
+          <Name>KSM Configuration</Name>
+          <Type>Header</Type>
+          <Value />
+        </CustomProperty>
+        <CustomProperty>
+          <Name>KSM Config Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value></Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>KSM Config Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value></Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Database Paths</Name>
+          <Type>Header</Type>
+          <Value />
+        </CustomProperty>
+        <CustomProperty>
+          <Name>MySQL Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value>/usr/local/bin/mysql</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>MySQL Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value>C:\path\to\mysql.exe</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>PostgreSQL Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value>/usr/local/bin/psql</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>PostgreSQL Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value>C:\path\to\psql.exe</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>MSSQL Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value>/usr/local/bin/sqlcmd</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>MSSQL Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value>C:\path\to\sqlcmd.exe</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Oracle Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value>/usr/local/bin/sqlplus</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Oracle Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value>C:\path\to\sqlplus.exe</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>MongoDB Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value>/usr/local/bin/mongosh</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>MongoDB Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value>C:\path\to\mongosh.exe</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Redis Path (macOS)</Name>
+          <Type>Text</Type>
+          <Value>/usr/local/bin/redis-cli</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Redis Path (Windows)</Name>
+          <Type>Text</Type>
+          <Value>C:\path\to\redis-cli.exe</Value>
+        </CustomProperty>
+      </CustomProperties>
+      <ScriptInterpreter>python</ScriptInterpreter>
+      <Script><![CDATA[
+"""
+Keeper Secrets Manager - Dynamic Folder Script for Royal TS/TSX
+Author: Keeper Security
+Version: 1.0.0
+
+This script fetches credentials from Keeper Secrets Manager and outputs them
+as Dynamic Credentials in RoyalJSON format.
+
+Features:
+- Credentials Only Approach (users create connections manually)
+- URL extraction for login records
+- Cross-platform support (Windows and macOS)
+"""
+
+import configparser
+import json
+import os
+import sys
+from typing import Dict, List, Any, Optional
+
+# Configuration from Custom Properties
+ksm_config_path_macos = r"$CustomProperty.KSMConfigPathmacOS$"
+ksm_config_path_windows = r"$CustomProperty.KSMConfigPathWindows$"
+mysql_path_windows = r"$CustomProperty.MySQLPathWindows$"
+mysql_path_macos = r"$CustomProperty.MySQLPathmacOS$"
+postgres_path_windows = r"$CustomProperty.PostgreSQLPathWindows$"
+postgres_path_macos = r"$CustomProperty.PostgreSQLPathmacOS$"
+mssql_path_windows = r"$CustomProperty.MSSQLPathWindows$"
+mssql_path_macos = r"$CustomProperty.MSSQLPathmacOS$"
+oracle_path_windows = r"$CustomProperty.OraclePathWindows$"
+oracle_path_macos = r"$CustomProperty.OraclePathmacOS$"
+mongodb_path_windows = r"$CustomProperty.MongoDBPathWindows$"
+mongodb_path_macos = r"$CustomProperty.MongoDBPathmacOS$"
+redis_path_windows = r"$CustomProperty.RedisPathWindows$"
+redis_path_macos = r"$CustomProperty.RedisPathmacOS$"
+
+# Suppress warnings
+os.environ['KSM_CONFIG_SKIP_MODE_WARNING'] = 'TRUE'
+
+
+def _get_safe_error_description(exc: Exception) -> str:
+    """Return a safe, helpful error description without exposing credentials."""
+    msg = str(exc).strip() if exc else ""
+    if "KSM Config Path is not configured" in msg or "not configured" in msg.lower():
+        return "Set KSM Config Path (macOS) in Custom Properties to your KSM config file path"
+    if "not found" in msg.lower() and "config" in msg.lower():
+        return "KSM config file not found. Check the path in Custom Properties"
+    if "Profile" in msg and "not found" in msg:
+        return "INI profile not found. Use JSON or Base64 config, or fix profile name"
+    if "FileNotFoundError" in type(exc).__name__ or "not found" in msg.lower():
+        return "Config file not found at the configured path"
+    if "ImportError" in type(exc).__name__ or "not installed" in msg.lower():
+        return "Run: pip install keeper-secrets-manager-core"
+    return "Check KSM config path and configuration"
+
+
+def _get_windows_short_path(path: str) -> str:
+    """
+    Return Windows 8.3 short path when the path contains spaces.
+    Royal TS External Application often splits Arguments on spaces; unquoted paths
+    break at 'C:\\Program Files\\...'. Short paths avoid spaces.
+    """
+    if os.name != "nt" or not path or " " not in path.strip():
+        return path.strip()
+    try:
+        import ctypes
+        norm = os.path.normpath(path.strip())
+        buf = ctypes.create_unicode_buffer(4096)
+        n = ctypes.windll.kernel32.GetShortPathNameW(norm, buf, ctypes.sizeof(buf) // 2)
+        if n and buf.value:
+            return buf.value
+    except Exception:
+        pass
+    return path.strip()
+
+
+def _normalize_db_type(raw: str) -> str:
+    """Normalize Keeper database Type field to supported db types."""
+    t = raw.strip().lower() if raw else ""
+    if not t:
+        return "mysql"
+    if t in ("mysql", "mariadb"):
+        return "mysql"
+    if t in ("postgresql", "postgres", "pg"):
+        return "postgres"
+    if t in ("mssql", "sql server", "sqlserver", "microsoft sql server"):
+        return "mssql"
+    if t in ("oracle", "oracledb"):
+        return "oracle"
+    if t in ("mongodb", "mongo"):
+        return "mongodb"
+    if t == "redis":
+        return "redis"
+    return "mysql"
+
+
+class RoyalUtils:
+    """Utility class for Royal TS/TSX operations."""
+    
+    @staticmethod
+    def is_macOS() -> bool:
+        """Check if running on macOS."""
+        return sys.platform.lower().startswith("darwin")
+    
+    @staticmethod
+    def exit_with_error(message: str, exception: Optional[Exception] = None,
+                        hint: Optional[str] = None) -> None:
+        """Print error message and exit. Never logs credentials or sensitive data."""
+        err_type = type(exception).__name__ if exception else "Error"
+        out = f"{message}: {err_type}"
+        if hint:
+            out += f" - {hint}"
+        sys.stderr.write(out + "\n")
+        sys.exit(1)
+    
+    @staticmethod
+    def to_json(obj: Any, pretty: bool = False) -> str:
+        """Convert object to JSON string."""
+        return json.dumps(obj, indent=4) if pretty else json.dumps(obj)
+
+
+def _create_ksm_storage(config_path: str, profile_name: str = "_default"):
+    """Create KSM storage from .ini, .json, or .base64 config file."""
+    from keeper_secrets_manager_core.storage import InMemoryKeyValueStorage, FileKeyValueStorage
+    from keeper_secrets_manager_core.configkeys import ConfigKeys
+    
+    ext = os.path.splitext(config_path)[1].lower()
+    
+    if ext == ".json":
+        return FileKeyValueStorage(config_path)
+    if ext == ".base64":
+        import base64
+        import tempfile
+        with open(config_path, encoding="utf-8") as f:
+            decoded = base64.b64decode(f.read().strip()).decode("utf-8")
+        tf = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8")
+        tf.write(decoded)
+        tf.close()
+        return FileKeyValueStorage(tf.name)
+    # .ini or default
+    config = configparser.ConfigParser(allow_no_value=True)
+    config.read(config_path)
+    if profile_name not in config.sections():
+        raise ValueError(f"Profile '{profile_name}' not found in {config_path}")
+    profile = config[profile_name]
+    storage = InMemoryKeyValueStorage()
+    key_mapping = {
+        "clientid": ConfigKeys.KEY_CLIENT_ID,
+        "privatekey": ConfigKeys.KEY_PRIVATE_KEY,
+        "appkey": ConfigKeys.KEY_APP_KEY,
+        "hostname": ConfigKeys.KEY_HOSTNAME,
+        "appownerpublickey": ConfigKeys.KEY_OWNER_PUBLIC_KEY,
+        "serverpublickeyid": ConfigKeys.KEY_SERVER_PUBLIC_KEY_ID,
+    }
+    for ini_key, sdk_key in key_mapping.items():
+        if ini_key in profile and profile[ini_key]:
+            storage.set(sdk_key, profile[ini_key])
+    return storage
+
+
+class KeeperKSM:
+    """Keeper Secrets Manager client. Supports .ini, .json, and .base64 config formats."""
+    
+    def __init__(self, config_path: str, profile_name: str = "_default"):
+        """
+        Initialize KSM client. Config format is auto-detected from file extension.
+        
+        Args:
+            config_path: Path to config file (.ini, .json, or .base64)
+            profile_name: Profile section name for .ini files only
+        """
+        try:
+            from keeper_secrets_manager_core import SecretsManager
+        except ImportError:
+            raise ImportError(
+                "keeper-secrets-manager-core is not installed. "
+                "Run: pip install keeper-secrets-manager-core"
+            )
+        if not config_path or config_path.startswith("$"):
+            raise ValueError("KSM Config Path is not configured. Set it in Custom Properties.")
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"KSM config file not found: {config_path}")
+        storage = _create_ksm_storage(config_path, profile_name)
+        self.client = SecretsManager(config=storage)
+    
+    def get_secrets(self) -> List[Dict[str, Any]]:
+        """
+        Fetch all secrets from Keeper and parse them.
+        
+        Returns:
+            List of parsed secret records
+        """
+        secrets = self.client.get_secrets()
+        results = []
+        
+        for secret in secrets:
+            record = {
+                "uid": secret.uid,
+                "title": secret.title,
+                "type": secret.type,
+                "host": None,
+                "port": None,
+                "url": None,
+                "database_type": None,
+                "login": None,
+                "has_password": False,
+            }
+            
+            # Extract database type for databaseCredentials (text field = Type in Keeper UI)
+            if secret.type == "databaseCredentials":
+                try:
+                    db_type_raw = secret.field("text", single=True)
+                    if db_type_raw and isinstance(db_type_raw, str):
+                        record["database_type"] = _normalize_db_type(db_type_raw)
+                except Exception:
+                    pass
+                if not record["database_type"]:
+                    record["database_type"] = "mysql"
+                try:
+                    lg = secret.field("login", single=True)
+                    record["login"] = (lg or "").strip() if lg else ""
+                except Exception:
+                    record["login"] = ""
+                try:
+                    pw = secret.field("password", single=True)
+                    record["has_password"] = bool(pw and str(pw).strip())
+                except Exception:
+                    record["has_password"] = False
+            
+            # Extract URL for login records
+            try:
+                url = secret.field("url", single=True)
+                if url:
+                    record["url"] = url
+            except:
+                pass
+            
+            # Extract host information for description
+            try:
+                host_data = secret.field("host")
+                if host_data and len(host_data) > 0:
+                    if isinstance(host_data[0], dict):
+                        record["host"] = host_data[0].get("hostName")
+                        record["port"] = host_data[0].get("port")
+            except:
+                pass
+            
+            results.append(record)
+        
+        return results
+
+
+def _get_db_helper_path() -> str:
+    """Return path for the database connection helper script (macOS Terminal connections)."""
+    base = os.path.expanduser("~/.config/royal-keeper")
+    return os.path.join(base, "db_connect.py")
+
+
+def _write_db_launcher(config_path: str, uid: str, db_type: str, client_path: str,
+                       helper_path: str) -> str:
+    """Write a launcher .sh script for a DB connection. Returns script path."""
+    import hashlib
+    base = os.path.expanduser("~/.config/royal-keeper")
+    os.makedirs(base, exist_ok=True)
+    h = hashlib.md5(uid.encode()).hexdigest()[:12]
+    launcher_path = os.path.join(base, f"run_{h}.sh")
+    python_exe = sys.executable or "/usr/bin/python3"
+    client_arg = f' "{client_path}"' if client_path else ""
+    script = f'''#!/bin/bash
+"{python_exe}" -u "{helper_path}" "{config_path}" "keeper://{uid}" "{db_type}"{client_arg}
+exec /bin/bash -l
+'''
+    with open(launcher_path, "w", encoding="utf-8") as f:
+        f.write(script)
+    try:
+        os.chmod(launcher_path, 0o700)
+    except Exception:
+        pass
+    return launcher_path
+
+
+def _write_db_helper() -> str:
+    """Write the database connection helper script for macOS. Returns the script path."""
+    helper_path = _get_db_helper_path()
+    os.makedirs(os.path.dirname(helper_path), exist_ok=True)
+    script = '''
+"""Database connection helper for Keeper KSM - fetches credentials and runs DB client."""
+import os
+import sys
+import subprocess
+
+os.environ.setdefault("KSM_CONFIG_SKIP_MODE_WARNING", "TRUE")
+
+def _err(msg):
+    sys.stderr.write(msg + "\\n")
+    sys.exit(1)
+
+def main():
+    if len(sys.argv) < 4:
+        _err("Usage: db_connect.py <config_path> <record_uid> <db_type> [client_path]")
+    config_path, uid, db_type = sys.argv[1], sys.argv[2], (sys.argv[3] or "mysql").lower()
+    client_path = sys.argv[4] if len(sys.argv) > 4 and sys.argv[4] else None
+    uid = uid.replace("keeper://", "") if uid.startswith("keeper://") else uid
+    if not os.path.isfile(config_path):
+        _err("KSM config file not found")
+    try:
+        from keeper_secrets_manager_core import SecretsManager
+        from keeper_secrets_manager_core.storage import FileKeyValueStorage
+    except ImportError:
+        _err("Install: pip install keeper-secrets-manager-core")
+    sm = SecretsManager(config=FileKeyValueStorage(config_path))
+    secrets = sm.get_secrets([uid])
+    if not secrets:
+        _err("Record not found")
+    r = secrets[0]
+    login = r.field("login", single=True) or ""
+    password = r.field("password", single=True) or ""
+    host, port = "localhost", None
+    try:
+        hv = r.field("host", single=True)
+        if hv and isinstance(hv, dict):
+            host = hv.get("hostName", host)
+            port = hv.get("port")
+    except Exception:
+        pass
+    default_ports = {"mysql": "3306", "postgres": "5432", "mssql": "1433",
+                     "oracle": "1521", "mongodb": "27017", "redis": "6379"}
+    if port is None or str(port).strip() == "" or str(port).strip() == "0":
+        port = default_ports.get(db_type, "3306")
+    else:
+        port = str(port).strip()
+    env = os.environ.copy()
+    if db_type == "mysql":
+        bin_name = client_path or "mysql"
+        env["MYSQL_PWD"] = password
+        cmd = [bin_name, "-h", host, "-P", port, "-u", login]
+    elif db_type == "postgres":
+        bin_name = client_path or "psql"
+        env["PGPASSWORD"] = password
+        cmd = [bin_name, "-h", host, "-p", port, "-U", login]
+    elif db_type == "mssql":
+        bin_name = client_path or "sqlcmd"
+        cmd = [bin_name, "-S", host + "," + port, "-U", login, "-P", password, "-C", "-No"]
+    elif db_type == "oracle":
+        bin_name = client_path or "sqlplus"
+        # Oracle 21c XE PDB default; older XE / full Oracle often use XE or ORCL
+        service = "XEPDB1"
+        conn_str = f"{login}/{password}@//{host}:{port}/{service}"
+        cmd = [bin_name, conn_str]
+    elif db_type == "mongodb":
+        bin_name = client_path or "mongosh"
+        if (login or "").strip():
+            conn_str = f"mongodb://{login}:{password}@{host}:{port}"
+        else:
+            conn_str = f"mongodb://{host}:{port}"
+        cmd = [bin_name, conn_str]
+    elif db_type == "redis":
+        bin_name = client_path or "redis-cli"
+        cmd = [bin_name, "-h", host, "-p", port]
+        if password:
+            cmd.extend(["-a", password])
+        if login:
+            cmd.extend(["--user", login])
+    else:
+        bin_name = client_path or "mysql"
+        env["MYSQL_PWD"] = password
+        cmd = [bin_name, "-h", host, "-P", port, "-u", login]
+    subprocess.run(cmd, env=env, stdin=sys.stdin, stdout=sys.stdout, stderr=sys.stderr)
+if __name__ == "__main__":
+    main()
+'''
+    with open(helper_path, "w", encoding="utf-8") as f:
+        f.write(script)
+    try:
+        os.chmod(helper_path, 0o700)
+    except Exception:
+        pass
+    return helper_path
+
+
+def _get_db_default_port(db_type: str) -> str:
+    """Default port for database type."""
+    return {"mysql": "3306", "postgres": "5432", "mssql": "1433",
+            "oracle": "1521", "mongodb": "27017", "redis": "6379"}.get(db_type, "3306")
+
+
+def _normalize_db_port(port: Any, db_type: str) -> str:
+    """Keeper may send port 0 or \"0\" when unset; psql rejects port \"0\"."""
+    default = _get_db_default_port(db_type)
+    if port is None:
+        return default
+    s = str(port).strip()
+    if not s or s == "0":
+        return default
+    try:
+        n = int(s)
+        if n <= 0 or n > 65535:
+            return default
+    except ValueError:
+        return default
+    return str(n)
+
+
+def _get_db_args_template(
+    db_type: str,
+    port_str: Optional[str] = None,
+    *,
+    mongo_with_auth: bool = True,
+    redis_with_user: bool = False,
+    redis_with_password: bool = False,
+) -> str:
+    """
+    Arguments template for External Application (Windows) with credential tokens.
+    When port_str is set (normalized port from Keeper at reload), embed it literally.
+    Royal TS may resolve $$Port$$ from the connection object as 0; literals avoid that.
+    mongo_with_auth: if False, use mongodb://host:port (no empty user:pass@ which breaks mongosh).
+    redis: no -a when neither login nor password (reload detects non-empty password via KSM).
+    """
+    pp = port_str if port_str is not None else "$$Port$$"
+    if db_type == "mysql":
+        return f"-h $$URI$$ -P {pp} -u $$EffectiveUsername$$ -p$$EffectivePassword$$"
+    if db_type == "postgres":
+        return f'"postgresql://$$EffectiveUsername$$:$$EffectivePassword$$@$$URI$$:{pp}/postgres"'
+    if db_type == "mssql":
+        return f"-S $$URI$$,{pp} -U $$EffectiveUsername$$ -P $$EffectivePassword$$ -C -No"
+    if db_type == "oracle":
+        return f"$$EffectiveUsername$$/$$EffectivePassword$$@//$$URI$$:{pp}/XEPDB1"
+    if db_type == "mongodb":
+        if mongo_with_auth:
+            return f'"mongodb://$$EffectiveUsername$$:$$EffectivePassword$$@$$URI$$:{pp}"'
+        return f'"mongodb://$$URI$$:{pp}"'
+    if db_type == "redis":
+        if not redis_with_user and not redis_with_password:
+            return f"-h $$URI$$ -p {pp}"
+        if redis_with_user:
+            return (
+                f"-h $$URI$$ -p {pp} --user $$EffectiveUsername$$ "
+                f"-a $$EffectivePassword$$"
+            )
+        return f"-h $$URI$$ -p {pp} -a $$EffectivePassword$$"
+    return f"-h $$URI$$ -P {pp} -u $$EffectiveUsername$$ -p$$EffectivePassword$$"
+
+
+class Converter:
+    """Converts Keeper records to RoyalJSON Dynamic Credentials and Connections."""
+    
+    @staticmethod
+    def convert_items(items: List[Dict[str, Any]], db_paths: Dict[str, str],
+                      helper_path: str = "", config_path: str = "",
+                      db_path_placeholders: Optional[Dict[str, str]] = None) -> Dict:
+        """
+        Convert Keeper records to RoyalJSON format.
+        
+        Generates:
+        - Dynamic Credentials for all record types
+        - Windows: External Application for databaseCredentials
+        - macOS: TerminalConnection (CustomTerminal) for databaseCredentials (iTerm2-compatible)
+        
+        Args:
+            items: List of parsed Keeper records
+            db_paths: Dict of db_type -> client path (mysql, postgres, mssql)
+            helper_path: Path to db_connect.py helper (macOS only)
+            config_path: Resolved path to KSM config file (macOS only)
+            db_path_placeholders: Unused, kept for compatibility
+            
+        Returns:
+            RoyalJSON structure with Objects array
+        """
+        objects = []
+        
+        for item in items:
+            record_type = item.get("type", "login")
+            
+            # Always create a Dynamic Credential
+            cred = {
+                "Type": "DynamicCredential",
+                "Name": item["title"],
+                "ID": f"keeper://{item['uid']}",
+            }
+            
+            # Add URL if available (for login records)
+            if item.get("url"):
+                cred["URL"] = item["url"]
+            
+            # Add description with host:port or URL
+            if item.get("host"):
+                host = item["host"]
+                if record_type == "databaseCredentials":
+                    port = _normalize_db_port(
+                        item.get("port"),
+                        item.get("database_type") or "mysql",
+                    )
+                    cred["Description"] = f"{host}:{port}"
+                else:
+                    port = item.get("port", "")
+                    cred["Description"] = f"{host}:{port}" if port else host
+            elif item.get("url"):
+                cred["Description"] = item["url"]
+            
+            # Organize by record type
+            cred["Path"] = record_type
+            objects.append(cred)
+            
+            # For database credentials: Windows=External Application, macOS=Terminal (iTerm2)
+            if record_type == "databaseCredentials":
+                host = item.get("host", "")
+                db_type = item.get("database_type") or "mysql"
+                port = _normalize_db_port(item.get("port"), db_type)
+                uid = item.get("uid", "")
+                db_label = {"mysql": "MySQL", "postgres": "PostgreSQL", "mssql": "MSSQL",
+                            "oracle": "Oracle", "mongodb": "MongoDB", "redis": "Redis"}.get(db_type, "Database")
+                
+                if host and uid:
+                    if RoyalUtils.is_macOS() and helper_path and config_path:
+                        # macOS: Use launcher script - Royal TSX runs it reliably
+                        client_path = (db_paths.get(db_type) or "").strip()
+                        launcher_path = _write_db_launcher(
+                            config_path, uid, db_type, client_path, helper_path
+                        )
+                        term_conn = {
+                            "Type": "TerminalConnection",
+                            "TerminalConnectionType": "CustomTerminal",
+                            "Name": item["title"],
+                            "Description": f"{db_label} connection to {host}:{port}",
+                            "Path": f"databaseCredentials/{db_label} Connections",
+                            "CustomCommand": launcher_path,
+                            "Properties": {
+                                "RunInsideLoginShell": True,
+                            }
+                        }
+                        objects.append(term_conn)
+                    elif not RoyalUtils.is_macOS():
+                        # Windows: External Application (credential tokens supported)
+                        client_path = db_paths.get(db_type, "")
+                        client_path = client_path if client_path and not str(client_path).startswith("$") else ""
+                        # Use 8.3 short path when the path contains spaces — Royal's arg parser can split
+                        # "C:\\Program Files\\..." on unquoted paths.
+                        exe_path = client_path
+                        if os.name == "nt" and client_path and " " in client_path:
+                            exe_path = _get_windows_short_path(client_path)
+                        # PostgreSQL: run "psql.exe <uri>" inside cmd /k so a real console stays open.
+                        # Bare psql.exe often flashes and exits. Use cmd only when exe_path has no spaces
+                        # (short path); quoting "C:\\Program Files\\..." after /k breaks parsing.
+                        mongo_auth = bool((item.get("login") or "").strip())
+                        redis_with_user = bool((item.get("login") or "").strip())
+                        redis_with_password = bool(item.get("has_password"))
+                        if db_type == "postgres" and client_path and " " not in exe_path:
+                            props = {
+                                "Command": r"C:\Windows\System32\cmd.exe",
+                                "Arguments": (
+                                    f"/k {exe_path} {_get_db_args_template('postgres', port)}"
+                                ),
+                            }
+                        elif db_type == "mongodb" and client_path and " " not in exe_path:
+                            props = {
+                                "Command": r"C:\Windows\System32\cmd.exe",
+                                "Arguments": (
+                                    f"/k {exe_path} "
+                                    f"{_get_db_args_template('mongodb', port, mongo_with_auth=mongo_auth)}"
+                                ),
+                            }
+                        elif db_type == "mssql" and client_path and " " not in exe_path:
+                            # sqlcmd needs a real console (same as psql/mongosh under External Application)
+                            props = {
+                                "Command": r"C:\Windows\System32\cmd.exe",
+                                "Arguments": (
+                                    f"/k {exe_path} {_get_db_args_template('mssql', port)}"
+                                ),
+                            }
+                        elif db_type == "oracle" and client_path and " " not in exe_path:
+                            # sqlplus is interactive; bare launch under External Application often shows no window
+                            props = {
+                                "Command": r"C:\Windows\System32\cmd.exe",
+                                "Arguments": (
+                                    f"/k {exe_path} {_get_db_args_template('oracle', port)}"
+                                ),
+                            }
+                        elif db_type == "redis" and client_path and " " not in exe_path:
+                            # redis-cli interactive REPL; same External Application console issue as psql
+                            props = {
+                                "Command": r"C:\Windows\System32\cmd.exe",
+                                "Arguments": (
+                                    f"/k {exe_path} {_get_db_args_template('redis', port, redis_with_user=redis_with_user, redis_with_password=redis_with_password)}"
+                                ),
+                            }
+                        else:
+                            props = {
+                                "Command": exe_path,
+                                "Arguments": _get_db_args_template(
+                                    db_type,
+                                    port,
+                                    mongo_with_auth=mongo_auth,
+                                    redis_with_user=redis_with_user,
+                                    redis_with_password=redis_with_password,
+                                ),
+                            }
+                        ext_app = {
+                            "Type": "ExternalApplicationConnection",
+                            "Name": item["title"],
+                            "Description": f"{db_label} connection to {host}:{port}" + (" - Set client path in Command" if not client_path else ""),
+                            "Path": f"databaseCredentials/{db_label} Connections",
+                            "ComputerName": host,
+                            "Port": int(port),
+                            "CredentialName": item["title"],
+                            "Properties": props,
+                        }
+                        objects.append(ext_app)
+        
+        # Sort by path (type) and name
+        objects = sorted(objects, key=lambda i: (i.get("Path", ""), i["Name"]))
+        
+        return {"Objects": objects}
+
+
+class Coordinator:
+    """Coordinates the credential fetching and conversion process."""
+    
+    def __init__(self, config_path_windows: str, config_path_macos: str,
+                 db_paths: Dict[str, str]):
+        """Initialize with platform-specific config paths and DB client paths."""
+        self.config_path = config_path_macos if RoyalUtils.is_macOS() else config_path_windows
+        self.db_paths = db_paths
+    
+    def get_items(self) -> None:
+        """Fetch credentials and output RoyalJSON."""
+        try:
+            ksm = KeeperKSM(self.config_path)
+            items = ksm.get_secrets()
+            helper_path = ""
+            config_path = self.config_path
+            db_paths_resolved = self.db_paths
+            if RoyalUtils.is_macOS():
+                helper_path = _write_db_helper()
+                config_path = self.config_path
+                db_paths_resolved = {k: v if v and not str(v).startswith("$") else "" for k, v in self.db_paths.items()}
+            store = Converter.convert_items(
+                items, db_paths_resolved,
+                helper_path=helper_path,
+                config_path=config_path,
+                db_path_placeholders=None,
+            )
+            print(RoyalUtils.to_json(store, True))
+        except Exception as e:
+            desc = _get_safe_error_description(e)
+            error_output = {
+                "Objects": [{
+                    "Type": "DynamicCredential",
+                    "Name": f"Error: {type(e).__name__}",
+                    "Description": desc,
+                    "ID": "error"
+                }]
+            }
+            print(RoyalUtils.to_json(error_output, True))
+            RoyalUtils.exit_with_error("Error loading secrets", e, hint=desc)
+
+
+# Main execution
+_db_paths = {
+    "mysql": mysql_path_macos if RoyalUtils.is_macOS() else mysql_path_windows,
+    "postgres": postgres_path_macos if RoyalUtils.is_macOS() else postgres_path_windows,
+    "mssql": mssql_path_macos if RoyalUtils.is_macOS() else mssql_path_windows,
+    "oracle": oracle_path_macos if RoyalUtils.is_macOS() else oracle_path_windows,
+    "mongodb": mongodb_path_macos if RoyalUtils.is_macOS() else mongodb_path_windows,
+    "redis": redis_path_macos if RoyalUtils.is_macOS() else redis_path_windows,
+}
+coordinator = Coordinator(
+    ksm_config_path_windows, ksm_config_path_macos,
+    _db_paths
+)
+coordinator.get_items()
+]]></Script>
+      <DynamicCredentialScriptInterpreter>python</DynamicCredentialScriptInterpreter>
+      <DynamicCredentialScript><![CDATA[
+"""
+Keeper Secrets Manager - Dynamic Credential Script for Royal TS/TSX
+Author: Keeper Security
+Version: 1.0.0
+
+This script fetches a specific credential from Keeper when a connection
+requests it. Returns Username, Password, and KeyFileContent (for SSH keys).
+"""
+
+import configparser
+import json
+import os
+import sys
+from typing import Dict, Any, Optional
+
+# Configuration from Custom Properties
+ksm_config_path_macos = r"$CustomProperty.KSMConfigPathmacOS$"
+ksm_config_path_windows = r"$CustomProperty.KSMConfigPathWindows$"
+item_id = r"$DynamicCredential.EffectiveID$"
+
+# Suppress warnings
+os.environ['KSM_CONFIG_SKIP_MODE_WARNING'] = 'TRUE'
+
+
+def _get_db_default_port(db_type: str) -> str:
+    return {"mysql": "3306", "postgres": "5432", "mssql": "1433",
+            "oracle": "1521", "mongodb": "27017", "redis": "6379"}.get(db_type, "3306")
+
+
+def _normalize_db_type(raw: str) -> str:
+    t = raw.strip().lower() if raw else ""
+    if not t:
+        return "mysql"
+    if t in ("mysql", "mariadb"):
+        return "mysql"
+    if t in ("postgresql", "postgres", "pg"):
+        return "postgres"
+    if t in ("mssql", "sql server", "sqlserver", "microsoft sql server"):
+        return "mssql"
+    if t in ("oracle", "oracledb"):
+        return "oracle"
+    if t in ("mongodb", "mongo"):
+        return "mongodb"
+    if t == "redis":
+        return "redis"
+    return "mysql"
+
+
+def _normalize_db_port(port: Any, db_type: str) -> str:
+    """Keeper may send 0; omitting Port made Royal TS use $$Port$$ = 0 for psql."""
+    default = _get_db_default_port(db_type)
+    if port is None:
+        return default
+    s = str(port).strip()
+    if not s or s == "0":
+        return default
+    try:
+        n = int(s)
+        if n <= 0 or n > 65535:
+            return default
+    except ValueError:
+        return default
+    return str(n)
+
+
+class RoyalUtils:
+    """Utility class for Royal TS/TSX operations."""
+    
+    @staticmethod
+    def is_macOS() -> bool:
+        """Check if running on macOS."""
+        return sys.platform.lower().startswith("darwin")
+    
+    @staticmethod
+    def exit_with_error(message: str, exception: Optional[Exception] = None,
+                        hint: Optional[str] = None) -> None:
+        """Print error message and exit. Never logs credentials or sensitive data."""
+        err_type = type(exception).__name__ if exception else "Error"
+        out = f"{message}: {err_type}"
+        if hint:
+            out += f" - {hint}"
+        sys.stderr.write(out + "\n")
+        sys.exit(1)
+    
+    @staticmethod
+    def to_json(obj: Any, pretty: bool = False) -> str:
+        """Convert object to JSON string."""
+        return json.dumps(obj, indent=4) if pretty else json.dumps(obj)
+
+
+def _create_ksm_storage(config_path: str, profile_name: str = "_default"):
+    """Create KSM storage from .ini, .json, or .base64 config file."""
+    from keeper_secrets_manager_core.storage import InMemoryKeyValueStorage, FileKeyValueStorage
+    from keeper_secrets_manager_core.configkeys import ConfigKeys
+    
+    ext = os.path.splitext(config_path)[1].lower()
+    
+    if ext == ".json":
+        return FileKeyValueStorage(config_path)
+    if ext == ".base64":
+        import base64
+        import tempfile
+        with open(config_path, encoding="utf-8") as f:
+            decoded = base64.b64decode(f.read().strip()).decode("utf-8")
+        tf = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8")
+        tf.write(decoded)
+        tf.close()
+        return FileKeyValueStorage(tf.name)
+    # .ini or default
+    config = configparser.ConfigParser(allow_no_value=True)
+    config.read(config_path)
+    if profile_name not in config.sections():
+        raise ValueError(f"Profile '{profile_name}' not found in {config_path}")
+    profile = config[profile_name]
+    storage = InMemoryKeyValueStorage()
+    key_mapping = {
+        "clientid": ConfigKeys.KEY_CLIENT_ID,
+        "privatekey": ConfigKeys.KEY_PRIVATE_KEY,
+        "appkey": ConfigKeys.KEY_APP_KEY,
+        "hostname": ConfigKeys.KEY_HOSTNAME,
+        "appownerpublickey": ConfigKeys.KEY_OWNER_PUBLIC_KEY,
+        "serverpublickeyid": ConfigKeys.KEY_SERVER_PUBLIC_KEY_ID,
+    }
+    for ini_key, sdk_key in key_mapping.items():
+        if ini_key in profile and profile[ini_key]:
+            storage.set(sdk_key, profile[ini_key])
+    return storage
+
+
+class KeeperKSM:
+    """Keeper Secrets Manager client. Supports .ini, .json, and .base64 config formats."""
+    
+    def __init__(self, config_path: str, profile_name: str = "_default"):
+        """
+        Initialize KSM client. Config format is auto-detected from file extension.
+        
+        Args:
+            config_path: Path to config file (.ini, .json, or .base64)
+            profile_name: Profile section name for .ini files only
+        """
+        try:
+            from keeper_secrets_manager_core import SecretsManager
+        except ImportError:
+            raise ImportError(
+                "keeper-secrets-manager-core is not installed. "
+                "Run: pip install keeper-secrets-manager-core"
+            )
+        if not config_path or config_path.startswith("$"):
+            raise ValueError("KSM Config Path is not configured. Set it in Custom Properties.")
+        if not os.path.exists(config_path):
+            raise FileNotFoundError(f"KSM config file not found: {config_path}")
+        storage = _create_ksm_storage(config_path, profile_name)
+        self.client = SecretsManager(config=storage)
+    
+    def get_credential(self, uid: str) -> Dict[str, Any]:
+        """
+        Fetch a specific credential by UID.
+        
+        Handles multiple Keeper record types:
+        - Server record: login + password fields + host
+        - SSH Key record: login + keyPair (nested privateKey) + password (labeled as passphrase) + host
+        - Database record: login + password + host
+        - Login record: login + password fields
+        
+        Args:
+            uid: The Keeper record UID
+            
+        Returns:
+            Dictionary with Username, Password, URI, Port, and optionally KeyFileContent/KeyFilePassphrase
+        """
+        secrets = self.client.get_secrets([uid])
+        
+        if not secrets:
+            return {"Error": f"Secret {uid} not found"}
+        
+        secret = secrets[0]
+        result = {}
+        record_type = secret.type
+        
+        # Extract username from 'login' field (common across record types)
+        try:
+            login = secret.field("login", single=True)
+            if login:
+                result["Username"] = login
+        except:
+            pass
+        
+        # Extract password field (used differently by record types)
+        password = None
+        try:
+            password = secret.field("password", single=True)
+        except:
+            pass
+        
+        # Extract host and port (for $URI$ and $Port$ tokens)
+        try:
+            host_data = secret.field("host")
+            if host_data and len(host_data) > 0:
+                if isinstance(host_data[0], dict):
+                    host_name = host_data[0].get("hostName")
+                    port = host_data[0].get("port")
+                    if host_name:
+                        result["URI"] = host_name
+                    if record_type == "databaseCredentials":
+                        try:
+                            db_raw = secret.field("text", single=True)
+                            db_t = _normalize_db_type(db_raw or "")
+                        except Exception:
+                            db_t = "mysql"
+                        result["Port"] = _normalize_db_port(port, db_t)
+                    elif port:
+                        result["Port"] = port
+        except:
+            pass
+        
+        # Extract private key - check keyPair first (SSH Key records), then standalone privateKey
+        private_key = None
+        try:
+            # SSH Key records store private key inside keyPair object
+            key_pair = secret.field("keyPair", single=True)
+            if key_pair and isinstance(key_pair, dict):
+                private_key = key_pair.get("privateKey")
+        except:
+            pass
+        
+        if not private_key:
+            # Fallback: try standalone privateKey field
+            try:
+                private_key = secret.field("privateKey", single=True)
+            except:
+                pass
+        
+        # Handle based on record type and available fields
+        if record_type == "sshKeys":
+            # SSH Key record: password field is labeled "passphrase" (key passphrase)
+            if private_key:
+                result["KeyFileContent"] = private_key
+                if password:
+                    # password field in sshKeys is the key's passphrase
+                    result["KeyFilePassphrase"] = password
+            elif password:
+                # No private key, password is SSH login password
+                result["Password"] = password
+        else:
+            # Server/Login/other records: password is the login password
+            if password:
+                result["Password"] = password
+            if private_key:
+                result["KeyFileContent"] = private_key
+        
+        return result
+
+
+class Coordinator:
+    """Coordinates the credential fetching process."""
+    
+    def __init__(self, config_path_windows: str, config_path_macos: str):
+        """Initialize with platform-specific config paths."""
+        self.config_path = config_path_macos if RoyalUtils.is_macOS() else config_path_windows
+    
+    def get_credential(self, credential_id: str) -> None:
+        """
+        Fetch and output a specific credential.
+        
+        Args:
+            credential_id: The credential ID (keeper://UID format)
+        """
+        # Extract UID from keeper://UID format
+        if credential_id.startswith("keeper://"):
+            uid = credential_id[9:]
+        else:
+            uid = credential_id
+        
+        try:
+            ksm = KeeperKSM(self.config_path)
+            credential = ksm.get_credential(uid)
+            print(RoyalUtils.to_json(credential, True))
+        except Exception as e:
+            RoyalUtils.exit_with_error("Error fetching credential", e)
+
+
+# Main execution
+coordinator = Coordinator(ksm_config_path_windows, ksm_config_path_macos)
+coordinator.get_credential(item_id)
+]]></DynamicCredentialScript>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
