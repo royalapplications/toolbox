@@ -46,7 +46,14 @@ code { font-family: monospace; background-color: #f0f0f0; padding: 2px 4px; }
   <li><code>databaseCredentials</code> - Database credentials (MySQL, PostgreSQL, MSSQL, Oracle, MongoDB, Redis; Windows: External Application; macOS: Terminal/iTerm2 with helper script)</li>
   <li><code>sshKeys</code> - SSH private keys (KeyFileContent supported)</li>
 </ul>
-<p>For <code>databaseCredentials</code>: Supports <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>MSSQL</strong>, <strong>Oracle</strong>, <strong>MongoDB</strong>, and <strong>Redis</strong>. Database type is read from the Keeper record's Type field. <strong>Windows</strong> uses External Application; <strong>macOS</strong> uses Terminal (iTerm2-compatible) with a helper script. Set each database client path you use and KSM Config Path in Custom Properties. On macOS, the helper script is written to <code>~/.config/royal-keeper/db_connect.py</code>. Credentials are never logged or exposed.</p>
+<p>For <code>databaseCredentials</code>: Supports <strong>MySQL</strong>, <strong>PostgreSQL</strong>, <strong>MSSQL</strong>, <strong>Oracle</strong>, <strong>MongoDB</strong>, and <strong>Redis</strong>. Database type is read from the Keeper record's Type field. <strong>Windows</strong> uses External Application; <strong>macOS</strong> uses Terminal (iTerm2-compatible) with a helper script. Set each database client path you use and KSM Config Path in Custom Properties. On macOS, the helper script is written to <code>~/.config/royal-keeper/db_connect.py</code> (launcher and helper use safe quoting and atomic writes; database passwords are passed via environment variables or short-lived local files where the client supports it). Credentials are not written to the Royal document or script logs.</p>
+
+<h3>Security notes</h3>
+<ul>
+  <li><strong>Windows External Application</strong> builds command lines using Royal credential tokens (<code>$$EffectivePassword$$</code>, etc.). After Royal substitutes values, secrets may be visible in process listings like any other launched app—this is a limitation of the External Application model, not unique to this folder.</li>
+  <li><strong>macOS</strong> launcher scripts quote all paths and arguments (<code>shlex</code>) to avoid shell injection from malicious paths in Custom Properties.</li>
+  <li><strong>.base64</strong> KSM configs are decoded to a restrictive (0600) temp file during each script run and removed when the run finishes.</li>
+</ul>
 
 <h3>Usage</h3>
 <ol>
@@ -166,7 +173,9 @@ Features:
 import configparser
 import json
 import os
+import shlex
 import sys
+import tempfile
 from typing import Dict, List, Any, Optional
 
 # Configuration from Custom Properties
@@ -215,12 +224,13 @@ def _get_windows_short_path(path: str) -> str:
         return path.strip()
     try:
         import ctypes
+
         norm = os.path.normpath(path.strip())
         buf = ctypes.create_unicode_buffer(4096)
         n = ctypes.windll.kernel32.GetShortPathNameW(norm, buf, ctypes.sizeof(buf) // 2)
         if n and buf.value:
             return buf.value
-    except Exception:
+    except (AttributeError, OSError, ValueError):
         pass
     return path.strip()
 
@@ -270,24 +280,41 @@ class RoyalUtils:
         return json.dumps(obj, indent=4) if pretty else json.dumps(obj)
 
 
-def _create_ksm_storage(config_path: str, profile_name: str = "_default"):
+def _create_ksm_storage(
+    config_path: str,
+    profile_name: str = "_default",
+    temp_paths: Optional[List[str]] = None,
+):
     """Create KSM storage from .ini, .json, or .base64 config file."""
-    from keeper_secrets_manager_core.storage import InMemoryKeyValueStorage, FileKeyValueStorage
+    import base64
+
     from keeper_secrets_manager_core.configkeys import ConfigKeys
-    
+    from keeper_secrets_manager_core.storage import FileKeyValueStorage, InMemoryKeyValueStorage
+
     ext = os.path.splitext(config_path)[1].lower()
-    
+
     if ext == ".json":
         return FileKeyValueStorage(config_path)
     if ext == ".base64":
-        import base64
-        import tempfile
         with open(config_path, encoding="utf-8") as f:
             decoded = base64.b64decode(f.read().strip()).decode("utf-8")
-        tf = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8")
-        tf.write(decoded)
-        tf.close()
-        return FileKeyValueStorage(tf.name)
+        fd, tmp_path = tempfile.mkstemp(suffix=".json", prefix="ksm_", text=True)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as tf:
+                tf.write(decoded)
+            try:
+                os.chmod(tmp_path, 0o600)
+            except OSError:
+                pass
+            if temp_paths is not None:
+                temp_paths.append(tmp_path)
+            return FileKeyValueStorage(tmp_path)
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
     # .ini or default
     config = configparser.ConfigParser(allow_no_value=True)
     config.read(config_path)
@@ -311,14 +338,20 @@ def _create_ksm_storage(config_path: str, profile_name: str = "_default"):
 
 class KeeperKSM:
     """Keeper Secrets Manager client. Supports .ini, .json, and .base64 config formats."""
-    
-    def __init__(self, config_path: str, profile_name: str = "_default"):
+
+    def __init__(
+        self,
+        config_path: str,
+        profile_name: str = "_default",
+        temp_paths: Optional[List[str]] = None,
+    ):
         """
         Initialize KSM client. Config format is auto-detected from file extension.
-        
+
         Args:
             config_path: Path to config file (.ini, .json, or .base64)
             profile_name: Profile section name for .ini files only
+            temp_paths: If set, decoded .base64 temp paths are appended for cleanup.
         """
         try:
             from keeper_secrets_manager_core import SecretsManager
@@ -331,9 +364,9 @@ class KeeperKSM:
             raise ValueError("KSM Config Path is not configured. Set it in Custom Properties.")
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"KSM config file not found: {config_path}")
-        storage = _create_ksm_storage(config_path, profile_name)
+        storage = _create_ksm_storage(config_path, profile_name, temp_paths=temp_paths)
         self.client = SecretsManager(config=storage)
-    
+
     def get_secrets(self) -> List[Dict[str, Any]]:
         """
         Fetch all secrets from Keeper and parse them.
@@ -363,29 +396,29 @@ class KeeperKSM:
                     db_type_raw = secret.field("text", single=True)
                     if db_type_raw and isinstance(db_type_raw, str):
                         record["database_type"] = _normalize_db_type(db_type_raw)
-                except Exception:
+                except (TypeError, ValueError, AttributeError, LookupError):
                     pass
                 if not record["database_type"]:
                     record["database_type"] = "mysql"
                 try:
                     lg = secret.field("login", single=True)
                     record["login"] = (lg or "").strip() if lg else ""
-                except Exception:
+                except (TypeError, ValueError, AttributeError, LookupError):
                     record["login"] = ""
                 try:
                     pw = secret.field("password", single=True)
                     record["has_password"] = bool(pw and str(pw).strip())
-                except Exception:
+                except (TypeError, ValueError, AttributeError, LookupError):
                     record["has_password"] = False
-            
+
             # Extract URL for login records
             try:
                 url = secret.field("url", single=True)
                 if url:
                     record["url"] = url
-            except:
+            except (TypeError, ValueError, AttributeError, LookupError):
                 pass
-            
+
             # Extract host information for description
             try:
                 host_data = secret.field("host")
@@ -393,9 +426,9 @@ class KeeperKSM:
                     if isinstance(host_data[0], dict):
                         record["host"] = host_data[0].get("hostName")
                         record["port"] = host_data[0].get("port")
-            except:
+            except (TypeError, ValueError, AttributeError, LookupError):
                 pass
-            
+
             results.append(record)
         
         return results
@@ -407,26 +440,55 @@ def _get_db_helper_path() -> str:
     return os.path.join(base, "db_connect.py")
 
 
+def _atomic_write_text(path: str, content: str, file_mode: int = 0o600) -> None:
+    """Write text via temp file + replace; set permissions before rename."""
+    directory = os.path.dirname(path) or "."
+    os.makedirs(directory, exist_ok=True)
+    try:
+        os.chmod(directory, 0o700)
+    except OSError:
+        pass
+    fd, tmp = tempfile.mkstemp(dir=directory, prefix=".tmp_royal_", text=True)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as tf:
+            tf.write(content)
+        os.chmod(tmp, file_mode)
+        os.replace(tmp, path)
+    except Exception:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+
+
 def _write_db_launcher(config_path: str, uid: str, db_type: str, client_path: str,
                        helper_path: str) -> str:
     """Write a launcher .sh script for a DB connection. Returns script path."""
     import hashlib
+
     base = os.path.expanduser("~/.config/royal-keeper")
     os.makedirs(base, exist_ok=True)
-    h = hashlib.md5(uid.encode()).hexdigest()[:12]
+    try:
+        os.chmod(base, 0o700)
+    except OSError:
+        pass
+    h = hashlib.md5(uid.encode(), usedforsecurity=False).hexdigest()[:12]
     launcher_path = os.path.join(base, f"run_{h}.sh")
     python_exe = sys.executable or "/usr/bin/python3"
-    client_arg = f' "{client_path}"' if client_path else ""
-    script = f'''#!/bin/bash
-"{python_exe}" -u "{helper_path}" "{config_path}" "keeper://{uid}" "{db_type}"{client_arg}
-exec /bin/bash -l
-'''
-    with open(launcher_path, "w", encoding="utf-8") as f:
-        f.write(script)
-    try:
-        os.chmod(launcher_path, 0o700)
-    except Exception:
-        pass
+    keeper_ref = f"keeper://{uid}"
+    parts = [
+        shlex.quote(python_exe),
+        "-u",
+        shlex.quote(helper_path),
+        shlex.quote(config_path),
+        shlex.quote(keeper_ref),
+        shlex.quote(db_type),
+    ]
+    if (client_path or "").strip():
+        parts.append(shlex.quote(client_path.strip()))
+    script = "#!/bin/bash\n" + " ".join(parts) + "\nexec /bin/bash -l\n"
+    _atomic_write_text(launcher_path, script, 0o700)
     return launcher_path
 
 
@@ -436,9 +498,11 @@ def _write_db_helper() -> str:
     os.makedirs(os.path.dirname(helper_path), exist_ok=True)
     script = '''
 """Database connection helper for Keeper KSM - fetches credentials and runs DB client."""
+import atexit
 import os
-import sys
 import subprocess
+import sys
+import tempfile
 
 os.environ.setdefault("KSM_CONFIG_SKIP_MODE_WARNING", "TRUE")
 
@@ -472,7 +536,7 @@ def main():
         if hv and isinstance(hv, dict):
             host = hv.get("hostName", host)
             port = hv.get("port")
-    except Exception:
+    except (TypeError, ValueError, AttributeError, LookupError):
         pass
     default_ports = {"mysql": "3306", "postgres": "5432", "mssql": "1433",
                      "oracle": "1521", "mongodb": "27017", "redis": "6379"}
@@ -491,25 +555,35 @@ def main():
         cmd = [bin_name, "-h", host, "-p", port, "-U", login]
     elif db_type == "mssql":
         bin_name = client_path or "sqlcmd"
-        cmd = [bin_name, "-S", host + "," + port, "-U", login, "-P", password, "-C", "-No"]
+        env["SQLCMDPASSWORD"] = password
+        cmd = [bin_name, "-S", host + "," + port, "-U", login, "-C", "-No"]
     elif db_type == "oracle":
         bin_name = client_path or "sqlplus"
-        # Oracle 21c XE PDB default; older XE / full Oracle often use XE or ORCL
         service = "XEPDB1"
-        conn_str = f"{login}/{password}@//{host}:{port}/{service}"
-        cmd = [bin_name, conn_str]
+        fd, sql_path = tempfile.mkstemp(suffix=".sql", prefix="ksmora_", text=True)
+        os.close(fd)
+        os.chmod(sql_path, 0o600)
+        with open(sql_path, "w", encoding="utf-8") as sf:
+            sf.write("connect " + login + "/" + password + "@//" + host + ":" + port + "/" + service + "\\n")
+        def _rm_sql():
+            try:
+                os.unlink(sql_path)
+            except OSError:
+                pass
+        atexit.register(_rm_sql)
+        cmd = [bin_name, "-L", "/nolog", "@" + sql_path]
     elif db_type == "mongodb":
         bin_name = client_path or "mongosh"
         if (login or "").strip():
-            conn_str = f"mongodb://{login}:{password}@{host}:{port}"
+            uri = "mongodb://" + login + ":" + password + "@" + host + ":" + port
         else:
-            conn_str = f"mongodb://{host}:{port}"
-        cmd = [bin_name, conn_str]
+            uri = "mongodb://" + host + ":" + port
+        cmd = [bin_name, uri]
     elif db_type == "redis":
         bin_name = client_path or "redis-cli"
         cmd = [bin_name, "-h", host, "-p", port]
         if password:
-            cmd.extend(["-a", password])
+            env["REDISCLI_AUTH"] = password
         if login:
             cmd.extend(["--user", login])
     else:
@@ -520,12 +594,7 @@ def main():
 if __name__ == "__main__":
     main()
 '''
-    with open(helper_path, "w", encoding="utf-8") as f:
-        f.write(script)
-    try:
-        os.chmod(helper_path, 0o700)
-    except Exception:
-        pass
+    _atomic_write_text(helper_path, script, 0o700)
     return helper_path
 
 
@@ -774,8 +843,9 @@ class Coordinator:
     
     def get_items(self) -> None:
         """Fetch credentials and output RoyalJSON."""
+        temp_paths: List[str] = []
         try:
-            ksm = KeeperKSM(self.config_path)
+            ksm = KeeperKSM(self.config_path, temp_paths=temp_paths)
             items = ksm.get_secrets()
             helper_path = ""
             config_path = self.config_path
@@ -803,6 +873,12 @@ class Coordinator:
             }
             print(RoyalUtils.to_json(error_output, True))
             RoyalUtils.exit_with_error("Error loading secrets", e, hint=desc)
+        finally:
+            for p in temp_paths:
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
 
 
 # Main execution
@@ -835,7 +911,8 @@ import configparser
 import json
 import os
 import sys
-from typing import Dict, Any, Optional
+import tempfile
+from typing import Any, Dict, List, Optional
 
 # Configuration from Custom Properties
 ksm_config_path_macos = r"$CustomProperty.KSMConfigPathmacOS$"
@@ -912,24 +989,41 @@ class RoyalUtils:
         return json.dumps(obj, indent=4) if pretty else json.dumps(obj)
 
 
-def _create_ksm_storage(config_path: str, profile_name: str = "_default"):
+def _create_ksm_storage(
+    config_path: str,
+    profile_name: str = "_default",
+    temp_paths: Optional[List[str]] = None,
+):
     """Create KSM storage from .ini, .json, or .base64 config file."""
-    from keeper_secrets_manager_core.storage import InMemoryKeyValueStorage, FileKeyValueStorage
+    import base64
+
     from keeper_secrets_manager_core.configkeys import ConfigKeys
-    
+    from keeper_secrets_manager_core.storage import FileKeyValueStorage, InMemoryKeyValueStorage
+
     ext = os.path.splitext(config_path)[1].lower()
-    
+
     if ext == ".json":
         return FileKeyValueStorage(config_path)
     if ext == ".base64":
-        import base64
-        import tempfile
         with open(config_path, encoding="utf-8") as f:
             decoded = base64.b64decode(f.read().strip()).decode("utf-8")
-        tf = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False, encoding="utf-8")
-        tf.write(decoded)
-        tf.close()
-        return FileKeyValueStorage(tf.name)
+        fd, tmp_path = tempfile.mkstemp(suffix=".json", prefix="ksm_", text=True)
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as tf:
+                tf.write(decoded)
+            try:
+                os.chmod(tmp_path, 0o600)
+            except OSError:
+                pass
+            if temp_paths is not None:
+                temp_paths.append(tmp_path)
+            return FileKeyValueStorage(tmp_path)
+        except Exception:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
+            raise
     # .ini or default
     config = configparser.ConfigParser(allow_no_value=True)
     config.read(config_path)
@@ -953,14 +1047,20 @@ def _create_ksm_storage(config_path: str, profile_name: str = "_default"):
 
 class KeeperKSM:
     """Keeper Secrets Manager client. Supports .ini, .json, and .base64 config formats."""
-    
-    def __init__(self, config_path: str, profile_name: str = "_default"):
+
+    def __init__(
+        self,
+        config_path: str,
+        profile_name: str = "_default",
+        temp_paths: Optional[List[str]] = None,
+    ):
         """
         Initialize KSM client. Config format is auto-detected from file extension.
-        
+
         Args:
             config_path: Path to config file (.ini, .json, or .base64)
             profile_name: Profile section name for .ini files only
+            temp_paths: If set, decoded .base64 temp paths are appended for cleanup.
         """
         try:
             from keeper_secrets_manager_core import SecretsManager
@@ -973,9 +1073,9 @@ class KeeperKSM:
             raise ValueError("KSM Config Path is not configured. Set it in Custom Properties.")
         if not os.path.exists(config_path):
             raise FileNotFoundError(f"KSM config file not found: {config_path}")
-        storage = _create_ksm_storage(config_path, profile_name)
+        storage = _create_ksm_storage(config_path, profile_name, temp_paths=temp_paths)
         self.client = SecretsManager(config=storage)
-    
+
     def get_credential(self, uid: str) -> Dict[str, Any]:
         """
         Fetch a specific credential by UID.
@@ -1006,16 +1106,16 @@ class KeeperKSM:
             login = secret.field("login", single=True)
             if login:
                 result["Username"] = login
-        except:
+        except (TypeError, ValueError, AttributeError, LookupError):
             pass
-        
+
         # Extract password field (used differently by record types)
         password = None
         try:
             password = secret.field("password", single=True)
-        except:
+        except (TypeError, ValueError, AttributeError, LookupError):
             pass
-        
+
         # Extract host and port (for $URI$ and $Port$ tokens)
         try:
             host_data = secret.field("host")
@@ -1029,14 +1129,14 @@ class KeeperKSM:
                         try:
                             db_raw = secret.field("text", single=True)
                             db_t = _normalize_db_type(db_raw or "")
-                        except Exception:
+                        except (TypeError, ValueError, AttributeError, LookupError):
                             db_t = "mysql"
                         result["Port"] = _normalize_db_port(port, db_t)
                     elif port:
                         result["Port"] = port
-        except:
+        except (TypeError, ValueError, AttributeError, LookupError):
             pass
-        
+
         # Extract private key - check keyPair first (SSH Key records), then standalone privateKey
         private_key = None
         try:
@@ -1044,16 +1144,16 @@ class KeeperKSM:
             key_pair = secret.field("keyPair", single=True)
             if key_pair and isinstance(key_pair, dict):
                 private_key = key_pair.get("privateKey")
-        except:
+        except (TypeError, ValueError, AttributeError, LookupError):
             pass
-        
+
         if not private_key:
             # Fallback: try standalone privateKey field
             try:
                 private_key = secret.field("privateKey", single=True)
-            except:
+            except (TypeError, ValueError, AttributeError, LookupError):
                 pass
-        
+
         # Handle based on record type and available fields
         if record_type == "sshKeys":
             # SSH Key record: password field is labeled "passphrase" (key passphrase)
@@ -1094,13 +1194,20 @@ class Coordinator:
             uid = credential_id[9:]
         else:
             uid = credential_id
-        
+
+        temp_paths: List[str] = []
         try:
-            ksm = KeeperKSM(self.config_path)
+            ksm = KeeperKSM(self.config_path, temp_paths=temp_paths)
             credential = ksm.get_credential(uid)
             print(RoyalUtils.to_json(credential, True))
         except Exception as e:
             RoyalUtils.exit_with_error("Error fetching credential", e)
+        finally:
+            for p in temp_paths:
+                try:
+                    os.unlink(p)
+                except OSError:
+                    pass
 
 
 # Main execution
