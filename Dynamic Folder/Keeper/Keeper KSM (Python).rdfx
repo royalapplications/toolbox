@@ -50,7 +50,7 @@ code { font-family: monospace; background-color: #f0f0f0; padding: 2px 4px; }
 
 <h3>Security notes</h3>
 <ul>
-  <li><strong>Windows External Application</strong> builds command lines using Royal credential tokens (<code>$$EffectivePassword$$</code>, etc.). After Royal substitutes values, secrets may be visible in process listings like any other launched app—this is a limitation of the External Application model, not unique to this folder.</li>
+  <li><strong>Windows External Application</strong> builds command lines using Royal credential tokens (<code>$$EffectivePassword$$</code>, etc.). After Royal substitutes values, secrets may be visible in process listings like any other launched app—this is a limitation of the External Application model, not unique to this folder. Additionally, passwords containing special characters such as <code>&amp;</code>, <code>%</code>, <code>"</code>, or <code>!</code> may break command-line parsing and cause authentication failures. If you encounter this, consider updating the Keeper record password to avoid these characters for database connections launched via External Application.</li>
   <li><strong>macOS</strong> launcher scripts quote all paths and arguments (<code>shlex</code>) to avoid shell injection from malicious paths in Custom Properties.</li>
   <li><strong>.base64</strong> KSM configs are decoded to a restrictive (0600) temp file during each script run and removed when the run finishes.</li>
 </ul>
