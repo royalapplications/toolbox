@@ -499,6 +499,8 @@ def _write_db_helper() -> str:
     script = '''
 """Database connection helper for Keeper KSM - fetches credentials and runs DB client."""
 import atexit
+import base64
+import json
 import os
 import subprocess
 import sys
@@ -510,6 +512,32 @@ def _err(msg):
     sys.stderr.write(msg + "\\n")
     sys.exit(1)
 
+def _create_storage(config_path):
+    """Create KSM storage from .json or .base64 config file (content-detected)."""
+    from keeper_secrets_manager_core.storage import FileKeyValueStorage
+    with open(config_path, encoding="utf-8") as f:
+        raw = f.read().strip()
+    if raw.startswith("{"):
+        try:
+            json.loads(raw)
+            return FileKeyValueStorage(config_path), None
+        except json.JSONDecodeError:
+            pass
+    try:
+        decoded = base64.b64decode(raw).decode("utf-8")
+        json.loads(decoded)
+        fd, tmp = tempfile.mkstemp(suffix=".json", prefix="ksm_", text=True)
+        with os.fdopen(fd, "w", encoding="utf-8") as tf:
+            tf.write(decoded)
+        try:
+            os.chmod(tmp, 0o600)
+        except OSError:
+            pass
+        return FileKeyValueStorage(tmp), tmp
+    except Exception:
+        pass
+    _err("Unsupported config format: " + config_path)
+
 def main():
     if len(sys.argv) < 4:
         _err("Usage: db_connect.py <config_path> <record_uid> <db_type> [client_path]")
@@ -520,11 +548,18 @@ def main():
         _err("KSM config file not found")
     try:
         from keeper_secrets_manager_core import SecretsManager
-        from keeper_secrets_manager_core.storage import FileKeyValueStorage
     except ImportError:
         _err("Install: pip install keeper-secrets-manager-core")
-    sm = SecretsManager(config=FileKeyValueStorage(config_path))
-    secrets = sm.get_secrets([uid])
+    storage, tmp_path = _create_storage(config_path)
+    try:
+        sm = SecretsManager(config=storage)
+        secrets = sm.get_secrets([uid])
+    finally:
+        if tmp_path:
+            try:
+                os.unlink(tmp_path)
+            except OSError:
+                pass
     if not secrets:
         _err("Record not found")
     r = secrets[0]
