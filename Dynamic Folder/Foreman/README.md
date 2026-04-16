@@ -16,9 +16,7 @@ Source files:
 - [`Foreman (PHP).rdfe`](./Foreman%20%28PHP%29.rdfe)
 - [`Foreman (PHP).script.autogen.php`](./Foreman%20%28PHP%29.script.autogen.php)
 
-## 
-		Dynamic Folder support for Foreman
-
+## 		Dynamic Folder support for Foreman
 	
 Version: 1.0
 Author: Daniel Rieper
