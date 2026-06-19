@@ -16,6 +16,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="ReverseMarkdown" Version="5.3.0" />
+        <PackageReference Include="ReverseMarkdown" Version="5.4.0" />
     </ItemGroup>
 </Project>
