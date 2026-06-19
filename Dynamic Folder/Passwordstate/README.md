@@ -53,37 +53,25 @@ Source files:
 - [`Passwordstate - Based on management module (PowerShell).script.autogen.ps1`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.script.autogen.ps1)
 - [`Passwordstate - Based on management module (PowerShell).dyncred-script.autogen.ps1`](./Passwordstate%20-%20Based%20on%20management%20module%20%28PowerShell%29.dyncred-script.autogen.ps1)
 
-# 
-		Password State Dynamic Folder
-
+# 		Password State Dynamic Folder
 	
-## 
-		How to use
-
+## 		How to use
 	
 Install passwordstate-management powershell module [PSGalleryLink](https://www.powershellgallery.com/packages/passwordstate-management/)
 
-### 
-		Setup your passwordstate management environment
-
+### 		Setup your passwordstate management environment
 	
 First you will need to setup the environment for PasswordState. This prevents you having to enter the api key all the time as it's stored in an encrypted format. Or you can use Windows authentication using the currently logged on user.
 
-#### 
-		For API Key
-
+#### 		For API Key
 	
 Set-PasswordStateEnvironment  -baseuri "https://passwordstatserver.co.uk" -apikey "dsiwjdi9e0377dw84w45dsw5sw"
 
-#### 
-		For Windows Auth With Pass Through Authentication
-
+#### 		For Windows Auth With Pass Through Authentication
 	
 Set-PasswordStateEnvironment  -baseuri "https://passwordstateserver.co.uk" -WindowsAuthOnly
 
-#### 
-		For Windows Auth With Custom Credentials
-
+#### 		For Windows Auth With Custom Credentials
 	
 Set-PasswordStateEnvironment  -baseuri "https://passwordstateserver.co.uk" -customcredentials $(Get-Credential)
 
