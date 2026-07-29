@@ -1,0 +1,190 @@
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>Azure VM (PowerShell)</Name>
+      <Description>Starts one Azure VM if needed, resolves its current IP address, and generates selected RDP, password-based SSH, and Azure AD-based AzSSH connections.</Description>
+      <Notes><![CDATA[<h2>Microsoft Azure VM Dynamic Folder</h2>
+<p><strong>Version:</strong> 1.0.0<br />
+<strong>Author:</strong> Ghost93</p>
+<p>This sample generates connection objects for one Azure virtual machine. Duplicate the imported
+Dynamic Folder for additional VMs and change only its Custom Properties. The wrapper invokes the
+included <code>Source\Get-AzureVmConnections.ps1</code> script through PowerShell 7.</p>
+<p>Azure AD SSH uses the Windows Custom Terminal PTY support requested in
+<a href="https://github.com/royalapplications/toolbox/issues/141">toolbox issue #141</a>.</p>
+<h3>Prerequisites</h3>
+<ul>
+  <li>Windows and Royal TS 26 or newer.</li>
+  <li>PowerShell 7 with the Az module: <code>Install-Module Az -Scope CurrentUser</code>.</li>
+  <li>A cached PowerShell Azure session created with <code>Connect-AzAccount</code>.</li>
+  <li>For AzSSH, Azure CLI with SSH extension 2.0.4 or newer and a cached <code>az login</code> session.</li>
+  <li>Royal TS credentials matching <strong>CredentialName</strong> for RDP and
+  <strong>SshCredentialName</strong> for password-based SSH.</li>
+</ul>
+<h3>Setup</h3>
+<ul>
+  <li>Download
+  <a href="https://raw.githubusercontent.com/royalapplications/toolbox/master/Dynamic%20Folder/Microsoft%20Azure/Virtual%20Machines/Source/Get-AzureVmConnections.ps1">Get-AzureVmConnections.ps1</a>
+  and set <strong>ScriptPath</strong> to its local Windows path.</li>
+  <li>Set <strong>SubscriptionId</strong>, <strong>ResourceGroup</strong>, <strong>VmName</strong>,
+  <strong>ConnectionName</strong>, credential names, <strong>IpType</strong>, and
+  <strong>Protocols</strong>.</li>
+  <li><strong>Protocols</strong> accepts <code>RDP</code>, <code>SSH</code>, <code>AzSSH</code>,
+  or comma-separated combinations such as <code>RDP,SSH,AzSSH</code>.</li>
+  <li>Reload the Dynamic Folder.</li>
+</ul>
+<h3>Behavior</h3>
+<ul>
+  <li>The script starts a stopped VM, waits for provisioning and network readiness, then emits
+  deterministic RoyalJSON connection IDs.</li>
+  <li>RDP and SSH reference Royal TS credentials by name. No password or private key is emitted.</li>
+  <li>AzSSH starts an embedded Custom Terminal and runs <code>az ssh vm</code> with a forced TTY
+  and Bash login shell. Azure CLI performs the Azure AD authentication.</li>
+  <li>Public RDP or SSH requires the VM's network security group to permit the selected port from
+  the Royal TS client.</li>
+  <li>Diagnostics are written to a synchronized log beside the shared script.</li>
+</ul>]]></Notes>
+      <CustomProperties>
+        <CustomProperty>
+          <Name>ScriptPath</Name>
+          <Type>Text</Type>
+          <Value>C:\Path\To\Get-AzureVmConnections.ps1</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>SubscriptionId</Name>
+          <Type>Text</Type>
+          <Value>00000000-0000-0000-0000-000000000000</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>ResourceGroup</Name>
+          <Type>Text</Type>
+          <Value>my-resource-group</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>VmName</Name>
+          <Type>Text</Type>
+          <Value>my-azure-vm</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>ConnectionName</Name>
+          <Type>Text</Type>
+          <Value>My Azure VM</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>CredentialName</Name>
+          <Type>Text</Type>
+          <Value>Windows VM Credential</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>SshCredentialName</Name>
+          <Type>Text</Type>
+          <Value>Linux VM Credential</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>IpType</Name>
+          <Type>Text</Type>
+          <Value>Public</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Protocols</Name>
+          <Type>Text</Type>
+          <Value>RDP,SSH,AzSSH</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>SshPort</Name>
+          <Type>Text</Type>
+          <Value>22</Value>
+        </CustomProperty>
+      </CustomProperties>
+      <ScriptInterpreter>powershell</ScriptInterpreter>
+      <Script><![CDATA[# Wrapper runs under Windows PowerShell 5.1 (Royal TS default).
+# Explicitly invoke PS7 so the Az module is available, and bypass execution policy for the target script.
+$ErrorActionPreference = 'Stop'
+
+# Text Custom Properties are single-line values. Literal here-strings keep quotes and PowerShell
+# metacharacters in those values from becoming wrapper code.
+function ConvertFrom-RoyalText {
+    param([string]$Value)
+
+    $resolvedValue = $Value.TrimEnd([char[]]"`r`n")
+    if (
+        $resolvedValue.StartsWith('$') -and
+        $resolvedValue.EndsWith('$') -and
+        $resolvedValue.Contains('CustomProperty.')
+    ) {
+        throw "A required Dynamic Folder Custom Property could not be resolved."
+    }
+
+    return $resolvedValue
+}
+
+$scriptPath = ConvertFrom-RoyalText @'
+$CustomProperty.ScriptPath$
+'@
+$subscriptionId = ConvertFrom-RoyalText @'
+$CustomProperty.SubscriptionId$
+'@
+$resourceGroup = ConvertFrom-RoyalText @'
+$CustomProperty.ResourceGroup$
+'@
+$vmName = ConvertFrom-RoyalText @'
+$CustomProperty.VmName$
+'@
+$connectionName = ConvertFrom-RoyalText @'
+$CustomProperty.ConnectionName$
+'@
+$credentialName = ConvertFrom-RoyalText @'
+$CustomProperty.CredentialName$
+'@
+$sshCredentialName = ConvertFrom-RoyalText @'
+$CustomProperty.SshCredentialName$
+'@
+$protocols = ConvertFrom-RoyalText @'
+$CustomProperty.Protocols$
+'@
+$sshPort = ConvertFrom-RoyalText @'
+$CustomProperty.SshPort$
+'@
+$ipType = ConvertFrom-RoyalText @'
+$CustomProperty.IpType$
+'@
+
+$pwshCommand = Get-Command pwsh.exe -CommandType Application -ErrorAction SilentlyContinue |
+    Select-Object -First 1
+$pwsh = if ($pwshCommand) {
+    $pwshCommand.Source
+} else {
+    Join-Path $env:ProgramFiles 'PowerShell\7\pwsh.exe'
+}
+
+if (-not (Test-Path -LiteralPath $pwsh -PathType Leaf)) {
+    throw "PowerShell 7 executable was not found. Expected 'pwsh.exe' on PATH or at '$pwsh'."
+}
+
+$arguments = @(
+    '-ExecutionPolicy', 'Bypass',
+    '-NonInteractive',
+    '-File', $scriptPath,
+    '-SubscriptionId', $subscriptionId,
+    '-ResourceGroup', $resourceGroup,
+    '-VmName', $vmName,
+    '-ConnectionName', $connectionName,
+    '-CredentialName', $credentialName,
+    '-SshCredentialName', $sshCredentialName,
+    '-Protocols', $protocols,
+    '-SshPort', $sshPort,
+    '-IpType', $ipType
+)
+
+& $pwsh @arguments
+$exitCode = $LASTEXITCODE
+if ($null -eq $exitCode) {
+    throw "PowerShell 7 exited without reporting a process exit code."
+}
+
+exit $exitCode]]></Script>
+      <DynamicCredentialScriptInterpreter>json</DynamicCredentialScriptInterpreter>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
