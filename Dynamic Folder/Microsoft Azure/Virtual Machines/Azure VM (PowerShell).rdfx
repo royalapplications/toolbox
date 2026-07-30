@@ -32,12 +32,17 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
   <strong>Protocols</strong>.</li>
   <li><strong>Protocols</strong> accepts <code>RDP</code>, <code>SSH</code>, <code>AzSSH</code>,
   or comma-separated combinations such as <code>RDP,SSH,AzSSH</code>.</li>
+  <li>Optional: set <strong>StartVm</strong> to <code>true</code> to auto-start a stopped VM when the
+  Dynamic Folder reloads. Default is <code>false</code>; if the VM is stopped, the reload fails with
+  a visible error rather than silently starting the VM and incurring Azure cost.</li>
   <li>Reload the Dynamic Folder.</li>
 </ul>
 <h3>Behavior</h3>
 <ul>
-  <li>The script starts a stopped VM, waits for provisioning and network readiness, then emits
-  deterministic RoyalJSON connection IDs.</li>
+  <li>When <strong>StartVm</strong> is <code>true</code>, the script starts a stopped VM, waits
+  for provisioning and network readiness, then emits deterministic RoyalJSON connection IDs. When
+  <strong>StartVm</strong> is <code>false</code> and the VM is stopped, the reload fails; start
+  the VM manually or set <strong>StartVm</strong> to <code>true</code>.</li>
   <li>RDP and SSH reference Royal TS credentials by name. No password or private key is emitted.</li>
   <li>AzSSH starts an embedded Custom Terminal and runs <code>az ssh vm</code> with a forced TTY
   and Bash login shell. Azure CLI performs the Azure AD authentication.</li>
@@ -85,6 +90,11 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
           <Name>Protocols</Name>
           <Type>Text</Type>
           <Value>RDP,SSH,AzSSH</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>StartVm</Name>
+          <Type>Text</Type>
+          <Value>false</Value>
         </CustomProperty>
         <CustomProperty>
           <Name>SshPort</Name>
@@ -140,6 +150,9 @@ $CustomProperty.SshPort$
 '@
 $ipType = ConvertFrom-RoyalText @'
 $CustomProperty.IpType$
+'@
+$startVm = ConvertFrom-RoyalText @'
+$CustomProperty.StartVm$
 '@
 
 $pwshCommand = Get-Command pwsh.exe -CommandType Application -ErrorAction SilentlyContinue |
@@ -212,7 +225,7 @@ param(
     [int]$AzSshFontSize = 10,
 
     # Runtime behavior
-    [bool]$StartIfStopped = $true,
+    [bool]$StartIfStopped = $false,
     [ValidateRange(30, 1800)]
     [int]$VmStartTimeoutSeconds = 300,
     [ValidateRange(0, 600)]
@@ -847,6 +860,7 @@ try {
         '-Protocols', $protocols,
         '-SshPort', $sshPort,
         '-IpType', $ipType,
+        '-StartIfStopped', $startVm,
         '-LogPath', (Join-Path $env:LOCALAPPDATA 'RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log')
     )
 
