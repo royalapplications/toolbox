@@ -109,11 +109,23 @@ static class Markdown
 
     static readonly Converter HtmlToMarkdownOptions = new(new Config
     {
-        CleanupUnnecessarySpaces = true,
         GithubFlavored = true,
-        RemoveComments = true,
-        TableWithoutHeaderRowHandling = Config.TableWithoutHeaderRowHandlingOption.EmptyRow,
-        UnknownTags = Config.UnknownTagsOption.Bypass, // render contents
-        WhitelistUriSchemes = {"http", "https"},
+        Formatting =
+        {
+            CleanupSpaces = true,
+            RemoveComments = true,
+        },
+        Links =
+        {
+            WhitelistedSchemes = { "http", "https" },
+        },
+        Tables =
+        {
+            WithoutHeaderRow = Config.TableWithoutHeaderRowHandlingOption.EmptyRow,
+        },
+        Tags =
+        {
+            Unknown = Config.UnknownTagsOption.Bypass, // render contents
+        }
     });
 }
