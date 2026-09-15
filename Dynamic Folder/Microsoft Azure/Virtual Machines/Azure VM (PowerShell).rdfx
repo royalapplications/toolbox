@@ -20,6 +20,9 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
   <li>PowerShell 7 with the Az module: <code>Install-Module Az -Scope CurrentUser</code>.</li>
   <li>A cached PowerShell Azure session created with <code>Connect-AzAccount</code>.</li>
   <li>For AzSSH, Azure CLI with SSH extension 2.0.4 or newer and a cached <code>az login</code> session.</li>
+  <li>The wrapper starts the embedded worker with PowerShell
+  <code>-ExecutionPolicy Bypass</code> for that child process. This does not elevate privileges;
+  review the behavior against local PowerShell execution policy requirements.</li>
   <li>The PowerShell identity must be allowed to read the VM, its instance state, network interface,
   and public IP. If <strong>StartVm</strong> is <code>true</code>, it also needs permission to start
   the VM. Grant only the required permissions.</li>
