@@ -39,14 +39,12 @@ Source files:
 
 Local Administrator Password Solution (LAPS)
 
-More information on LAPS can be found here:
-
+More information on LAPS can be found here:  
 [https://www.microsoft.com/en-us/download/details.aspx?id=46899](https://www.microsoft.com/en-us/download/details.aspx?id=46899)
 
 Requirements:
 
-The dynamic credential script executes the Get-AdmPwdPassword cmdlet of the AdmPwd.PS module:
-
+The dynamic credential script executes the Get-AdmPwdPassword cmdlet of the AdmPwd.PS module:  
 [https://www.powershellgallery.com/packages/AdmPwd.PS](https://www.powershellgallery.com/packages/AdmPwd.PS)
 
 Make sure the module is installed/available on your system!
@@ -71,7 +69,7 @@ More information on LAPS can be found here:
 
 Requirements:
 
-The dynamic credential script executes the Get-LapsADPassword cmdlet of the new LAPS (April 2023 Update) module:
+The dynamic credential script executes the Get-LapsADPassword cmdlet of the new LAPS (April 2023 Update) module:  
 Make sure the new LAPS is installed on the System
 
 Configuration:

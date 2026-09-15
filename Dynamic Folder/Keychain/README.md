@@ -19,13 +19,12 @@ Source files:
 
 ## Keychain (Python)
 
-Version: 1.0
-
+Version: 1.0  
 Author: Royal Apps
 
 ### Description
 
-This script dynamically retrieves usernames and passwords from the macOS Keychain. You provide the names of the keychain items as a semicolon separated list in the custom properties section. When reloading the dynamic folder, a dynamic credential object will be created for each provided keychain item. When opening a connection that uses one of the dynamic credentials, the username and password will be requested from the keychain.
+This script dynamically retrieves usernames and passwords from the macOS Keychain. You provide the names of the keychain items as a semicolon separated list in the custom properties section. When reloading the dynamic folder, a dynamic credential object will be created for each provided keychain item. When opening a connection that uses one of the dynamic credentials, the username and password will be requested from the keychain.
 
 ### Configuration
 

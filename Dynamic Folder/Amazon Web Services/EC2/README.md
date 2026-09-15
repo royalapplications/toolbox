@@ -23,8 +23,7 @@ Source files:
 
 ## **Dynamic Folder sample for Amazon Web Services (AWS) EC2**
 
-**Version**: 1.0.1
-
+**Version**: 1.0.1  
 **Author**: Royal Applications
 
 This Dynamic Folder sample for AWS EC2 supports grabbing all EC2 instances of a specified region.
@@ -52,8 +51,7 @@ Source files:
 
 ## **Dynamic Folder sample for Amazon Web Services (AWS) EC2 managed by SSM**
 
-**Version**: 1.0.0
-
+**Version**: 1.0.0  
 **Author**: Chrysostomos Galatoulas
 
 This Dynamic Folder sample for AWS EC2 SSM supports grabbing all EC2 instances of a specified region managed by SSM. The script creates terminal connections with custom commands which is a feature only Royal TSX (for macOS) supports at the moment. That means this script currently only works on macOS and does NOT support Windows.

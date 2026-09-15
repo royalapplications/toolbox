@@ -18,16 +18,15 @@ Source files:
 
 ## **Dynamic Folder sample for IBM Softlayer Virtual Server**
 
-**Version**: 1.0
-
+**Version**: 1.0  
 **Author**: Royal Applications, [Matt Warren](https://github.com/eightnoneone)
 
 This Dynamic Folder sample for IBM Softlayer supports grabbing all virtual servers of a specified datacenter.
 
 ### **Prerequisites**
 
-- Softlayer Command Line Interface (CLI) Python pip module needs to be installed and configured for your OS default Python.
-[https://softlayer-api-python-client.readthedocs.io/en/latest/](https://softlayer-api-python-client.readthedocs.io/en/latest/)
+- Softlayer Command Line Interface (CLI) Python pip module needs to be installed and configured for your OS default Python.  
+  [https://softlayer-api-python-client.readthedocs.io/en/latest/](https://softlayer-api-python-client.readthedocs.io/en/latest/)
 
 ### **Setup**
 
@@ -36,5 +35,5 @@ This Dynamic Folder sample for IBM Softlayer supports grabbing all virtual serve
 
 ### **Notes**
 
-- The provided script sets SSH connections to "Use credentials from parent folder" and sets RDP connections to "Specify a credential name" There are multiple different ways to manage credentials with Royal. Alternatively, you may also just use "Connect with Options - Prompt for Credentials" when establishing a connection.
+- The provided script sets SSH connections to "Use credentials from parent folder" and sets RDP connections to "Specify a credential name" There are multiple different ways to manage credentials with Royal. Alternatively, you may also just use "Connect with Options - Prompt for Credentials" when establishing a connection.
 

@@ -18,15 +18,14 @@ Source files:
 
 ## **Port Scan Dynamic Folder sample**
 
-**Version**: 1.0
-
+**Version**: 1.0  
 **Author**: Royal Applications
 
 This Dynamic Folder sample scans your main network interface's IP subnet for open ports. The connection types/ports to scan can be configured in the "Custom Properties" section.
 
 ### **Note**
 
-Port scans can take a very long time depending on your subnet size, the number of ports enabled for scanning and the configured connection timeout. Please be patient and/or adjust the configuration as needed.
+Port scans can take a very long time depending on your subnet size, the number of ports enabled for scanning and the configured connection timeout. Please be patient and/or adjust the configuration as needed.
 
 ### **Requirements**
 
@@ -34,6 +33,6 @@ Port scans can take a very long time depending on your subnet size, the number 
 
 ### **Setup**
 
-- Enable or disable the connection types you want to be scanned in the "Custom Properties" section.
-- Configure a timeout (in seconds) for each scanned port in the "Custom Properties" section.
+- Enable or disable the connection types you want to be scanned in the "Custom Properties" section.
+- Configure a timeout (in seconds) for each scanned port in the "Custom Properties" section.
 

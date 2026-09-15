@@ -23,8 +23,7 @@ Source files:
 
 ## **Dynamic Folder sample for CSV**
 
-**Version**: 1.0
-
+**Version**: 1.0  
 **Author**: Royal Applications
 
 This Dynamic Folder sample for CSV files allows you to import connections from a CSV file.
@@ -44,8 +43,7 @@ Source files:
 
 ## **Dynamic Folder sample for CSV**
 
-**Version**: 1.0
-
+**Version**: 1.0  
 **Author**: Royal Applications
 
 This Dynamic Folder sample for CSV files allows you to import connections from a CSV file.

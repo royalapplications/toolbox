@@ -27,6 +27,7 @@ PowerShell 5.1 or higher on Windows
 
 PowerShell 7.2.1 or higher on MacOS (Thanks @lemonmojo)
 
+  
 VMware.PowerCLI Module 12.4.0 or higher
 
 Configure the Server URL Custom Property with a comma separated list of ESXi Hosts or vCenter servers.
