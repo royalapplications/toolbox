@@ -20,6 +20,12 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
   <li>PowerShell 7 with the Az module: <code>Install-Module Az -Scope CurrentUser</code>.</li>
   <li>A cached PowerShell Azure session created with <code>Connect-AzAccount</code>.</li>
   <li>For AzSSH, Azure CLI with SSH extension 2.0.4 or newer and a cached <code>az login</code> session.</li>
+  <li>The PowerShell identity must be allowed to read the VM, its instance state, network interface,
+  and public IP. If <strong>StartVm</strong> is <code>true</code>, it also needs permission to start
+  the VM. Grant only the required permissions.</li>
+  <li>For AzSSH, configure the Linux VM with the Entra SSH login extension and a managed identity.
+  Assign the Azure CLI identity either <strong>Virtual Machine User Login</strong> or
+  <strong>Virtual Machine Administrator Login</strong> on the VM or its resource group.</li>
   <li>Royal TS credentials matching <strong>CredentialName</strong> for RDP and
   <strong>SshCredentialName</strong> for password-based SSH.</li>
 </ul>
