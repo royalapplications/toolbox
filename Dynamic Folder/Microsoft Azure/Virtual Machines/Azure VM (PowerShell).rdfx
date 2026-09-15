@@ -44,9 +44,9 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
   <li>Optional: set <strong>StartVm</strong> to <code>true</code> to auto-start a stopped VM when the
   Dynamic Folder reloads. Default is <code>false</code>; if the VM is stopped, the reload fails with
   a visible error rather than silently starting the VM and incurring Azure cost.</li>
-  <li>Optional: set <strong>DisableFileLogging</strong> to <code>true</code> to prevent the worker
-  from writing its diagnostic log. File logging is enabled by default and appends timestamps,
-  resource names, IP addresses, and Azure error details to
+  <li>Optional: set <strong>EnableFileLogging</strong> to <code>true</code> while troubleshooting
+  to write a diagnostic log. File logging is disabled by default. When enabled, the worker appends
+  timestamps, resource names, IP addresses, and Azure error details to
   <code>%LOCALAPPDATA%\RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log</code>.
   The log has no automatic rotation or retention cleanup; review or delete it according to local
   policy.</li>
@@ -115,7 +115,7 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
           <Value>false</Value>
         </CustomProperty>
         <CustomProperty>
-          <Name>DisableFileLogging</Name>
+          <Name>EnableFileLogging</Name>
           <Type>Text</Type>
           <Value>false</Value>
         </CustomProperty>
@@ -186,12 +186,12 @@ $startVmValue = $startVm.Trim()
 if ($startVmValue -notmatch '^(true|false)$') {
     throw "StartVm must be either 'true' or 'false'."
 }
-$disableFileLogging = ConvertFrom-RoyalText @'
-$CustomProperty.DisableFileLogging$
+$enableFileLogging = ConvertFrom-RoyalText @'
+$CustomProperty.EnableFileLogging$
 '@
-$disableFileLoggingValue = $disableFileLogging.Trim()
-if ($disableFileLoggingValue -notmatch '^(true|false)$') {
-    throw "DisableFileLogging must be either 'true' or 'false'."
+$enableFileLoggingValue = $enableFileLogging.Trim()
+if ($enableFileLoggingValue -notmatch '^(true|false)$') {
+    throw "EnableFileLogging must be either 'true' or 'false'."
 }
 
 $pwshCommand = Get-Command pwsh.exe -CommandType Application -ErrorAction SilentlyContinue |
@@ -274,14 +274,14 @@ param(
     [ValidateRange(1, 30)]
     [int]$PollIntervalSeconds = 3,
     [string]$LogPath = (Join-Path $PSScriptRoot 'logs\Get-AzureVmConnections.log'),
-    [switch]$DisableFileLogging,
+    [switch]$EnableFileLogging,
 
     # Test mode
     [string]$TestModeAddress = '10.0.0.4',
     [switch]$TestMode
 )
 
-if ($DisableFileLogging) {
+if (-not $EnableFileLogging) {
     $LogPath = ''
 }
 
@@ -905,8 +905,8 @@ try {
     if ($startVmValue -ieq 'true') {
         $arguments += '-StartIfStopped'
     }
-    if ($disableFileLoggingValue -ieq 'true') {
-        $arguments += '-DisableFileLogging'
+    if ($enableFileLoggingValue -ieq 'true') {
+        $arguments += '-EnableFileLogging'
     }
 
     & $pwsh @arguments
