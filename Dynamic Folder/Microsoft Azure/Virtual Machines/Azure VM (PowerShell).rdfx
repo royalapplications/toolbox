@@ -854,6 +854,7 @@ try {
     $arguments = @(
         '-ExecutionPolicy', 'Bypass',
         '-NonInteractive',
+        '-NoProfile',
         '-File', $tempScript,
         '-SubscriptionId', $subscriptionId,
         '-ResourceGroup', $resourceGroup,
