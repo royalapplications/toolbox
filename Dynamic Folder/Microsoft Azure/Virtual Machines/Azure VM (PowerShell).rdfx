@@ -440,6 +440,9 @@ function ConvertTo-CmdQuotedArgument {
     if ($Value.IndexOfAny([char[]]"`r`n`"") -ge 0) {
         throw "$Name contains unsupported command-line characters."
     }
+    if ($Value.IndexOfAny([char[]]'&|<>()^%!') -ge 0) {
+        throw "$Name contains unsupported cmd.exe metacharacters."
+    }
 
     return "`"$Value`""
 }
