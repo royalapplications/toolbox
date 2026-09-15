@@ -154,6 +154,10 @@ $CustomProperty.IpType$
 $startVm = ConvertFrom-RoyalText @'
 $CustomProperty.StartVm$
 '@
+$startVmValue = $startVm.Trim()
+if ($startVmValue -notmatch '^(true|false)$') {
+    throw "StartVm must be either 'true' or 'false'."
+}
 
 $pwshCommand = Get-Command pwsh.exe -CommandType Application -ErrorAction SilentlyContinue |
     Select-Object -First 1
@@ -225,7 +229,7 @@ param(
     [int]$AzSshFontSize = 10,
 
     # Runtime behavior
-    [bool]$StartIfStopped = $false,
+    [switch]$StartIfStopped,
     [ValidateRange(30, 1800)]
     [int]$VmStartTimeoutSeconds = 300,
     [ValidateRange(0, 600)]
@@ -860,9 +864,11 @@ try {
         '-Protocols', $protocols,
         '-SshPort', $sshPort,
         '-IpType', $ipType,
-        '-StartIfStopped', $startVm,
         '-LogPath', (Join-Path $env:LOCALAPPDATA 'RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log')
     )
+    if ($startVmValue -ieq 'true') {
+        $arguments += '-StartIfStopped'
+    }
 
     & $pwsh @arguments
     $exitCode = $LASTEXITCODE
