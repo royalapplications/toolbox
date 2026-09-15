@@ -36,7 +36,7 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
 <ul>
   <li>Import this <code>.rdfx</code> into Royal TS. The PowerShell 7 script that queries Azure is
   embedded inside the wrapper; no additional file needs to be downloaded.</li>
-  <li>Set <strong>SubscriptionId</strong>, <strong>ResourceGroup</strong>, <strong>VmName</strong>,
+  <li>Set <strong>SubscriptionId</strong> to a GUID, then set <strong>ResourceGroup</strong>, <strong>VmName</strong>,
   <strong>ConnectionName</strong>, credential names, <strong>IpType</strong>, and
   <strong>Protocols</strong>.</li>
   <li><strong>Protocols</strong> accepts <code>RDP</code>, <code>SSH</code>, <code>AzSSH</code>,
@@ -177,6 +177,11 @@ $CustomProperty.IpType$
 $startVm = ConvertFrom-RoyalText @'
 $CustomProperty.StartVm$
 '@
+$subscriptionIdGuid = [guid]::Empty
+if (-not [guid]::TryParse($subscriptionId.Trim(), [ref]$subscriptionIdGuid)) {
+    throw "SubscriptionId must be a valid GUID."
+}
+$subscriptionId = $subscriptionIdGuid.Guid
 $startVmValue = $startVm.Trim()
 if ($startVmValue -notmatch '^(true|false)$') {
     throw "StartVm must be either 'true' or 'false'."
