@@ -45,7 +45,10 @@ file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p
   the VM manually or set <strong>StartVm</strong> to <code>true</code>.</li>
   <li>RDP and SSH reference Royal TS credentials by name. No password or private key is emitted.</li>
   <li>AzSSH starts an embedded Custom Terminal and runs <code>az ssh vm</code> with a forced TTY
-  and Bash login shell. Azure CLI performs the Azure AD authentication.</li>
+  and Bash login shell. When <strong>StartVm</strong> is <code>true</code>, the generated command
+  also runs <code>az vm start</code> each time the AzSSH connection opens. This can add connection
+  delay and Azure activity, and the Azure CLI identity must have permission to start the VM.
+  Azure CLI performs the Azure AD authentication.</li>
   <li>Public RDP or SSH requires the VM's network security group to permit the selected port from
   the Royal TS client.</li>
   <li>Diagnostics are written to <code>%LOCALAPPDATA%\RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log</code> with a cross-process lock.</li>
