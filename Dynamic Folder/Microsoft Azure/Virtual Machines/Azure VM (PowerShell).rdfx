@@ -1,0 +1,931 @@
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>Azure VM (PowerShell)</Name>
+      <Description>Starts one Azure VM if needed, resolves its current IP address, and generates selected RDP, password-based SSH, and Azure AD-based AzSSH connections.</Description>
+      <Notes><![CDATA[<h2>Microsoft Azure VM Dynamic Folder</h2>
+<p><strong>Version:</strong> 1.0.0<br />
+<strong>Author:</strong> Ghost93</p>
+<p>This sample generates connection objects for one Azure virtual machine. Duplicate the imported
+Dynamic Folder for additional VMs and change only its Custom Properties. The wrapper embeds a
+PowerShell 7 script inline; when the Dynamic Folder reloads, the wrapper writes it to a temporary
+file, invokes it with <code>pwsh.exe</code>, then deletes the temporary file.</p>
+<p>Azure AD SSH uses the Windows Custom Terminal PTY support requested in
+<a href="https://github.com/royalapplications/toolbox/issues/141">toolbox issue #141</a>.</p>
+<h3>Prerequisites</h3>
+<ul>
+  <li>Windows and Royal TS 26 or newer.</li>
+  <li>PowerShell 7 with the Az module: <code>Install-Module Az -Scope CurrentUser</code>.</li>
+  <li>A cached PowerShell Azure session created with <code>Connect-AzAccount</code>.</li>
+  <li>For AzSSH, Azure CLI with SSH extension 2.0.4 or newer and a cached <code>az login</code> session.</li>
+  <li>The wrapper starts the embedded worker with PowerShell
+  <code>-ExecutionPolicy Bypass</code> for that child process. This does not elevate privileges;
+  review the behavior against local PowerShell execution policy requirements.</li>
+  <li>The PowerShell identity must be allowed to read the VM, its instance state, network interface,
+  and public IP. If <strong>StartVm</strong> is <code>true</code>, it also needs permission to start
+  the VM. Grant only the required permissions.</li>
+  <li>For AzSSH, configure the Linux VM with the Entra SSH login extension and a managed identity.
+  Assign the Azure CLI identity either <strong>Virtual Machine User Login</strong> or
+  <strong>Virtual Machine Administrator Login</strong> on the VM or its resource group.</li>
+  <li>Royal TS credentials matching <strong>CredentialName</strong> for RDP and
+  <strong>SshCredentialName</strong> for password-based SSH.</li>
+</ul>
+<h3>Setup</h3>
+<ul>
+  <li>Import this <code>.rdfx</code> into Royal TS. The PowerShell 7 script that queries Azure is
+  embedded inside the wrapper; no additional file needs to be downloaded.</li>
+  <li>Set <strong>SubscriptionId</strong> to a GUID, then set <strong>ResourceGroup</strong>, <strong>VmName</strong>,
+  <strong>ConnectionName</strong>, credential names, <strong>IpType</strong>, and
+  <strong>Protocols</strong>.</li>
+  <li><strong>Protocols</strong> accepts <code>RDP</code>, <code>SSH</code>, <code>AzSSH</code>,
+  or comma-separated combinations such as <code>RDP,SSH,AzSSH</code>.</li>
+  <li>Optional: set <strong>StartVm</strong> to <code>true</code> to auto-start a stopped VM when the
+  Dynamic Folder reloads. Default is <code>false</code>; if the VM is stopped, the reload fails with
+  a visible error rather than silently starting the VM and incurring Azure cost.</li>
+  <li>Optional: set <strong>EnableFileLogging</strong> to <code>true</code> while troubleshooting
+  to write a diagnostic log. File logging is disabled by default. When enabled, the worker appends
+  timestamps, resource names, IP addresses, and Azure error details to
+  <code>%LOCALAPPDATA%\RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log</code>.
+  The log has no automatic rotation or retention cleanup; review or delete it according to local
+  policy.</li>
+  <li>Reload the Dynamic Folder.</li>
+</ul>
+<h3>Behavior</h3>
+<ul>
+  <li>When <strong>StartVm</strong> is <code>true</code>, the script starts a stopped VM, waits
+  for provisioning and network readiness, then emits deterministic RoyalJSON connection IDs. When
+  <strong>StartVm</strong> is <code>false</code> and the VM is stopped, the reload fails; start
+  the VM manually or set <strong>StartVm</strong> to <code>true</code>.</li>
+  <li>RDP and SSH reference Royal TS credentials by name. No password or private key is emitted.</li>
+  <li>AzSSH starts an embedded Custom Terminal and runs <code>az ssh vm</code> with a forced TTY
+  and Bash login shell. When <strong>StartVm</strong> is <code>true</code>, the generated command
+  also runs <code>az vm start</code> each time the AzSSH connection opens. This can add connection
+  delay and Azure activity, and the Azure CLI identity must have permission to start the VM.
+  Azure CLI performs the Azure AD authentication.</li>
+  <li>Public RDP or SSH requires the VM's network security group to permit the selected port from
+  the Royal TS client.</li>
+  <li>Diagnostics are written to <code>%LOCALAPPDATA%\RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log</code> with a cross-process lock.</li>
+</ul>]]></Notes>
+      <CustomProperties>
+        <CustomProperty>
+          <Name>SubscriptionId</Name>
+          <Type>Text</Type>
+          <Value>00000000-0000-0000-0000-000000000000</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>ResourceGroup</Name>
+          <Type>Text</Type>
+          <Value>my-resource-group</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>VmName</Name>
+          <Type>Text</Type>
+          <Value>my-azure-vm</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>ConnectionName</Name>
+          <Type>Text</Type>
+          <Value>My Azure VM</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>CredentialName</Name>
+          <Type>Text</Type>
+          <Value>Windows VM Credential</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>SshCredentialName</Name>
+          <Type>Text</Type>
+          <Value>Linux VM Credential</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>IpType</Name>
+          <Type>Text</Type>
+          <Value>Public</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>Protocols</Name>
+          <Type>Text</Type>
+          <Value>RDP,SSH,AzSSH</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>StartVm</Name>
+          <Type>Text</Type>
+          <Value>false</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>EnableFileLogging</Name>
+          <Type>Text</Type>
+          <Value>false</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>SshPort</Name>
+          <Type>Text</Type>
+          <Value>22</Value>
+        </CustomProperty>
+      </CustomProperties>
+      <ScriptInterpreter>powershell</ScriptInterpreter>
+      <Script><![CDATA[# Wrapper runs under Windows PowerShell 5.1 (Royal TS default).
+# Explicitly invoke PS7 so the Az module is available, and bypass execution policy for the target script.
+$ErrorActionPreference = 'Stop'
+
+# Text Custom Properties are single-line values. Literal here-strings keep quotes and PowerShell
+# metacharacters in those values from becoming wrapper code.
+function ConvertFrom-RoyalText {
+    param([string]$Value)
+
+    $resolvedValue = $Value.TrimEnd([char[]]"`r`n")
+    if (
+        $resolvedValue.StartsWith('$') -and
+        $resolvedValue.EndsWith('$') -and
+        $resolvedValue.Contains('CustomProperty.')
+    ) {
+        throw "A required Dynamic Folder Custom Property could not be resolved."
+    }
+
+    return $resolvedValue
+}
+
+$subscriptionId = ConvertFrom-RoyalText @'
+$CustomProperty.SubscriptionId$
+'@
+$resourceGroup = ConvertFrom-RoyalText @'
+$CustomProperty.ResourceGroup$
+'@
+$vmName = ConvertFrom-RoyalText @'
+$CustomProperty.VmName$
+'@
+$connectionName = ConvertFrom-RoyalText @'
+$CustomProperty.ConnectionName$
+'@
+$credentialName = ConvertFrom-RoyalText @'
+$CustomProperty.CredentialName$
+'@
+$sshCredentialName = ConvertFrom-RoyalText @'
+$CustomProperty.SshCredentialName$
+'@
+$protocols = ConvertFrom-RoyalText @'
+$CustomProperty.Protocols$
+'@
+$sshPort = ConvertFrom-RoyalText @'
+$CustomProperty.SshPort$
+'@
+$ipType = ConvertFrom-RoyalText @'
+$CustomProperty.IpType$
+'@
+$startVm = ConvertFrom-RoyalText @'
+$CustomProperty.StartVm$
+'@
+$subscriptionIdGuid = [guid]::Empty
+if (-not [guid]::TryParse($subscriptionId.Trim(), [ref]$subscriptionIdGuid)) {
+    throw "SubscriptionId must be a valid GUID."
+}
+$subscriptionId = $subscriptionIdGuid.Guid
+$startVmValue = $startVm.Trim()
+if ($startVmValue -notmatch '^(true|false)$') {
+    throw "StartVm must be either 'true' or 'false'."
+}
+$enableFileLogging = ConvertFrom-RoyalText @'
+$CustomProperty.EnableFileLogging$
+'@
+$enableFileLoggingValue = $enableFileLogging.Trim()
+if ($enableFileLoggingValue -notmatch '^(true|false)$') {
+    throw "EnableFileLogging must be either 'true' or 'false'."
+}
+
+$pwshCommand = Get-Command pwsh.exe -CommandType Application -ErrorAction SilentlyContinue |
+    Select-Object -First 1
+$pwsh = if ($pwshCommand) {
+    $pwshCommand.Source
+} else {
+    Join-Path $env:ProgramFiles 'PowerShell\7\pwsh.exe'
+}
+
+if (-not (Test-Path -LiteralPath $pwsh -PathType Leaf)) {
+    throw "PowerShell 7 executable was not found. Expected 'pwsh.exe' on PATH or at '$pwsh'."
+}
+
+# The full PowerShell 7 worker script is embedded below as a single-quoted here-string
+# so that no external file is required. It is written to a temp .ps1 file and invoked via
+# 'pwsh.exe -File' so that PS7 parameter binding and $PSScriptRoot resolution work correctly.
+$embeddedScript = @'
+<#
+.SYNOPSIS
+    Emits Royal TS connections for an Azure VM as RoyalJSON.
+
+.DESCRIPTION
+    On reload, this script:
+      1. Validates its Dynamic Folder parameters.
+      2. Selects the Azure subscription in process scope.
+      3. Starts the VM when requested and waits for it to reach the running state.
+      4. Resolves the selected primary or named NIC and IP configuration.
+      5. Waits for every selected protocol port when a wait timeout is configured.
+      6. Emits stable RDP, local SSH, and Azure AD SSH RoyalJSON objects.
+
+    RDP and local SSH connections reference Royal TS credentials by name. Azure AD SSH uses a
+    Royal TS 26 Custom Terminal that starts the VM, invokes Azure CLI SSH, forces a remote TTY,
+    and opens a Bash login shell.
+
+.NOTES
+    Royal TS Dynamic Folders require valid rJSON on stdout and exit code 0. All diagnostics are
+    written to the optional log file or stderr.
+#>
+
+[CmdletBinding()]
+param(
+    # Azure target
+    [string]$SubscriptionId = '<YOUR-SUBSCRIPTION-ID>',
+    [string]$ResourceGroup = '<YOUR-RESOURCE-GROUP>',
+    [string]$VmName = '<YOUR-VM-NAME>',
+    [string]$NetworkInterfaceName = '',
+    [string]$IpConfigurationName = '',
+
+    # Royal TS presentation and credentials
+    [string]$ConnectionName = 'Azure VM',
+    [string]$CredentialName = 'Azure VM',
+    [string]$SshCredentialName = '',
+    [ValidateRange(1, 65535)]
+    [int]$RdpPort = 3389,
+    [ValidateRange(1, 65535)]
+    [int]$SshPort = 22,
+
+    # Protocols and addressing
+    [string]$Protocols = 'RDP',
+    [ValidateSet('Public', 'Private')]
+    [string]$IpType = 'Public',
+
+    # Azure AD SSH Custom Terminal
+    [string]$AzSshRemoteShell = '/usr/bin/bash',
+    [string]$AzSshTerm = 'xterm-256color',
+    [string]$AzSshColorTerm = 'truecolor',
+    [string]$AzSshFont = 'Consolas',
+    [ValidateRange(6, 72)]
+    [int]$AzSshFontSize = 10,
+
+    # Runtime behavior
+    [switch]$StartIfStopped,
+    [ValidateRange(30, 1800)]
+    [int]$VmStartTimeoutSeconds = 300,
+    [ValidateRange(0, 600)]
+    [int]$AddressWaitSeconds = 60,
+    [ValidateRange(0, 600)]
+    [int]$PortWaitSeconds = 60,
+    [ValidateRange(1, 30)]
+    [int]$PollIntervalSeconds = 3,
+    [string]$LogPath = (Join-Path $PSScriptRoot 'logs\Get-AzureVmConnections.log'),
+    [switch]$EnableFileLogging,
+
+    # Test mode
+    [string]$TestModeAddress = '10.0.0.4',
+    [switch]$TestMode
+)
+
+if (-not $EnableFileLogging) {
+    $LogPath = ''
+}
+
+$ErrorActionPreference = 'Stop'
+$WarningPreference = 'SilentlyContinue'
+$ProgressPreference = 'SilentlyContinue'
+$VerbosePreference = 'SilentlyContinue'
+$InformationPreference = 'SilentlyContinue'
+$env:SuppressAzurePowerShellBreakingChangeWarnings = 'true'
+
+function Initialize-Log {
+    Write-Log -Level INFO -Message 'Log initialized.'
+}
+
+function Write-Log {
+    param(
+        [ValidateSet('DEBUG', 'INFO', 'WARN', 'ERROR')]
+        [string]$Level,
+        [string]$Message
+    )
+
+    if ([string]::IsNullOrWhiteSpace($LogPath)) {
+        return
+    }
+
+    $line = "$(Get-Date -Format o) [$Level] $Message$([Environment]::NewLine)"
+    $normalizedLogPath = [System.IO.Path]::GetFullPath($LogPath).ToUpperInvariant()
+    $lockId = New-DeterministicGuid -Value $normalizedLogPath
+
+    try {
+        Invoke-WithNamedMutex `
+            -Name "Local\RoyalTS-Log-$lockId" `
+            -WaitSeconds 10 `
+            -ScriptBlock {
+                $logDirectory = Split-Path -Parent $LogPath
+                if ($logDirectory -and -not (Test-Path -LiteralPath $logDirectory)) {
+                    New-Item -ItemType Directory -Path $logDirectory -Force | Out-Null
+                }
+
+                [System.IO.File]::AppendAllText(
+                    $LogPath,
+                    $line,
+                    [System.Text.UTF8Encoding]::new($false)
+                )
+            }
+    } catch {
+        [Console]::Error.WriteLine("Logging failed for '$LogPath': $($_.Exception.Message)")
+    }
+}
+
+function Resolve-SelectedProtocols {
+    param([string]$Value)
+
+    $allowed = @('RDP', 'SSH', 'AZSSH')
+    $tokens = @(
+        $Value -split '[,;\s]+' |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+            ForEach-Object { $_.Trim().ToUpperInvariant() }
+    )
+
+    if ($tokens.Count -eq 0) {
+        throw 'Protocols cannot be empty.'
+    }
+
+    $invalid = @($tokens | Where-Object { $_ -notin $allowed } | Select-Object -Unique)
+    if ($invalid.Count -gt 0) {
+        throw "Unsupported protocol value(s): $($invalid -join ', '). Allowed values: RDP, SSH, AzSSH."
+    }
+
+    $selected = [System.Collections.Generic.List[string]]::new()
+    foreach ($token in $tokens) {
+        if (-not $selected.Contains($token)) {
+            $selected.Add($token)
+        }
+    }
+
+    return $selected.ToArray()
+}
+
+function Assert-RequiredParameters {
+    foreach ($parameter in @(
+        @{ Name = 'SubscriptionId'; Value = $SubscriptionId },
+        @{ Name = 'ResourceGroup'; Value = $ResourceGroup },
+        @{ Name = 'VmName'; Value = $VmName },
+        @{ Name = 'ConnectionName'; Value = $ConnectionName }
+    )) {
+        if ([string]::IsNullOrWhiteSpace($parameter.Value) -or $parameter.Value -like '<*>') {
+            throw "Missing required parameter -$($parameter.Name)."
+        }
+    }
+
+    if ($CredentialName -like '<*>') {
+        throw 'CredentialName still contains a placeholder value.'
+    }
+}
+
+function New-DeterministicGuid {
+    param([string]$Value)
+
+    $inputBytes = [System.Text.Encoding]::UTF8.GetBytes($Value)
+    $hash = [System.Security.Cryptography.SHA256]::HashData($inputBytes)
+    $guidBytes = [byte[]]::new(16)
+    [System.Array]::Copy($hash, $guidBytes, 16)
+
+    # Mark the value as an RFC 4122-compatible version 5-style GUID.
+    $guidBytes[7] = ($guidBytes[7] -band 0x0F) -bor 0x50
+    $guidBytes[8] = ($guidBytes[8] -band 0x3F) -bor 0x80
+    return [guid]::new($guidBytes).ToString()
+}
+
+function Get-ConnectionId {
+    param([string]$Protocol)
+
+    $identityProtocol = if ($Protocol -eq 'AZSSH') {
+        'AZSSH-CUSTOMTERMINAL-V6'
+    } else {
+        $Protocol
+    }
+
+    return New-DeterministicGuid -Value "$SubscriptionId|$ResourceGroup|$VmName|$identityProtocol"
+}
+
+function Get-ArmResourceIdSegment {
+    param(
+        [string]$ResourceId,
+        [string]$SegmentName
+    )
+
+    $segments = $ResourceId.Trim('/') -split '/'
+    for ($index = 0; $index -lt $segments.Count - 1; $index++) {
+        if ($segments[$index] -ieq $SegmentName) {
+            return $segments[$index + 1]
+        }
+    }
+
+    throw "ARM resource ID '$ResourceId' does not contain segment '$SegmentName'."
+}
+
+function Get-EffectiveSshCredentialName {
+    if ([string]::IsNullOrWhiteSpace($SshCredentialName)) {
+        return $CredentialName
+    }
+
+    return $SshCredentialName
+}
+
+function ConvertTo-CmdQuotedArgument {
+    param(
+        [string]$Value,
+        [string]$Name
+    )
+
+    if ([string]::IsNullOrWhiteSpace($Value)) {
+        throw "$Name cannot be empty."
+    }
+    if ($Value.IndexOfAny([char[]]"`r`n`"") -ge 0) {
+        throw "$Name contains unsupported command-line characters."
+    }
+    if ($Value.IndexOfAny([char[]]'&|<>()^%!') -ge 0) {
+        throw "$Name contains unsupported cmd.exe metacharacters."
+    }
+
+    return "`"$Value`""
+}
+
+function Assert-AzSshPrerequisites {
+    if (-not (Get-Command az -ErrorAction SilentlyContinue)) {
+        throw "Azure CLI executable 'az' was not found. Install Azure CLI and sign in with 'az login'."
+    }
+
+    foreach ($terminalValue in @(
+        @{ Name = 'AzSshTerm'; Value = $AzSshTerm },
+        @{ Name = 'AzSshColorTerm'; Value = $AzSshColorTerm }
+    )) {
+        if ($terminalValue.Value -notmatch '^[A-Za-z0-9._+-]+$') {
+            throw "$($terminalValue.Name) contains unsupported characters."
+        }
+    }
+}
+
+function New-AzSshCustomCommand {
+    $resourceGroupArgument = ConvertTo-CmdQuotedArgument -Value $ResourceGroup -Name 'ResourceGroup'
+    $vmNameArgument = ConvertTo-CmdQuotedArgument -Value $VmName -Name 'VmName'
+    $subscriptionArgument = ConvertTo-CmdQuotedArgument -Value $SubscriptionId -Name 'SubscriptionId'
+    $remoteShellArgument = ConvertTo-CmdQuotedArgument -Value $AzSshRemoteShell -Name 'AzSshRemoteShell'
+    $termArgument = ConvertTo-CmdQuotedArgument -Value "TERM=$AzSshTerm" -Name 'AzSshTerm'
+    $colorTermArgument = ConvertTo-CmdQuotedArgument -Value "COLORTERM=$AzSshColorTerm" -Name 'AzSshColorTerm'
+
+    $targetArguments = "-g $resourceGroupArgument -n $vmNameArgument --subscription $subscriptionArgument"
+    $commands = [System.Collections.Generic.List[string]]::new()
+
+    if ($StartIfStopped) {
+        $commands.Add("az vm start $targetArguments --only-show-errors")
+    }
+
+    $sshCommand = "az ssh vm $targetArguments --resource-type Microsoft.Compute/virtualMachines --port $SshPort --only-show-errors"
+    if ($IpType -eq 'Private') {
+        $sshCommand += ' --prefer-private-ip'
+    }
+    $sshCommand += " -- -tt `"/usr/bin/env`" $termArgument $colorTermArgument $remoteShellArgument --login"
+    $commands.Add($sshCommand)
+
+    return "cmd.exe /d /k $($commands -join ' && ')"
+}
+
+function Get-VmPowerState {
+    param($Context)
+
+    $vm = Get-AzVM `
+        -ResourceGroupName $ResourceGroup `
+        -Name $VmName `
+        -Status `
+        -DefaultProfile $Context
+
+    $statuses = @($vm.Statuses)
+    $state = ($statuses | Where-Object { $_.Code -like 'PowerState/*' } | Select-Object -First 1).Code
+    if (-not [string]::IsNullOrWhiteSpace($state)) {
+        return $state
+    }
+
+    $provisioningFailure = $statuses |
+        Where-Object {
+            $_.Code -like 'ProvisioningState/failed*' -or
+            $_.DisplayStatus -eq 'Provisioning failed'
+        } |
+        Select-Object -First 1
+    if ($provisioningFailure) {
+        $details = @(
+            $provisioningFailure.Code,
+            $provisioningFailure.Message
+        ) | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+        throw "Azure provisioning failed for VM '$VmName': $($details -join ' - ')"
+    }
+
+    return $null
+}
+
+function Ensure-AzureVmRunning {
+    param($Context)
+
+    $deadline = (Get-Date).AddSeconds($VmStartTimeoutSeconds)
+    $startRequested = $false
+    $lastState = ''
+    $missingStateLogged = $false
+
+    do {
+        $state = Get-VmPowerState -Context $Context
+        if ([string]::IsNullOrWhiteSpace($state)) {
+            if (-not $missingStateLogged) {
+                Write-Log -Level WARN -Message "Azure did not return a power state for VM '$VmName'; retrying."
+                $missingStateLogged = $true
+            }
+            Start-Sleep -Seconds $PollIntervalSeconds
+            continue
+        }
+
+        $missingStateLogged = $false
+        if ($state -ne $lastState) {
+            Write-Log -Level INFO -Message "VM '$VmName' power state: $state"
+            $lastState = $state
+        }
+
+        switch ($state) {
+            'PowerState/running' {
+                return
+            }
+            { $_ -in @('PowerState/stopped', 'PowerState/deallocated') } {
+                if (-not $StartIfStopped) {
+                    throw "VM '$VmName' is '$state' and StartIfStopped is disabled."
+                }
+
+                if (-not $startRequested) {
+                    Write-Log -Level INFO -Message "Starting VM '$VmName'."
+                    Start-AzVM `
+                        -ResourceGroupName $ResourceGroup `
+                        -Name $VmName `
+                        -NoWait `
+                        -DefaultProfile $Context | Out-Null
+                    $startRequested = $true
+                }
+            }
+            { $_ -in @('PowerState/starting', 'PowerState/stopping', 'PowerState/deallocating') } {
+                # Wait for the transition to complete.
+            }
+            default {
+                throw "VM '$VmName' is in unsupported power state '$state'."
+            }
+        }
+
+        Start-Sleep -Seconds $PollIntervalSeconds
+    } while ((Get-Date) -lt $deadline)
+
+    throw "VM '$VmName' did not reach PowerState/running within $VmStartTimeoutSeconds seconds. Last state: $lastState."
+}
+
+function Select-NetworkInterfaceReference {
+    param($VmModel)
+
+    $references = @($VmModel.NetworkProfile.NetworkInterfaces)
+    if ($references.Count -eq 0) {
+        throw "VM '$VmName' has no network interfaces."
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($NetworkInterfaceName)) {
+        $match = $references |
+            Where-Object { (Split-Path -Leaf $_.Id) -eq $NetworkInterfaceName } |
+            Select-Object -First 1
+        if (-not $match) {
+            throw "Network interface '$NetworkInterfaceName' is not attached to VM '$VmName'."
+        }
+        return $match
+    }
+
+    $primary = $references | Where-Object { $_.Primary } | Select-Object -First 1
+    if ($primary) {
+        return $primary
+    }
+
+    Write-Log -Level WARN -Message "No primary NIC was marked for '$VmName'; using '$((Split-Path -Leaf $references[0].Id))'."
+    return $references[0]
+}
+
+function Select-IpConfiguration {
+    param($NetworkInterface)
+
+    $configurations = @($NetworkInterface.IpConfigurations)
+    if ($configurations.Count -eq 0) {
+        throw "Network interface '$($NetworkInterface.Name)' has no IP configurations."
+    }
+
+    if (-not [string]::IsNullOrWhiteSpace($IpConfigurationName)) {
+        $match = $configurations | Where-Object { $_.Name -eq $IpConfigurationName } | Select-Object -First 1
+        if (-not $match) {
+            throw "IP configuration '$IpConfigurationName' was not found on NIC '$($NetworkInterface.Name)'."
+        }
+        return $match
+    }
+
+    $primary = $configurations | Where-Object { $_.Primary } | Select-Object -First 1
+    if ($primary) {
+        return $primary
+    }
+
+    Write-Log -Level WARN -Message "No primary IP configuration was marked on '$($NetworkInterface.Name)'; using '$($configurations[0].Name)'."
+    return $configurations[0]
+}
+
+function Get-AzureVmAddress {
+    param($Context)
+
+    $deadline = (Get-Date).AddSeconds($AddressWaitSeconds)
+
+    do {
+        $vmModel = Get-AzVM `
+            -ResourceGroupName $ResourceGroup `
+            -Name $VmName `
+            -DefaultProfile $Context
+
+        $nicReference = Select-NetworkInterfaceReference -VmModel $vmModel
+        $networkInterface = Get-AzNetworkInterface -ResourceId $nicReference.Id -DefaultProfile $Context
+        $ipConfiguration = Select-IpConfiguration -NetworkInterface $networkInterface
+
+        if ($IpType -eq 'Private') {
+            $address = $ipConfiguration.PrivateIpAddress
+        } elseif ($ipConfiguration.PublicIpAddress) {
+            $publicIpResourceId = $ipConfiguration.PublicIpAddress.Id
+            $publicIpResourceGroup = Get-ArmResourceIdSegment `
+                -ResourceId $publicIpResourceId `
+                -SegmentName 'resourceGroups'
+            $publicIpName = Split-Path -Leaf $publicIpResourceId
+            $publicIp = Get-AzPublicIpAddress `
+                -ResourceGroupName $publicIpResourceGroup `
+                -Name $publicIpName `
+                -DefaultProfile $Context
+            $address = $publicIp.IpAddress
+        } else {
+            throw "IP configuration '$($ipConfiguration.Name)' on VM '$VmName' has no public IP resource."
+        }
+
+        if (-not [string]::IsNullOrWhiteSpace($address) -and $address -ne 'Not Assigned') {
+            Write-Log -Level INFO -Message "Resolved $IpType IP '$address' from NIC '$($networkInterface.Name)' and IP configuration '$($ipConfiguration.Name)'."
+            return $address
+        }
+
+        if ($AddressWaitSeconds -eq 0) {
+            break
+        }
+
+        Start-Sleep -Seconds $PollIntervalSeconds
+    } while ((Get-Date) -lt $deadline)
+
+    throw "Could not resolve a usable $IpType IP for VM '$VmName' within $AddressWaitSeconds seconds."
+}
+
+function Invoke-WithNamedMutex {
+    param(
+        [string]$Name,
+        [int]$WaitSeconds = 120,
+        [scriptblock]$ScriptBlock
+    )
+
+    $mutex = [System.Threading.Mutex]::new($false, $Name)
+    $acquired = $false
+
+    try {
+        try {
+            $acquired = $mutex.WaitOne([TimeSpan]::FromSeconds($WaitSeconds))
+        } catch [System.Threading.AbandonedMutexException] {
+            $acquired = $true
+        }
+
+        if (-not $acquired) {
+            throw "Timed out after $WaitSeconds seconds waiting for lock '$Name'."
+        }
+
+        return & $ScriptBlock
+    } finally {
+        if ($acquired) {
+            $mutex.ReleaseMutex()
+        }
+        $mutex.Dispose()
+    }
+}
+
+function Test-TcpPort {
+    param(
+        [string]$ComputerName,
+        [int]$Port
+    )
+
+    $client = [System.Net.Sockets.TcpClient]::new()
+    try {
+        $connectTask = $client.ConnectAsync($ComputerName, $Port)
+        if (-not $connectTask.Wait(1000)) {
+            return $false
+        }
+        return $client.Connected
+    } catch {
+        return $false
+    } finally {
+        $client.Dispose()
+    }
+}
+
+function Wait-ConnectionPorts {
+    param(
+        [string]$ComputerName,
+        [string[]]$SelectedProtocols
+    )
+
+    if ($PortWaitSeconds -eq 0) {
+        return
+    }
+
+    $requiredPorts = [System.Collections.Generic.HashSet[int]]::new()
+    foreach ($protocol in $SelectedProtocols) {
+        if ($protocol -eq 'RDP') {
+            [void]$requiredPorts.Add($RdpPort)
+        } else {
+            [void]$requiredPorts.Add($SshPort)
+        }
+    }
+
+    $deadline = (Get-Date).AddSeconds($PortWaitSeconds)
+    $unavailablePorts = @()
+
+    do {
+        $unavailablePorts = @(
+            foreach ($port in $requiredPorts) {
+                if (-not (Test-TcpPort -ComputerName $ComputerName -Port $port)) {
+                    $port
+                }
+            }
+        )
+
+        if ($unavailablePorts.Count -eq 0) {
+            Write-Log -Level INFO -Message "Required connection ports are available: $($requiredPorts -join ', ')."
+            return
+        }
+
+        Start-Sleep -Seconds $PollIntervalSeconds
+    } while ((Get-Date) -lt $deadline)
+
+    throw "Port readiness timed out after $PortWaitSeconds seconds for '$ComputerName'. Unavailable port(s): $($unavailablePorts -join ', ')."
+}
+
+function New-RoyalJsonDocument {
+    param(
+        [string]$ComputerName,
+        [string[]]$SelectedProtocols
+    )
+
+    $multipleProtocols = $SelectedProtocols.Count -gt 1
+    $generatedAt = Get-Date -Format s
+    $objects = [System.Collections.Generic.List[object]]::new()
+
+    foreach ($protocol in $SelectedProtocols) {
+        $name = if ($multipleProtocols) { "$ConnectionName ($protocol)" } else { $ConnectionName }
+
+        switch ($protocol) {
+            'RDP' {
+                $objects.Add([ordered]@{
+                    Type = 'RemoteDesktopConnection'
+                    ID = Get-ConnectionId -Protocol $protocol
+                    Name = $name
+                    ComputerName = $ComputerName
+                    Port = $RdpPort
+                    CredentialName = $CredentialName
+                    Description = "Azure VM $VmName ($ResourceGroup) - RDP - generated $generatedAt"
+                })
+            }
+            'SSH' {
+                $objects.Add([ordered]@{
+                    Type = 'TerminalConnection'
+                    ID = Get-ConnectionId -Protocol $protocol
+                    TerminalConnectionType = 'SSH'
+                    Name = $name
+                    ComputerName = $ComputerName
+                    Port = $SshPort
+                    CredentialName = Get-EffectiveSshCredentialName
+                    Description = "Azure VM $VmName ($ResourceGroup) - local SSH - generated $generatedAt"
+                })
+            }
+            'AZSSH' {
+                $objects.Add([ordered]@{
+                    Type = 'TerminalConnection'
+                    ID = Get-ConnectionId -Protocol $protocol
+                    TerminalConnectionType = 'CustomTerminal'
+                    Name = $name
+                    ComputerName = $ComputerName
+                    CredentialMode = 0
+                    CredentialAutologon = $false
+                    CredentialFromParent = $false
+                    Properties = [ordered]@{
+                        CustomCommandWin = New-AzSshCustomCommand
+                        Font = $AzSshFont
+                        FontSize = "$AzSshFontSize"
+                    }
+                    Description = "Azure VM $VmName ($ResourceGroup) - Azure AD SSH via Custom Terminal - generated $generatedAt"
+                })
+            }
+        }
+    }
+
+    return [ordered]@{ Objects = $objects.ToArray() } | ConvertTo-Json -Depth 10
+}
+
+try {
+    Initialize-Log
+    $selectedProtocols = Resolve-SelectedProtocols -Value $Protocols
+    Write-Log -Level INFO -Message "Reload started for '$ResourceGroup/$VmName' with protocols '$($selectedProtocols -join ',')'."
+
+    if ($TestMode) {
+        $testJson = New-RoyalJsonDocument `
+            -ComputerName $TestModeAddress `
+            -SelectedProtocols $selectedProtocols
+        [Console]::Out.WriteLine($testJson)
+        Write-Log -Level INFO -Message 'Test mode reload completed.'
+        exit 0
+    }
+
+    Assert-RequiredParameters
+    if ($selectedProtocols -contains 'AZSSH') {
+        Assert-AzSshPrerequisites
+    }
+
+    $currentContext = Get-AzContext -ErrorAction SilentlyContinue
+    if (-not $currentContext) {
+        throw "No Az PowerShell context found. Run 'Connect-AzAccount' in PowerShell 7, then reload this folder."
+    }
+
+    $context = Set-AzContext -Subscription $SubscriptionId -Scope Process
+    Write-Log -Level INFO -Message "Selected Azure subscription '$($context.Subscription.Id)' in process scope."
+
+    Ensure-AzureVmRunning -Context $context
+    $address = Get-AzureVmAddress -Context $context
+
+    Wait-ConnectionPorts -ComputerName $address -SelectedProtocols $selectedProtocols
+
+    $json = New-RoyalJsonDocument `
+        -ComputerName $address `
+        -SelectedProtocols $selectedProtocols
+
+    [Console]::Out.WriteLine($json)
+    Write-Log -Level INFO -Message 'Reload completed successfully.'
+    exit 0
+} catch {
+    $message = "Dynamic Folder script failed: $($_.Exception.Message)"
+    $loggingFailure = $null
+    try {
+        Write-Log -Level ERROR -Message $message
+    } catch {
+        $loggingFailure = $_.Exception.Message
+    }
+
+    [Console]::Error.WriteLine($message)
+    if ($loggingFailure) {
+        [Console]::Error.WriteLine("Additionally, logging failed: $loggingFailure")
+    }
+    exit 1
+}
+'@
+
+$tempScript = Join-Path ([System.IO.Path]::GetTempPath()) ("royalts-azurevm-" + [Guid]::NewGuid().ToString() + ".ps1")
+[System.IO.File]::WriteAllText($tempScript, $embeddedScript, (New-Object System.Text.UTF8Encoding($false)))
+
+try {
+    $arguments = @(
+        '-ExecutionPolicy', 'Bypass',
+        '-NonInteractive',
+        '-NoProfile',
+        '-File', $tempScript,
+        '-SubscriptionId', $subscriptionId,
+        '-ResourceGroup', $resourceGroup,
+        '-VmName', $vmName,
+        '-ConnectionName', $connectionName,
+        '-CredentialName', $credentialName,
+        '-SshCredentialName', $sshCredentialName,
+        '-Protocols', $protocols,
+        '-SshPort', $sshPort,
+        '-IpType', $ipType,
+        '-LogPath', (Join-Path $env:LOCALAPPDATA 'RoyalTS\AzureVmDynamicFolder\logs\Get-AzureVmConnections.log')
+    )
+    if ($startVmValue -ieq 'true') {
+        $arguments += '-StartIfStopped'
+    }
+    if ($enableFileLoggingValue -ieq 'true') {
+        $arguments += '-EnableFileLogging'
+    }
+
+    & $pwsh @arguments
+    $exitCode = $LASTEXITCODE
+    if ($null -eq $exitCode) {
+        throw "PowerShell 7 exited without reporting a process exit code."
+    }
+
+    exit $exitCode
+}
+finally {
+    if (Test-Path -LiteralPath $tempScript) {
+        Remove-Item -LiteralPath $tempScript -Force -ErrorAction SilentlyContinue
+    }
+}]]></Script>
+      <DynamicCredentialScriptInterpreter>json</DynamicCredentialScriptInterpreter>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
