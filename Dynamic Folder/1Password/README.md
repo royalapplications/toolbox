@@ -19,7 +19,7 @@ Source files:
 
 ## 1Password v8+ Dynamic Folder sample
 
-This Dynamic Folder sample allows you to import credentials from 1Password. It requires both the 1Password app (version 8 or above) and the 1Password CLI tool (version 2.19 or above). The [1Password CLI tool](https://developer.1password.com/docs/cli/get-started/) must be installed, and the path where it is installed must be configured in the "Custom Properties" section. You also need to turn on the 1Password CLI/desktop integration in the 1Password app (Settings -> Developer -> enable "Integrate with 1Password CLI").
+This Dynamic Folder sample allows you to import credentials from 1Password. It requires both the 1Password app (version 8 or above) and the 1Password CLI tool (version 2.19 or above). The [1Password CLI tool](https://developer.1password.com/docs/cli/get-started/) must be installed, and the path where it is installed must be configured in the "Custom Properties" section. You also need to turn on the 1Password CLI/desktop integration in the 1Password app (Settings -&gt; Developer -&gt; enable "Integrate with 1Password CLI").
 
 Items are imported as Dynamic Credentials. This means that the username and password fields will remain empty after reloading the dynamic folder and only be requested when a connection is established that uses one of the credentials of this dynamic folder.
 
@@ -30,7 +30,7 @@ By default, items of all vaults are imported. If you only want to retrieve items
 ### Requirements
 
 - Royal TS v7 or higher / Royal TSX v6 or higher
-- [1Password CLI tool](https://developer.1password.com/docs/cli/get-started) (Version 2+)
+- [1Password CLI tool](https://developer.1password.com/docs/cli/get-started) (Version 2+)
 - Python 3 (Python 2 is not supported)
 - Python Module: sys
 - Python Module: json

@@ -19,8 +19,7 @@ Source files:
 
 ## **Dynamic Folder sample for Secret Server**
 
-**Version**: 1.0.2
-
+**Version**: 1.0.2  
 **Author**: Royal Applications
 
 This Dynamic Folder sample for Delinea Secret Server supports Dynamic Credentials and Multi-Factor-Authentication (MFA).
@@ -32,6 +31,6 @@ This Dynamic Folder sample for Delinea Secret Server supports Dynamic Credential
 ### **Setup**
 
 - Enter your "Server URL" in the "Custom Properties" section.
-- Enter or assign your Secret Server credentials.
-- If MFA is required by your server/user, enable it by setting "-requiresMFA" to "$true" instead of "$false" in the last line of both scripts.
+- Enter or assign your Secret Server credentials.
+- If MFA is required by your server/user, enable it by setting "-requiresMFA" to "$true" instead of "$false" in the last line of both scripts.
 
