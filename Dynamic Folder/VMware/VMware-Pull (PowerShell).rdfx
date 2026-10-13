@@ -1,0 +1,163 @@
+<DynamicFolderExport>
+  <Name>Dynamic Folder Export</Name>
+  <Objects>
+    <DynamicFolderExportObject>
+      <Type>DynamicFolder</Type>
+      <Name>VMware-Pull (PowerShell)</Name>
+      <Description>Imports Virtual Machines from VMware ESXi Hosts or vCenter Servers</Description>
+      <Notes><![CDATA[<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<style type="text/css">.cs49F7EBD7{text-align:left;text-indent:0pt;margin:0pt 0pt 0pt 0pt}
+			.cs9D55BE7C{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:bold;font-style:normal;}
+			.csC4C3C1ED{color:#000000;background-color:transparent;font-family:'Times New Roman';font-size:12pt;font-weight:normal;font-style:normal;}
+</style>
+<p class="cs49F7EBD7"><span class="cs9D55BE7C">VMware ESXi Host / vCenter Dynamic Folder Example</span></p>
+
+<p class="cs49F7EBD7"><span class="cs9D55BE7C">&nbsp;</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">This Dynamic Folder pulls all of the VMware VMs from your VMware ESXi Hosts or VMware vCenter environment and puts them into the appropriate DataCenter/Cluster folder.</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">&nbsp;</span></p>
+
+<p class="cs49F7EBD7"><span class="cs9D55BE7C">Requirements:</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">PowerShell 5.1 or higher on Windows</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">PowerShell 7.2.1 or higher on MacOS (Thanks @lemonmojo)</span></p>
+
+<p class="cs49F7EBD7"><br />
+<span class="csC4C3C1ED">VMware.PowerCLI Module 12.4.0 or higher</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">&nbsp;</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">Configure the Server URL Custom Property with a comma separated list of ESXi Hosts or vCenter servers.</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">&nbsp;</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">Configure your credentials under the Credentials Tab or leave them blank.</span></p>
+
+<p class="cs49F7EBD7"><span class="csC4C3C1ED">&nbsp;</span></p>
+]]></Notes>
+      <CustomProperties>
+        <CustomProperty>
+          <Name>Server URL</Name>
+          <Type>Text</Type>
+          <Value>TODO</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>WindowsCredential</Name>
+          <Type>Text</Type>
+          <Value>TODO</Value>
+        </CustomProperty>
+        <CustomProperty>
+          <Name>LinuxCredential</Name>
+          <Type>Text</Type>
+          <Value>TODO</Value>
+        </CustomProperty>
+      </CustomProperties>
+      <ScriptInterpreter>powershell</ScriptInterpreter>
+      <Script><![CDATA[$objCred=new-object System.Management.automation.pscredential -ArgumentList '$EffectiveUsername$',(Convertto-securestring '$EffectivePassword$' -AsPlainText -Force)
+
+$vcServers = '$CustomProperty.ServerURL$'
+
+$vcServers=$vcServers.split(',')
+
+
+foreach ($vcenter in $vcServers) {
+    connect-viserver -credential $objCred $vcenter > $null
+}
+
+#write-host 'Loading Virtual Machines...'
+$vmList=get-vm | where { $_.PowerState -eq 'PoweredOn' }
+
+$mySystems=$vmList | select Name,Guest,GuestId,@{n='IPAddress'; e={(get-vmguest -vm $_).Nics.IPAddress }},@{n='Datacenter'; e={($_ | get-datacenter).name } }, @{n='Cluster'; e= {($_ | get-cluster).name} }
+$ServerList = new-object System.Collections.ArrayList
+
+$ipv4Match='^(?:(?:0?0?\d|0?[1-9]\d|1\d\d|2[0-5][0-5]|2[0-4]\d)\.){3}(?:0?0?\d|0?[1-9]\d|1\d\d|2[0-5][0-5]|2[0-4]\d)$'
+
+
+foreach ($vm in $mySystems) {
+    $vmName=$vm.Name
+    $folderName="$($vm.datacenter)/$($vm.cluster)"
+    if ($vm.guest.extensiondata.guestfamily -match 'windows') { $vmType='RemoteDesktopConnection'}
+    if ($vm.guest.extensiondata.guestfamily -match 'Linux') {$vmType='SSH'}
+    
+    if ([string]::IsNullOrEmpty($vmType) -eq $true) {
+        if ($vm.guestid -match 'windows') { 
+            $vmType='RemoteDesktopConnection'
+        } else {
+            $vmType='SSH'
+        }
+    }
+
+    $IPAddress=($vm.guest.extensiondata.net.ipaddress -match  $ipv4Match)[0]
+    
+	if ($IPAddress -eq $true) {
+        $IPAddress=$vm.guest.extensiondata.net.ipaddress
+    }
+
+    if ($vm.guest.extensiondata.guestfamily -match 'windows') {
+     $tmpObj=[pscustomobject]@{
+        Name = $vmName
+        Path = $folderName
+        ComputerName = $IPAddress
+        Type = $vmType
+		CredentialName = '$CustomProperty.WindowsCredential$'
+     }
+     
+    }
+
+    if ($vm.guest.extensiondata.guestfamily -match 'Linux') {
+     $tmpObj=[pscustomobject]@{
+            Name = $vmName
+            Path = $folderName
+            ComputerName = $IPAddress
+            TerminalconnectionType = $vmType
+            Type='TerminalConnection'
+			CredentialName = '$CustomProperty.LinuxCredential$'
+     }        
+    }
+
+    [void] $serverList.add($tmpObj)
+
+}
+
+$objRoyalTS=@{}
+[void] $objRoyalTS.add('Objects',$serverList)
+
+#$objRoyalTS | ConvertTo-Json | out-file 'royalts.json'
+
+
+$objRoyalTS | ConvertTo-Json]]></Script>
+      <DynamicCredentialScriptInterpreter>json</DynamicCredentialScriptInterpreter>
+      <DynamicCredentialScript><![CDATA[{
+	"Objects": [
+		{
+			"Type": "Credential",
+			"Name": "Root",
+			"Username": "root",
+			"Password": "!ehrfew9fe9gew7rgew@",
+			"ID": "000001",
+			"Path": "/Credentials"
+		}, {
+			"Type": "Folder",
+			"Name": "Connections",
+			"Objects": [
+				{
+					"Type": "TerminalConnection",
+					"TerminalConnectionType": "SSH",
+					"Name": "VM01",
+					"ComputerName": "vm01",
+					"CredentialID": "000001"
+				}
+			]
+		}
+	]
+}]]></DynamicCredentialScript>
+      <DynamicFolderScriptTokenMode>ReplaceInline</DynamicFolderScriptTokenMode>
+      <DynamicFolderScriptEnvironmentPrefix>DynFolder_</DynamicFolderScriptEnvironmentPrefix>
+      <DynamicCredentialScriptTokenMode>ReplaceInline</DynamicCredentialScriptTokenMode>
+      <DynamicCredentialScriptEnvironmentPrefix>DynCredential_</DynamicCredentialScriptEnvironmentPrefix>
+    </DynamicFolderExportObject>
+  </Objects>
+</DynamicFolderExport>
